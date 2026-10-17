@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "asOf": "2026-10-16",
+    "updatedAt": "2026-10-16T09:00:00+02:00",
+    "version": 1,
+    "lastSource": "Startversie door Claude: juli-plan herzien met marktdata t/m 16 okt 2026",
+    "disclaimer": "Persoonlijk educatief plan. Geen beleggingsadvies; kansen zijn inschattingen, geen voorspellingen."
+  },
+  "regime": {
+    "name": "Stagflatie met renteschok",
+    "phase": "Late cyclus",
+    "riskLevel": "verhoogd",
+    "thesis": "Inflatie versnelt weer (CPI 3,7%, groothandelsprijzen +6,3%) terwijl de banenmarkt stilvalt (+29k in september). De Fed verhoogde in september en sluit een volgende stap niet uit. Olie staat boven $100 door de Hormuz-blokkade, de 10-jaarsrente raakte vorige week 5,36%, en de AI-chiprally kreeg een flinke tik (Kospi −7,6% op 15 okt). In deze mix is de rente de spil van je hele portefeuille.",
+    "masterVariable": {
+      "name": "US 10-jaarsrente",
+      "why": "Drie van je vier pijlers (mijnen, Mag 7, small caps) dalen als de rente stijgt. Alleen Circle verdient méér aan hoge rente. Kijk hier eerst naar, elke dag."
+    },
+    "changesSinceJuly": [
+      "Fed: van 'mogelijk een verhoging' naar daadwerkelijk +25 bp (16 sep), range nu 3,75–4,00%.",
+      "10-jaarsrente: van ~4,5% naar ~5,1% (top 5,36%).",
+      "Olie: het risicoscenario uit juli ($100+) is uitgekomen: Brent ~$104.",
+      "Goud: niet de verwachte veilige haven, −4% in een maand en 25% onder het record van $5.590 (28 jan).",
+      "AI: chip-uitverkoop in Azië en de VS; de 'AI houdt alles overeind'-these wordt nu getest."
+    ]
+  },
+  "portfolioCheck": {
+    "headline": "Je portefeuille is niet defensief meer",
+    "points": [
+      "Het juli-plan ging uit van fysiek goud + USDC (stabiel). Je grootste posities nu zijn mijnaandelen, het Circle-aandeel, Mag 7 en small caps: allemaal aandelen, met hogere beweeglijkheid dan goud of cash.",
+      "Mijnen bewegen 1,5 à 2× zo hard als goud, in beide richtingen, en lijden onder hoge olieprijzen (energiekosten).",
+      "Het CRCL-aandeel is geen USDC: het aandeel schommelt als een groeiaandeel, ook al is de stablecoin stabiel.",
+      "Er zit geen cash- of kortlopende obligatiebuffer in. Zonder droog kruit kun je de 'koop bij de dip'-regels in dit plan niet uitvoeren.",
+      "Natuurlijke hedge: CRCL profiteert van hoge rente, mijnen van dalende rente. Bij een scenario-omslag schuif je tussen deze twee in plaats van alles tegelijk te verkopen."
+    ]
+  },
+  "actionsNow": [
+    "Geen nieuwe grote aankopen vóór de Fed (28 okt) en de techcijfers (21–29 okt), tenzij een planregel hieronder afgaat.",
+    "Mijnen: aanhouden, niet bijkopen. Let op goud $4.000 (weekslot) en de goud/olie-ratio onder 40.",
+    "Circle: aanhouden tot de kwartaalcijfers van 4 nov; beslis daarna op USDC-groei.",
+    "Mag 7: wachten. Eerste toets is Meta op 21 okt: houdt de AI-investeringsbegroting stand?",
+    "Insider-trades: alleen meldingen jonger dan 30 dagen, maximaal 1–2% per positie, harde stop.",
+    "Beslis bewust hoeveel droog kruit (cash/T-bills) je wilt aanhouden voor de dip-regels."
+  ],
+  "scenarios": [
+    {
+      "id": "s1",
+      "name": "Stagflatie-grind",
+      "prob": 45,
+      "horizon": "3–6 maanden",
+      "desc": "Olie blijft $95–115, CPI 3,5–4%, de Fed pauzeert in oktober maar verhoogt nog één keer voor het eind van het jaar. 10-jaarsrente schommelt tussen 4,9 en 5,4%. Banengroei zwak maar positief. Aandelen bewegen zijwaarts met dalingen van 5–10%.",
+      "signals": ["CPI blijft boven 3,5%", "Brent tussen $95 en $115", "NFP tussen 0 en +100k", "10j tussen 4,9% en 5,4%"],
+      "impact": { "miners": -1, "crcl": 1, "mag7": -1, "insider": -1 },
+      "actions": [
+        "Mijnen houden zonder bij te kopen; hoge olie drukt marges.",
+        "CRCL is hier je sterkste pijler: hoge rente = meer rente-inkomsten op reserves.",
+        "Mag 7 alleen selectief bijkopen na sterke cijfers, in drie stappen.",
+        "Small caps klein houden; herfinanciering is duur."
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "Olieschok en escalatie",
+      "prob": 20,
+      "horizon": "0–3 maanden",
+      "desc": "Hormuz escaleert verder (meer tankeraanvallen, bredere blokkade), Brent boven $120, CPI boven 4%. De Fed verhoogt in oktober of december, de 10-jaarsrente breekt door 5,4%. Risk-off op de aandelenmarkt.",
+      "signals": ["Brent > $115", "CPI > 4%", "10j > 5,36% (nieuwe top)", "Kans op Fed-verhoging > 50%"],
+      "impact": { "miners": 0, "crcl": 0, "mag7": -2, "insider": -2 },
+      "actions": [
+        "Mijnen: eerst geraakt door liquidatie en energiekosten, daarna kan goud als veilige haven aantrekken. Niet in paniek verkopen; wacht op goud boven $4.450.",
+        "Mag 7 en small caps afbouwen volgens de stopregels.",
+        "CRCL houden: hogere rente compenseert crypto-zwakte deels."
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "Groeischok en kredietbreuk",
+      "prob": 20,
+      "horizon": "1–6 maanden",
+      "desc": "De banenmarkt kantelt naar krimp, private credit-fondsen beperken uitstappen verder, AI-investeringen worden teruggeschroefd. De rente daalt snel, de Fed draait naar renteverlagingen. Vergelijk 7 augustus: −23k banen en GDX +21% in één week.",
+      "signals": ["NFP negatief", "10j < 4,8%", "Nieuwe gating bij grote kredietfondsen", "Hyperscalers verlagen capex-guidance"],
+      "impact": { "miners": 2, "crcl": -2, "mag7": -2, "insider": -2 },
+      "actions": [
+        "Mijnen bijkopen in drie tranches: dit is hun beste scenario.",
+        "CRCL afbouwen of afdekken: renteverlagingen raken de kern van het verdienmodel.",
+        "Mag 7 en small caps afbouwen; wachten op capitulatie voor herinstap."
+      ]
+    },
+    {
+      "id": "s4",
+      "name": "De-escalatie en zachte landing",
+      "prob": 15,
+      "horizon": "3–9 maanden",
+      "desc": "Hormuz gaat weer open, olie zakt onder $85, inflatie koelt af, de 10-jaarsrente daalt richting 4,5%, de Fed is klaar met verhogen. Aandelen herstellen, techleiders voorop.",
+      "signals": ["Brent < $85", "CPI richting 3%", "10j < 4,7%", "Akkoord VS–Iran"],
+      "impact": { "miners": 1, "crcl": 1, "mag7": 2, "insider": 2 },
+      "actions": [
+        "Mag 7 opbouwen; dit is hun scenario.",
+        "Mijnen houden: goud vlakker, maar lagere energiekosten verbeteren de marges.",
+        "CRCL houden: rente iets lager, maar crypto-sentiment beter."
+      ]
+    }
+  ],
+  "positions": [
+    {
+      "id": "miners",
+      "name": "Goud- en zilvermijnen",
+      "tickers": "Jouw mijnaandelen/ETF's (bijv. GDX, GDXJ, SIL, SILJ)",
+      "role": "Grootste positie · inflatie- en crisishefboom",
+      "stance": "aanhouden",
+      "stanceNote": "Houden, niet bijkopen tot goud en de rente een richting kiezen.",
+      "myWeight": null,
+      "now": "Goud ~$4.185, 25% onder het record ($5.590, 28 jan). Zilver ~$56,8, ruim 50% onder de top (boven $121, 29 jan) en −10% in een maand. WTI ~$97 drukt de marges: een analyse van begin september waarschuwde dat goud richting $4.000 met olie boven $95 de margewinst binnen twee kwartalen kan wegvagen. Daar zitten we nu dicht tegenaan.",
+      "bull": ["Fed draait naar renteverlagingen (groeischok)", "Dalende reële rente", "Olie omlaag = hogere marges", "Geopolitieke escalatie trekt veilige-havenvraag"],
+      "bear": ["10j boven 5% houdt reële rente hoog", "Olie > $100 verhoogt kosten", "Sterke dollar", "Gedwongen verkopen bij een brede aandelendaling"],
+      "levels": [
+        { "label": "Goud $4.000", "meaning": "Cruciale steun. Weekslot eronder = afbouwsignaal." },
+        { "label": "Goud $4.200–4.450", "meaning": "Herovering op volume = bevestiging nieuwe opwaartse trend." },
+        { "label": "Zilver $55", "meaning": "Steun; eronder versnelt de daling in zilvermijnen." },
+        { "label": "Zilver $60–65", "meaning": "Herstelzone; boven $64 is de trend weer positief." },
+        { "label": "Goud/olie < 40", "meaning": "Margedruk: energie eet de winst op." }
+      ],
+      "rules": [
+        "Niet bijkopen zolang goud op weekbasis onder $4.200 sluit én WTI boven $95 staat.",
+        "Weekslot goud onder $4.000: verklein met een derde, junior- en zilvermijnen eerst (hoogste hefboom).",
+        "Bijkopen in drie tranches zodra NFP negatief is, óf de 10j onder 4,8% zakt, óf goud boven $4.450 sluit.",
+        "Stel zelf een maximum voor deze positie vast (bijvoorbeeld 25–35% van je vermogen) en houd je eraan."
+      ],
+      "catalysts": ["FOMC 28 okt", "NFP 6 nov", "CPI 10 nov", "Kwartaalcijfers mijnbouwers (kosten per ounce)"]
+    },
+    {
+      "id": "crcl",
+      "name": "Circle (CRCL)",
+      "tickers": "CRCL",
+      "role": "Rente- en stablecoinpositie",
+      "stance": "aanhouden",
+      "stanceNote": "Houden tot de cijfers van 4 nov; dan beslissen op USDC-groei.",
+      "myWeight": null,
+      "now": "Rond $84 (15 okt, +6% intraday op CFTC-nieuws over crypto-marktstructuur), na een terugval van de lage $90. USDC-circulatie $73,3 mrd per 30 juni (+19% j/j). Circa 95% van de omzet is rente op de reserves ($667,7 mln van $701,3 mln in Q2). Eigen vuistregel: elke 0,25% renteverschil is ruwweg $45 mln per kwartaal aan rente-inkomsten.",
+      "bull": ["Rente blijft langer hoog", "USDC-circulatie groeit", "Duidelijke Amerikaanse regels (CFTC, marktstructuur)", "Circle Payments Network groeit snel (+76% k/k in Q2)"],
+      "bear": ["Fed draait naar renteverlagingen", "Crypto risk-off (BTC < $75k)", "USDC-groei stokt", "Concurrentie van Tether en bank-stablecoins"],
+      "levels": [
+        { "label": "$90–93", "meaning": "Weerstand: recente top van waar het aandeel terugviel." },
+        { "label": "$80", "meaning": "Steun in de huidige range." },
+        { "label": "$75", "meaning": "Openingsniveau 15 okt; weekslot eronder = trendbreuk." }
+      ],
+      "rules": [
+        "Niet bijkopen vóór de cijfers van 4 nov.",
+        "Na de cijfers alleen bijkopen als USDC-circulatie kwartaal-op-kwartaal groeit.",
+        "Weekslot onder $75 terwijl BTC onder $75k staat: verklein met een derde.",
+        "Draait de Fed naar verlagingen (scenario 3), schuif dan geleidelijk van CRCL naar mijnen."
+      ],
+      "catalysts": ["FOMC 28 okt", "Q3-cijfers 4 nov", "CFTC-regelgeving", "BTC-trend"]
+    },
+    {
+      "id": "mag7",
+      "name": "Magnificent 7",
+      "tickers": "AAPL · MSFT · GOOGL · AMZN · META · NVDA · TSLA",
+      "role": "Groei- en AI-positie",
+      "stance": "voorzichtig",
+      "stanceNote": "Wachten op de cijfers; AI-investeringen zijn de toets.",
+      "myWeight": null,
+      "now": "Chip-uitverkoop: Kospi −7,6% op 15 okt (handel tijdelijk stilgelegd), TSMC −4% ondanks recordwinst, Nvidia −3,2% en techsector −2,6% op 14 okt. Een 10-jaarsrente boven 5% drukt de waardering van langlopende groeiwinsten. Nasdaq ~26.713.",
+      "bull": ["Hyperscalers houden AI-capex hoog", "Rente zakt onder 5%", "Sterke cloud- en advertentiecijfers", "De-escalatie Hormuz"],
+      "bear": ["Capex-verlaging of twijfel over AI-rendement", "10j > 5,36%", "Verdere chip-uitverkoop in Azië", "Nieuwe Fed-verhoging"],
+      "levels": [
+        { "label": "S&P 500 ~7.700", "meaning": "Huidig niveau; −10% vanaf de top = risk-off-regel." },
+        { "label": "10j 5,0%", "meaning": "Boven deze grens geen nieuwe techaankopen." }
+      ],
+      "rules": [
+        "Niet bijkopen vóór 28–29 okt (Microsoft, Alphabet, Amazon en de Fed).",
+        "Na de cijfers in drie stappen bijkopen, alleen als de capex-guidance stand houdt én de 10j onder 5% staat.",
+        "Verlaagt een bedrijf zijn AI-investeringen of mist het de omzetverwachting, verklein dan die naam.",
+        "Nvidia (17 nov) pas beoordelen na de hyperscaler-cijfers; die bepalen de vraag."
+      ],
+      "catalysts": ["META en TSLA 21 okt", "MSFT en GOOGL 28 okt", "AMZN 29 okt", "AAPL 2 nov", "NVDA 17 nov"]
+    },
+    {
+      "id": "insider",
+      "name": "Insider-trades (Wolf of Washington)",
+      "tickers": "Kleine aandelen uit politieke transactiemeldingen",
+      "role": "Satelliet · hoog risico, klein houden",
+      "stance": "voorzichtig",
+      "stanceNote": "Klein houden met strikte regels; hoge rente is slecht voor small caps.",
+      "myWeight": null,
+      "now": "Wolf of Washington volgt aandelentransacties van Amerikaanse politici op basis van de verplichte STOCK Act-meldingen. Die meldingen mogen tot 45 dagen na de transactie komen, dus je stapt vaak weken later in dan de politicus. De claim van 3–5% outperformance komt van de app zelf en is niet onafhankelijk getoetst. Kleine bedrijven hebben het extra zwaar bij een rente van 5% (dure herfinanciering).",
+      "bull": ["Clusters: meerdere politici of commissieleden in hetzelfde aandeel", "Rente daalt", "Sectorwind mee (defensie, energie bij escalatie)"],
+      "bear": ["Late melding (koers al gelopen)", "Lage liquiditeit en brede spreads", "Kredietstress raakt kleine bedrijven eerst"],
+      "levels": [
+        { "label": "Max 1–2% per positie", "meaning": "Een mislukte trade mag je plan niet raken." },
+        { "label": "Max ~10% totaal", "meaning": "Satelliet blijft satelliet." },
+        { "label": "Stop −15 à −20%", "meaning": "Harde stop, geen uitzonderingen." }
+      ],
+      "rules": [
+        "Check transactiedatum tegen meldingsdatum: ouder dan 30 dagen = halve positie of overslaan.",
+        "Alleen aandelen met voldoende dagvolume (vuistregel > $5 mln per dag).",
+        "Nooit bijkopen in een verliezer.",
+        "Weeg clusters en commissie-relevantie zwaarder dan losse trades."
+      ],
+      "catalysts": ["Nieuwe meldingen in de app", "Rentebesluit 28 okt", "Small-cap-index vs. 10j"]
+    }
+  ],
+  "triggers": [
+    { "id": "t_10y", "label": "US 10-jaarsrente", "marketKey": "us10y", "unit": "%", "dir": "up", "warn": 5.0, "danger": 5.36, "meaning": "Hoofdvariabele. Boven 5% staan mijnen, Mag 7 en small caps onder druk; alleen Circle profiteert.", "affects": ["miners", "mag7", "insider", "crcl"] },
+    { "id": "t_brent", "label": "Brent-olie", "marketKey": "brent", "unit": "$", "dir": "up", "warn": 95, "danger": 115, "meaning": "Boven $100 = inflatiedruk en hogere kosten voor mijnen.", "affects": ["miners", "mag7"] },
+    { "id": "t_goldoil", "label": "Goud/olie-ratio", "computed": "gold/wti", "unit": "×", "dir": "down", "warn": 45, "danger": 40, "meaning": "Grove maat voor mijnmarges: onder 40 eten energiekosten de winst op.", "affects": ["miners"] },
+    { "id": "t_gold", "label": "Goud", "marketKey": "gold", "unit": "$", "dir": "down", "warn": 4200, "danger": 4000, "meaning": "Weekslot onder $4.000 = afbouwregel mijnen.", "affects": ["miners"] },
+    { "id": "t_silver", "label": "Zilver", "marketKey": "silver", "unit": "$", "dir": "down", "warn": 60, "danger": 55, "meaning": "Onder $55 versnelt de daling in zilvermijnen.", "affects": ["miners"] },
+    { "id": "t_cpi", "label": "CPI-inflatie (j/j)", "current": 3.7, "asOf": "sep, gepubliceerd 14 okt", "unit": "%", "dir": "up", "warn": 3.5, "danger": 4.0, "meaning": "Boven 4% wordt een extra Fed-verhoging waarschijnlijk.", "affects": ["mag7", "insider", "crcl"] },
+    { "id": "t_jobs", "label": "Banengroei, gem. 3 mnd", "current": 51, "asOf": "jul −10k, aug +133k, sep +29k", "unit": "k", "dir": "down", "warn": 75, "danger": 0, "meaning": "Onder nul = groeischok: goed voor mijnen, slecht voor CRCL en Mag 7.", "affects": ["miners", "crcl", "mag7"] },
+    { "id": "t_fed", "label": "Kans Fed-verhoging 28 okt", "current": 15, "asOf": "CME FedWatch ~85% pauze, 16 okt", "unit": "%", "dir": "up", "warn": 40, "danger": 70, "meaning": "Een verhoging zou de rente verder opdrijven: risk-off.", "affects": ["mag7", "insider", "miners", "crcl"] },
+    { "id": "t_dxy", "label": "Dollarindex", "marketKey": "dxy", "unit": "", "dir": "up", "warn": 103, "danger": 105, "meaning": "Sterke dollar drukt goud en grondstoffen.", "affects": ["miners"] },
+    { "id": "t_jpy", "label": "USD/JPY", "marketKey": "usdjpy", "unit": "", "dir": "up", "warn": 158, "danger": 160, "meaning": "Boven 160 dreigt ingrijpen door Japan: carry-trades worden snel afgebouwd.", "affects": ["mag7", "insider"] },
+    { "id": "t_vix", "label": "VIX (angstindex)", "marketKey": "vix", "unit": "", "dir": "up", "warn": 22, "danger": 30, "meaning": "Boven 30 = paniekmodus; dan geen nieuwe posities openen.", "affects": ["mag7", "insider"] },
+    { "id": "t_btc", "label": "Bitcoin", "marketKey": "btc", "unit": "$", "dir": "down", "warn": 75000, "danger": 65000, "meaning": "Crypto-sentiment stuurt CRCL mee.", "affects": ["crcl"] },
+    { "id": "t_credit", "label": "Private credit: uitstapverzoeken", "current": 16.8, "asOf": "Blue Owl OCIC Q3 (Q2: 18,8%), plafond 5%", "unit": "%", "dir": "up", "warn": 10, "danger": 25, "meaning": "Hoe ver de vraag naar uitstap boven het plafond ligt: maat voor kredietstress.", "affects": ["insider", "mag7"] },
+    { "id": "t_chips", "label": "Chip-stress: Kospi dagbeweging", "current": -7.6, "asOf": "15 okt", "unit": "%", "dir": "down", "warn": -3, "danger": -6, "meaning": "Een grote daling in Korea ging eerder vooraf aan druk op Nvidia en de Nasdaq.", "affects": ["mag7"] }
+  ],
+  "exposure": {
+    "factors": ["Rente ↑", "Olie ↑", "Dollar ↑", "Goud ↑", "AI-capex ↑", "Crypto ↑", "Kredietstress ↑"],
+    "rows": [
+      { "id": "miners", "values": [-2, -1, -1, 2, 0, 0, 1] },
+      { "id": "crcl", "values": [2, 0, 0, 0, 0, 2, -1] },
+      { "id": "mag7", "values": [-2, -1, -1, 0, 2, 0, -1] },
+      { "id": "insider", "values": [-2, -1, 0, 0, 0, 0, -2] }
+    ],
+    "note": "+2 = profiteert sterk, −2 = lijdt sterk als die factor stijgt. Eigen inschatting."
+  },
+  "calendar": [
+    { "date": "2026-10-21", "time": "nabeurs", "event": "Cijfers Meta en Tesla", "why": "Eerste toets van de AI-investeringsbegroting.", "affects": ["mag7"] },
+    { "date": "2026-10-28", "time": "19:00", "event": "Fed-rentebesluit", "why": "Markt prijst ~85% pauze. Let op de toon over een volgende verhoging.", "affects": ["miners", "crcl", "mag7", "insider"] },
+    { "date": "2026-10-28", "time": "nabeurs", "event": "Cijfers Microsoft en Alphabet", "why": "Cloudgroei en capex-guidance bepalen de vraag naar chips.", "affects": ["mag7"] },
+    { "date": "2026-10-29", "time": "13:30", "event": "BBP Q3 (eerste raming) en PCE-inflatie sep", "why": "Groei vs. inflatie: welk scenario wint terrein?", "affects": ["miners", "crcl", "mag7"] },
+    { "date": "2026-10-29", "time": "nabeurs", "event": "Cijfers Amazon (verwacht)", "why": "AWS-groei en investeringen.", "affects": ["mag7"] },
+    { "date": "2026-10-30", "time": "04:00", "event": "Bank of Japan-besluit", "why": "Leunt tegen een tweede verhoging op rij; een verrassing raakt de yen-carry.", "affects": ["mag7", "insider"] },
+    { "date": "2026-11-02", "time": "nabeurs", "event": "Cijfers Apple (verwacht)", "why": "Minder AI-capex-gevoelig; consumentenvraag.", "affects": ["mag7"] },
+    { "date": "2026-11-04", "time": "", "event": "Kwartaalcijfers Circle (Q3)", "why": "USDC-groei, rente-inkomsten, distributiekosten. Beslismoment CRCL.", "affects": ["crcl"] },
+    { "date": "2026-11-06", "time": "14:30", "event": "Banenrapport oktober (NFP)", "why": "Negatief cijfer = groeischok-scenario.", "affects": ["miners", "crcl", "mag7", "insider"] },
+    { "date": "2026-11-10", "time": "14:30", "event": "CPI oktober", "why": "Boven 4% maakt een decemberverhoging waarschijnlijk.", "affects": ["miners", "crcl", "mag7", "insider"] },
+    { "date": "2026-11-13", "time": "14:30", "event": "PPI oktober", "why": "Groothandelsprijzen liepen in sep op met 6,3% j/j.", "affects": ["mag7"] },
+    { "date": "2026-11-17", "time": "", "event": "Cijfers Nvidia", "why": "Bevestigt of ontkracht de AI-chipvraag.", "affects": ["mag7"] },
+    { "date": "2026-11-25", "time": "14:30", "event": "PCE-inflatie oktober", "why": "De inflatiemaat waar de Fed op stuurt.", "affects": ["miners", "crcl", "mag7"] }
+  ],
+  "claims": [
+    { "text": "De Fed blijft hawkish en verhoogt mogelijk.", "source": "Handelsplan juli", "date": "2026-07-22", "status": "bevestigd", "note": "+25 bp op 16 sep; notulen wijzen op nog een stap dit jaar." },
+    { "text": "Olie naar $100+ bij escalatie rond Hormuz.", "source": "Handelsplan juli", "date": "2026-07-22", "status": "bevestigd", "note": "Brent ~$104–106 half oktober; blokkade sinds 14 juli hersteld." },
+    { "text": "Goud is de ultieme veilige haven in deze fase.", "source": "Handelsplan juli", "date": "2026-07-22", "status": "weerlegd", "note": "Goud −4% in een maand ondanks oorlog en inflatie; de hoge reële rente weegt zwaarder." },
+    { "text": "Private credit is de nieuwe junkbondmarkt; fondsen beperken uitstappen.", "source": "Monetary Matters / Ed Dowd (via juli-plan)", "date": "2026-07-22", "status": "bevestigd", "note": "Blue Owl Q3: $4,2 mrd aan uitstapverzoeken (Q2 $4,7 mrd), techfonds 39%; 5%-plafond. Stress licht afnemend." },
+    { "text": "Verzekeraars hebben via CLO-tranches 90–100× effectieve hefboom.", "source": "Monetary Matters / Ed Dowd (via juli-plan)", "date": "2026-07-22", "status": "open", "note": "Bron-claim, niet onafhankelijk bevestigd." },
+    { "text": "Korea is de waarschuwing: hefboomproducten veroorzaken crashes.", "source": "Handelsplan juli", "date": "2026-07-22", "status": "open", "note": "Kospi −7,6% op 15 okt met handelsstop na chip-uitverkoop; rol van hefboom-ETF's niet bevestigd in de bronnen." },
+    { "text": "Record margin debt ($1,42 bln) maakt de markt kwetsbaar.", "source": "Handelsplan juli (FINRA, mei)", "date": "2026-07-22", "status": "open", "note": "Nieuwere FINRA-cijfers nog niet verwerkt." },
+    { "text": "AI-euforie houdt de aandelenmarkt overeind.", "source": "Handelsplan juli", "date": "2026-07-22", "status": "open", "note": "Onder druk: chip-uitverkoop half oktober. Cijfers 21 okt–17 nov beslissen." }
+  ],
+  "sources": [
+    { "label": "TheStreet, slot 15 okt", "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-oct-15-2026" },
+    { "label": "Benzinga, 16 okt (rente, dollar, olie, goud, BTC, FedWatch)", "url": "https://www.benzinga.com/markets/equities/26/10/62404483/stock-market-today-dow-sp-500-futures-rise-as-bessent-intensifies-economic-pressure-on-iran-treasury-yields-cool-off-tsla-aa-ibkr-in-focus" },
+    { "label": "Chase: Fed sep-verhoging en CPI sep", "url": "https://www.chase.com/personal/investments/learning-and-insights/article/will-the-federal-reserve-hike-rates-at-october-2026-fomc-meeting" },
+    { "label": "FXMacroData: banenrapport september", "url": "https://fxmacrodata.com/articles/september-2026-nfp-jobs-report-why-it-matters" },
+    { "label": "Fortune: zilver 15 okt", "url": "https://fortune.com/article/current-price-of-silver-10-15-2026/" },
+    { "label": "Metalcharts: goudrecord", "url": "https://metalcharts.org/gold-all-time-high" },
+    { "label": "Faruzo: zilverrecord en daling", "url": "https://www.faruzo.com/blog/silver-price-statistics-2026/" },
+    { "label": "Discovery Alert: mijnen vs. goud (sep)", "url": "https://discoveryalert.com/analysis/gold-miners-outperform-bullion-september-2026/" },
+    { "label": "Mining.com: mijnen +20% (7 aug)", "url": "https://www.mining.com/gold-miners-surge-more-than-20-in-breakout-week/" },
+    { "label": "StocksToTrade: CRCL 15 okt", "url": "https://stockstotrade.com/news/circle-internet-group-inc-crcl-news-2026_10_15/" },
+    { "label": "Forex Crunch: Circle en rente", "url": "https://www.forexcrunch.com/blog/2026/10/10/circle-usdc-earnings-bet-us-interest-rates/" },
+    { "label": "Circle: cijfers Q3 op 4 nov", "url": "https://www.circle.com/pressroom/circle-to-announce-q3-2026-financial-results-on-november-4-2026" },
+    { "label": "Smart Calendars: Mag 7-cijferdata", "url": "https://www.smartcalendars.ai/en/feeds/magnificent-7-earnings-calendar" },
+    { "label": "FedRateCalc: macrokalender", "url": "https://fedratecalc.com/us-economic-calendar/" },
+    { "label": "Wikipedia: Hormuz-crisis 2026", "url": "https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis" },
+    { "label": "24/7 Wall St.: private credit (Blue Owl)", "url": "https://247wallst.com/investing/2026/10/05/the-2-trillion-private-credit-market-just-got-some-good-news-but-its-biggest-test-may-still-be-coming/" },
+    { "label": "FinanceCalendar: BOJ 30 okt", "url": "https://www.financecalendar.com/event/bank-of-japan-rate-decision-october-2026/" },
+    { "label": "Wolf of Washington (App Store)", "url": "https://apps.apple.com/app/id6744653240" }
+  ]
+}

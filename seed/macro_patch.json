@@ -1,0 +1,922 @@
+{
+ "macro": {
+  "updatedAt": "2026-10-16T22:45:00+02:00",
+  "source": "Startversie door Claude, cijfers t/m 15 okt 2026",
+  "riskMode": "defensief",
+  "regime": "Stagflatie-light",
+  "headline": "De obligatiemarkt is de stressplek",
+  "summary": "Inflatie loopt op door de olieschok (CPI 3,7%), de Fed verhoogde in september en de 30-jaarsrente piekte op het hoogste niveau sinds 2002. Opvallend: de inflatieverwachting is maar 2,32%, dus de rentestijging komt van de reële rente (2,78%). Die drukt tegelijk op goud, tech en kleine bedrijven. Aandelen en junk-obligaties zijn nog rustig, en de arbeidsmarkt koelt af zonder ontslagen.",
+  "compass": {
+   "growth": -0.35,
+   "inflation": 0.55,
+   "heading": {
+    "growth": -0.2,
+    "inflation": 0
+   },
+   "why": "Groei koelt af (banen +29k, werkloosheid 4,2%) en inflatie stijgt (3,4% → 3,7%). Anders dan in de jaren 70 is de reële rente hoog. Daarom krijgt goud nog geen wind mee."
+  },
+  "keyPoints": [
+   {
+    "tone": "bad",
+    "title": "Rente stijgt om de verkeerde reden",
+    "text": "Reële rente 2,78% (een jaar geleden 1,76%), inflatieverwachting maar 2,32%. Schuld en termijnpremie drijven de lange rente, geen inflatieangst."
+   },
+   {
+    "tone": "warn",
+    "title": "Inflatie is een energieschok",
+    "text": "CPI 3,7%, maar de kern is 2,6%. Olie blijft boven $95 door de Hormuz-blokkade; groothandelsprijzen +6,3%."
+   },
+   {
+    "tone": "warn",
+    "title": "Werk: weinig aannemen, weinig ontslaan",
+    "text": "Banen +29k in september en werkloosheid 4,2%, maar WW-aanvragen laag (199k). Afkoeling, nog geen recessiesignaal."
+   },
+   {
+    "tone": "warn",
+    "title": "Liquiditeit vlak, buffer leeg",
+    "text": "Netto liquiditeit ~$5,87 bln. QT is voorbij, maar de reverse repo is leeg en Warsh wil een kleinere Fed-balans."
+   },
+   {
+    "tone": "good",
+    "title": "Krediet rustig aan de oppervlakte",
+    "text": "Junk-spread 3,16%: rustig. Wel klem in private credit, waar uitstapverzoeken ver boven het plafond liggen."
+   },
+   {
+    "tone": "bad",
+    "title": "AI-chips kraken, de VIX slaapt",
+    "text": "Kospi −7,6% in één dag en chips onder druk, maar de angstindex staat op 16,9. De techcijfers van 21–29 okt beslissen."
+   }
+  ],
+  "pillars": [
+   {
+    "id": "inflatie",
+    "stage": 1,
+    "name": "Inflatie & energie",
+    "q": "Wordt geld minder waard?",
+    "status": "gespannen",
+    "keys": [
+     "cpiYoY",
+     "breakeven10",
+     "brent"
+    ],
+    "reading": "Headline-inflatie 3,7% door olie, kern 2,6%. De obligatiemarkt ziet het als tijdelijk: inflatieverwachting 2,32%.",
+    "effects": {
+     "miners": -1,
+     "crcl": 0,
+     "mag7": -1,
+     "insider": -1
+    }
+   },
+   {
+    "id": "groei",
+    "stage": 1,
+    "name": "Groei & werk",
+    "q": "Draait de economie?",
+    "status": "gespannen",
+    "keys": [
+     "nfp3m",
+     "unrate",
+     "claims"
+    ],
+    "reading": "Banengroei bijna nul en werkloosheid 4,2%, maar weinig ontslagen. Afkoeling, geen krimp.",
+    "effects": {
+     "miners": 1,
+     "crcl": -1,
+     "mag7": -1,
+     "insider": -1
+    }
+   },
+   {
+    "id": "rente",
+    "stage": 2,
+    "name": "Rente & obligaties",
+    "q": "Wat kost geld?",
+    "status": "stress",
+    "keys": [
+     "us10y",
+     "us30y",
+     "realYield10"
+    ],
+    "reading": "Fed-rente 3,75–4,00% na de verhoging in september. 10-jaars 5,1%, 30-jaars 5,4% (piek 5,73%). De reële rente van 2,78% is de grootste rem op goud en tech.",
+    "effects": {
+     "miners": -2,
+     "crcl": 2,
+     "mag7": -2,
+     "insider": -2
+    }
+   },
+   {
+    "id": "liquiditeit",
+    "stage": 2,
+    "name": "Liquiditeit",
+    "q": "Is er geld in het systeem?",
+    "status": "gespannen",
+    "keys": [
+     "netLiq",
+     "netLiqChg"
+    ],
+    "reading": "De Fed koopt weer T-bills (~$40 mld per maand), maar de netto liquiditeit is vlak (~$5,87 bln) en de reverse-repobuffer is op.",
+    "effects": {
+     "miners": 0,
+     "crcl": 0,
+     "mag7": -1,
+     "insider": -1
+    }
+   },
+   {
+    "id": "dollar",
+    "stage": 3,
+    "name": "Dollar & yen",
+    "q": "Is de dollar schaars?",
+    "status": "rustig",
+    "keys": [
+     "dxy",
+     "usdjpy"
+    ],
+    "reading": "Dollar neutraal rond 102. De yen staat bij 158: boven 160 grijpt Japan in. De BOJ beslist op 30 oktober.",
+    "effects": {
+     "miners": 0,
+     "crcl": 0,
+     "mag7": 0,
+     "insider": 0
+    }
+   },
+   {
+    "id": "krediet",
+    "stage": 3,
+    "name": "Krediet",
+    "q": "Breekt er iets?",
+    "status": "gespannen",
+    "keys": [
+     "hySpread"
+    ],
+    "reading": "Junk-obligaties rustig (spread 3,16%). Private credit staat onder druk: uitstapverzoeken liggen ver boven het plafond.",
+    "effects": {
+     "miners": 0,
+     "crcl": 0,
+     "mag7": 0,
+     "insider": -1
+    }
+   },
+   {
+    "id": "sentiment",
+    "stage": 3,
+    "name": "Sentiment & AI",
+    "q": "Hoe zit de markt erin?",
+    "status": "stress",
+    "keys": [
+     "vix",
+     "kospi",
+     "btc"
+    ],
+    "reading": "AI-chips zitten in een uitverkoop, maar de angstindex is laag. Fragiel: een tegenvaller bij de techcijfers kan snel doorslaan.",
+    "effects": {
+     "miners": 0,
+     "crcl": -1,
+     "mag7": -2,
+     "insider": -1
+    }
+   }
+  ],
+  "positionImpact": {
+   "miners": {
+    "dir": -1,
+    "why": "Hoge reële rente en dure olie: dubbele tegenwind voor goud én marges."
+   },
+   "crcl": {
+    "dir": 1,
+    "why": "Hoge korte rente betekent meer rente-inkomsten; crypto-sentiment is de rem."
+   },
+   "mag7": {
+    "dir": -1,
+    "why": "Reële rente drukt waarderingen; de AI-investeringen worden getest."
+   },
+   "insider": {
+    "dir": -1,
+    "why": "Kleine bedrijven betalen de hoge rente bij herfinanciering."
+   }
+  },
+  "lenses": [
+   {
+    "id": "rebel",
+    "name": "Liquiditeit & schuld",
+    "who": "Rebel Capitalist (George Gammon)",
+    "method": "Kijkt eerst naar het geldsysteem: de Fed-balans, de schatkistrekening (TGA), reverse repo, staatsschuld en tekort ten opzichte van de nominale groei, en de wereldwijde vraag naar dollars.",
+    "question": "Is er genoeg geld in het systeem, en breekt er iets in de obligatiemarkt?",
+    "checks": [
+     {
+      "id": "fed",
+      "q": "Wat doet de Fed met haar balans?",
+      "status": "gespannen",
+      "answer": "QT is sinds eind 2025 gestopt; de Fed koopt ~$40 mld per maand aan T-bills om de reserves op peil te houden. Maar de rente ging in september omhoog, en Warsh wil een kleinere balans."
+     },
+     {
+      "id": "netliq",
+      "q": "Netto liquiditeit (Fed-balans − TGA − reverse repo)",
+      "status": "gespannen",
+      "key": "netLiq",
+      "answer": "Ongeveer $5,87 bln (9 okt) en vlak. De reverse-repobuffer is leeg: elke opbouw van de schatkistrekening haalt nu direct geld uit de markt."
+     },
+     {
+      "id": "bonds",
+      "q": "Wat zegt de obligatiemarkt?",
+      "status": "stress",
+      "key": "realYield10",
+      "answer": "De 30-jaarsrente piekte op 5,73% (hoogste sinds 2002) en de reële rente is 2,78%, een procentpunt hoger dan een jaar geleden, terwijl de inflatieverwachting maar 2,32% is. De stijging komt van reële rente en termijnpremie."
+     },
+     {
+      "id": "fiscal",
+      "q": "Schuld en tekort versus rente",
+      "status": "stress",
+      "answer": "Oorlog, hoge rentelasten en een groot tekort betekenen veel nieuwe staatsleningen. Gammon waarschuwde begin oktober dat de volatiliteit in obligaties snel oploopt."
+     },
+     {
+      "id": "dollar",
+      "q": "Is de dollar schaars?",
+      "status": "rustig",
+      "key": "dxy",
+      "answer": "Nee: de dollarindex rond 102 is neutraal. Wereldwijde schulden in dollars houden de vraag hoog. Let op USD/JPY: boven 160 dreigt ingrijpen en het afbouwen van carry-trades."
+     },
+     {
+      "id": "credit",
+      "q": "Breekt er iets in krediet?",
+      "status": "gespannen",
+      "key": "hySpread",
+      "answer": "De junk-spread van 3,16% is rustig, maar private credit zit klem: uitstapverzoeken liggen ver boven het plafond van 5%. Gammon waarschuwt al maanden voor een nieuwe subprime-crisis."
+     }
+    ],
+    "take": "De stress zit in de obligatiemarkt, niet in aandelen. Zolang de lange rente oploopt door termijnpremie, hebben risico-assets én goud tegenwind. Het kantelpunt komt als de Fed of de schatkist moet ingrijpen (renteverlaging, meer staatsleningen opkopen). Dan daalt de reële rente, en dan zijn goud en mijnen de grootste winnaars.",
+    "basis": "Startversie door Claude, opgebouwd uit de onderwerpen die Gammon in 2026 volgt: obligatievolatiliteit, tekort versus rente, Fed-balans, TGA, de dollar en kredietrisico. Nog geen eigen transcript verwerkt.",
+    "updatedAt": "2026-10-16T22:45:00+02:00"
+   },
+   {
+    "id": "tr",
+    "name": "Geldstromen & marktstructuur",
+    "who": "TradersReality",
+    "method": "Hun Hybrid System combineert prijsactie, marktpsychologie en liquiditeitszones. Met PVSRA-volumekaarsen (vector candles) zoeken ze de voetafdruk van grote partijen, en ze bekijken de hele markt tegelijk: indices, Mag 7, obligaties, dollar en crypto.",
+    "question": "Waar gaat het grote geld naartoe, en bij welke niveaus?",
+    "checks": [
+     {
+      "id": "flow",
+      "q": "Risk-on of risk-off?",
+      "status": "gespannen",
+      "answer": "Risk-off rotatie: geld trekt uit AI-chips (Kospi −7,6%, TSMC −4%, Nvidia −3,2%) naar obligaties en defensieve sectoren (zorg +2,4% op 14 okt). De VIX blijft laag (16,9): herpositionering, geen paniek."
+     },
+     {
+      "id": "intermarket",
+      "q": "Bevestigen de markten elkaar?",
+      "status": "gespannen",
+      "answer": "Nee. De dollar is stabiel, maar goud en zilver dalen mee met tech terwijl olie hoog blijft. Dat wijst op hoge reële rente en het afbouwen van posities, niet op een klassieke vluchthavenbeweging."
+     },
+     {
+      "id": "levels",
+      "q": "Waar liggen de liquiditeitszones?",
+      "status": "info",
+      "answer": "Goud: onder $4.000 (psychologisch niveau, stops) en boven $4.200–4.450 (eerdere weerstand). Zilver: $55 en $60. CRCL: $75 en $90–93. 10-jaars: 5,36% (top vorige week)."
+     },
+     {
+      "id": "trend",
+      "q": "Trend ten opzichte van het 50- en 200-daags gemiddelde",
+      "status": "info",
+      "auto": "levels",
+      "answer": "Wordt na elke handelsdag automatisch berekend (zie het niveaubord)."
+     },
+     {
+      "id": "mm",
+      "q": "Wat doen de market makers deze week?",
+      "status": "info",
+      "answer": "Nog geen TradersReality-transcript verwerkt. Plak hun weekoutlook of livestream om dit in te vullen."
+     }
+    ],
+    "take": "Het grote geld verlaat de AI-hoek en zoekt veiligheid, maar goud krijgt (nog) geen vluchthavenvraag. Voor mijnen: wacht op een herovering van $4.200 met volume voordat je bijkoopt. Een weekslot onder $4.000 is het signaal om af te bouwen.",
+    "basis": "Startversie door Claude op basis van hun publieke methode (Hybrid System, TradingView-indicator Traders Reality Main) en de marktcijfers. Nog geen eigen call van TradersReality.",
+    "updatedAt": "2026-10-16T22:45:00+02:00"
+   }
+  ],
+  "cycle": {
+   "updatedAt": "2026-10-17T00:30:00+02:00",
+   "verdict": "Laat in de cyclus: de eerste barsten, nog geen crash",
+   "summary": "We staan ongeveer waar de markt in de zomer en het najaar van 2007 stond. In een hoek van de kredietmarkt gaat het mis (toen subprimefondsen, nu private credit), terwijl de beurs vlak bij zijn record staat en de angst laag is. In 2007 duurde het vanaf hier nog een jaar tot de echte klap. Maar een late fase kan ook jaren duren: Greenspan waarschuwde in december 1996 al voor 'irrationele uitbundigheid', en daarna verdubbelde de beurs nog.",
+   "analogs": [
+    {
+     "label": "zomer 2007",
+     "what": "krediet",
+     "why": "Stress in een schaduwhoek van de kredietmarkt, terwijl de beurs op de top staat."
+    },
+    {
+     "label": "1999–2000",
+     "what": "euforie",
+     "why": "Bijna-record waardering en een markt die leunt op een paar techreuzen."
+    },
+    {
+     "label": "1973",
+     "what": "olie",
+     "why": "Een oorlog maakt olie duur en de inflatie loopt op terwijl de Fed verhoogt."
+    },
+    {
+     "label": "2022",
+     "what": "rente",
+     "why": "De reële rente stijgt: lastig voor goud(mijnen), tech en crypto."
+    }
+   ],
+   "cycles": [
+    {
+     "id": "sentiment",
+     "pos": 0.56,
+     "why": "De S&P 500 staat ca. 1% onder zijn record van 6 oktober, de waardering (CAPE 40,5) zit dicht bij het record van 2000 en er is $1,45 bln geleend om aandelen te kopen. Toch is de angst laag (VIX 16,9) terwijl AI-chips onderuitgaan: het patroon van net over de top.",
+     "extra": [
+      {
+       "label": "Goud & zilver",
+       "pos": 0.76,
+       "why": "Hun euforie was in januari (goud $5.590, zilver boven $121). Sindsdien goud −25% en zilver −53%: ze zitten al in de dalende helft van hun eigen cyclus."
+      }
+     ]
+    },
+    {
+     "id": "credit",
+     "pos": 0.57,
+     "why": "De junk-spread is nog laag (3,2%), maar private credit kraakt: wanbetalingen op een record (Fitch: 6,0%) en fondsen laten maar 5% per kwartaal uitstappen terwijl 17 tot 39% eruit wil."
+    },
+    {
+     "id": "economy",
+     "pos": 0.55,
+     "why": "De inflatie loopt op (3,7%) en de Fed verhoogt, terwijl de banengroei bijna stilvalt (+29k in september). Ontslagen blijven laag (Sahm-regel 0,0): laat in de cyclus, op de grens met afkoeling."
+    }
+   ],
+   "tipping": [
+    {
+     "id": "tp_hy",
+     "label": "Junk-spread boven 5%",
+     "key": "hySpread",
+     "dir": "up",
+     "near": 4,
+     "hit": 5,
+     "rule": "bereikt vanaf 5%",
+     "then": "in 2007–08 liep de spread op van het laagste niveau ooit (juni 2007) naar ca. 20% (dec 2008)"
+    },
+    {
+     "id": "tp_sahm",
+     "label": "Ontslagen nemen toe (Sahm-regel 0,5 of hoger)",
+     "key": "sahm",
+     "dir": "up",
+     "near": 0.3,
+     "hit": 0.5,
+     "rule": "bereikt vanaf 0,50",
+     "then": "sloeg sinds 1970 bij elke recessie vroeg aan (in 2024 één keer vals alarm)"
+    },
+    {
+     "id": "tp_fund",
+     "label": "Een groot fonds stopt uitstappen helemaal of gaat om",
+     "status": "gespannen",
+     "now": "uitstappen beperkt tot 5% per kwartaal, nog niet helemaal gestopt",
+     "then": "9 aug 2007 bevroor BNP Paribas drie fondsen; in maart 2008 moest Bear Stearns worden gered"
+    },
+    {
+     "id": "tp_fed",
+     "label": "De Fed verlaagt in paniek",
+     "status": "rustig",
+     "now": "de Fed verhoogt juist (sep 2026)",
+     "then": "sep 2007 −0,5%; jan 2008 een noodverlaging van −0,75% buiten het vaste schema"
+    },
+    {
+     "id": "tp_dd",
+     "label": "Beurs 20% onder het record",
+     "key": "spxDD",
+     "dir": "down",
+     "near": -10,
+     "hit": -20,
+     "rule": "bereikt bij 20% onder het record",
+     "then": "jun–jul 2008, ca. 2,5 maand vóór Lehman"
+    },
+    {
+     "id": "tp_oil",
+     "label": "Olie boven $120",
+     "key": "brent",
+     "dir": "up",
+     "near": 100,
+     "hit": 120,
+     "rule": "bereikt boven $120 (Brent)",
+     "then": "jul 2008 olie $147; kort daarna begon de echte val"
+    }
+   ]
+  }
+ },
+ "triggersAdd": [
+  {
+   "id": "t_30y",
+   "label": "US 30-jaarsrente",
+   "marketKey": "us30y",
+   "unit": "%",
+   "dir": "up",
+   "warn": 5.4,
+   "danger": 5.7,
+   "pillar": "rente",
+   "meaning": "Bond vigilantes: boven 5,7% (de piek sinds 2002) breekt er iets in de obligatiemarkt.",
+   "affects": [
+    "miners",
+    "mag7",
+    "insider"
+   ]
+  },
+  {
+   "id": "t_real",
+   "label": "Reële rente 10j (TIPS)",
+   "marketKey": "realYield10",
+   "unit": "%",
+   "dir": "up",
+   "warn": 2.0,
+   "danger": 2.5,
+   "pillar": "rente",
+   "meaning": "Grootste rem op goud. Boven 2,5% is historisch zware tegenwind; een daling is het startsein voor mijnen.",
+   "affects": [
+    "miners",
+    "mag7"
+   ]
+  },
+  {
+   "id": "t_be",
+   "label": "Inflatieverwachting 10j",
+   "marketKey": "breakeven10",
+   "unit": "%",
+   "dir": "up",
+   "warn": 2.6,
+   "danger": 3.0,
+   "pillar": "inflatie",
+   "meaning": "Stijgt deze, dan gaat de markt de inflatie wél geloven: slecht voor obligaties, goed voor goud.",
+   "affects": [
+    "miners",
+    "mag7"
+   ]
+  },
+  {
+   "id": "t_hy",
+   "label": "Junk-spread (HY OAS)",
+   "marketKey": "hySpread",
+   "unit": "%",
+   "dir": "up",
+   "warn": 4.0,
+   "danger": 5.0,
+   "pillar": "krediet",
+   "meaning": "Boven 5% is er kredietstress: risk-off voor small caps en tech.",
+   "affects": [
+    "insider",
+    "mag7"
+   ]
+  },
+  {
+   "id": "t_claims",
+   "label": "WW-aanvragen (wekelijks)",
+   "marketKey": "claims",
+   "unit": "k",
+   "dir": "up",
+   "warn": 260,
+   "danger": 300,
+   "pillar": "groei",
+   "meaning": "Loopt dit op, dan beginnen de ontslagen en wordt het groeischok-scenario actueel.",
+   "affects": [
+    "miners",
+    "crcl",
+    "mag7"
+   ]
+  },
+  {
+   "id": "t_netliq",
+   "label": "Netto liquiditeit, 4 weken",
+   "marketKey": "netLiqChg",
+   "unit": "Δ$mld",
+   "dir": "down",
+   "warn": -50,
+   "danger": -150,
+   "pillar": "liquiditeit",
+   "meaning": "Daalt de liquiditeit hard, dan verliezen risico-assets hun steun.",
+   "affects": [
+    "mag7",
+    "insider",
+    "crcl"
+   ]
+  },
+  {
+   "id": "t_sahm",
+   "label": "Sahm-regel (recessiesignaal)",
+   "marketKey": "sahm",
+   "unit": "",
+   "dir": "up",
+   "warn": 0.3,
+   "danger": 0.5,
+   "pillar": "groei",
+   "meaning": "Vanaf 0,5 nemen de ontslagen echt toe: sinds 1970 een vroeg recessiesignaal.",
+   "affects": [
+    "miners",
+    "crcl",
+    "mag7",
+    "insider"
+   ]
+  },
+  {
+   "id": "t_dd",
+   "label": "S&P 500 onder het record",
+   "marketKey": "spxDD",
+   "unit": "%",
+   "dir": "down",
+   "warn": -10,
+   "danger": -20,
+   "pillar": "sentiment",
+   "meaning": "−10% is een correctie, −20% een bear market: dan begint de crashfase.",
+   "affects": [
+    "mag7",
+    "insider"
+   ]
+  }
+ ],
+ "triggerPatch": {
+  "t_10y": {
+   "pillar": "rente"
+  },
+  "t_brent": {
+   "pillar": "inflatie"
+  },
+  "t_goldoil": {
+   "pillar": "posities"
+  },
+  "t_gold": {
+   "pillar": "posities"
+  },
+  "t_silver": {
+   "pillar": "posities"
+  },
+  "t_cpi": {
+   "pillar": "inflatie",
+   "marketKey": "cpiYoY"
+  },
+  "t_jobs": {
+   "pillar": "groei",
+   "marketKey": "nfp3m",
+   "unit": "Δk"
+  },
+  "t_fed": {
+   "pillar": "rente"
+  },
+  "t_dxy": {
+   "pillar": "dollar"
+  },
+  "t_jpy": {
+   "pillar": "dollar"
+  },
+  "t_vix": {
+   "pillar": "sentiment"
+  },
+  "t_btc": {
+   "pillar": "sentiment"
+  },
+  "t_credit": {
+   "pillar": "krediet"
+  },
+  "t_chips": {
+   "pillar": "sentiment",
+   "marketKey": "kospiDay"
+  }
+ },
+ "itemPillars": {
+  "gold": "posities",
+  "silver": "posities",
+  "crcl": "posities",
+  "wti": "inflatie",
+  "brent": "inflatie",
+  "us10y": "rente",
+  "us2y": "rente",
+  "dxy": "dollar",
+  "usdjpy": "dollar",
+  "spx": "sentiment",
+  "ndx": "sentiment",
+  "kospi": "sentiment",
+  "vix": "sentiment",
+  "btc": "sentiment"
+ },
+ "itemsAdd": [
+  {
+   "key": "fedFunds",
+   "label": "Fed-rente",
+   "group": "Rente & valuta",
+   "pillar": "rente",
+   "value": 4.0,
+   "display": "3,75–4,00%",
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 2,
+   "change": "+25 bp op 16 sep",
+   "asOf": "sinds 16 sep",
+   "src": "Federal Reserve"
+  },
+  {
+   "key": "us30y",
+   "label": "US 30-jaars",
+   "group": "Rente & valuta",
+   "pillar": "rente",
+   "value": 5.43,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 2,
+   "change": "piek 5,73% vorige week",
+   "asOf": "15 okt",
+   "src": "Benzinga"
+  },
+  {
+   "key": "realYield10",
+   "label": "Reële rente 10j (TIPS)",
+   "group": "Rente & valuta",
+   "pillar": "rente",
+   "value": 2.78,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 2,
+   "change": "1 mnd: 2,60% · 1 jr: 1,76%",
+   "asOf": "15 okt",
+   "src": "TreasuryRateWatch"
+  },
+  {
+   "key": "curve",
+   "label": "Rentecurve 10j − 2j",
+   "group": "Rente & valuta",
+   "pillar": "rente",
+   "value": 0.35,
+   "prefix": "",
+   "suffix": " pp",
+   "decimals": 2,
+   "change": "positief",
+   "asOf": "15 okt",
+   "src": "berekend"
+  },
+  {
+   "key": "breakeven10",
+   "label": "Inflatieverwachting 10j",
+   "group": "Macro",
+   "pillar": "inflatie",
+   "value": 2.32,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 2,
+   "change": "10-jaars minus reële rente",
+   "asOf": "15 okt",
+   "src": "TreasuryRateWatch"
+  },
+  {
+   "key": "cpiYoY",
+   "label": "CPI-inflatie (j/j)",
+   "group": "Macro",
+   "pillar": "inflatie",
+   "value": 3.7,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "aug 3,4%",
+   "asOf": "sep",
+   "src": "BLS"
+  },
+  {
+   "key": "coreCpi",
+   "label": "Kerninflatie (j/j)",
+   "group": "Macro",
+   "pillar": "inflatie",
+   "value": 2.6,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "boven verwachting (2,5%)",
+   "asOf": "sep",
+   "src": "BLS"
+  },
+  {
+   "key": "ppiYoY",
+   "label": "Producentenprijzen (j/j)",
+   "group": "Macro",
+   "pillar": "inflatie",
+   "value": 6.3,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "hoogste sinds 2022",
+   "asOf": "sep",
+   "src": "BLS"
+  },
+  {
+   "key": "nfp3m",
+   "label": "Banengroei, gem. 3 mnd",
+   "group": "Macro",
+   "pillar": "groei",
+   "value": 51,
+   "prefix": "",
+   "suffix": "k",
+   "decimals": 0,
+   "change": "jul −10k · aug +133k · sep +29k",
+   "asOf": "sep",
+   "src": "BLS"
+  },
+  {
+   "key": "unrate",
+   "label": "Werkloosheid",
+   "group": "Macro",
+   "pillar": "groei",
+   "value": 4.2,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "aug 4,1%",
+   "asOf": "sep",
+   "src": "BLS"
+  },
+  {
+   "key": "claims",
+   "label": "WW-aanvragen",
+   "group": "Macro",
+   "pillar": "groei",
+   "value": 199,
+   "prefix": "",
+   "suffix": "k",
+   "decimals": 0,
+   "change": "4-wk gem. 198,5k",
+   "asOf": "week 10 okt",
+   "src": "US Dept. of Labor"
+  },
+  {
+   "key": "netLiq",
+   "label": "Netto liquiditeit",
+   "group": "Macro",
+   "pillar": "liquiditeit",
+   "value": 5867,
+   "prefix": "$",
+   "suffix": " mld",
+   "decimals": 0,
+   "change": "Fed-balans − TGA − RRP",
+   "asOf": "9 okt",
+   "src": "eco3min (FRED-data)"
+  },
+  {
+   "key": "hySpread",
+   "label": "Junk-spread (HY OAS)",
+   "group": "Macro",
+   "pillar": "krediet",
+   "value": 3.16,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 2,
+   "change": "rustige zone 3–5%",
+   "asOf": "13 okt",
+   "src": "ICE BofA via MacroRadar"
+  },
+  {
+   "key": "kospiDay",
+   "label": "Kospi dagbeweging",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": -7.57,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "handelsstop",
+   "asOf": "15 okt",
+   "src": "economy.com.pk (Reuters)"
+  },
+  {
+   "key": "spxDD",
+   "label": "S&P 500 t.o.v. record",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": -0.96,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "ath": 7818.93,
+   "athDate": "2026-10-06",
+   "change": "record 7.819 op 6 okt",
+   "asOf": "15 okt",
+   "src": "berekend (TheStreet, Vantage)"
+  },
+  {
+   "key": "cape",
+   "label": "Waardering (Shiller-CAPE)",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": 40.5,
+   "prefix": "",
+   "suffix": "",
+   "decimals": 1,
+   "change": "record 44,2 (dec 1999) · normaal 16,6",
+   "asOf": "16 okt",
+   "src": "Multpl / GuruFocus"
+  },
+  {
+   "key": "marginDebt",
+   "label": "Margin debt (geleend voor aandelen)",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": 1.45,
+   "prefix": "$",
+   "suffix": " bln",
+   "decimals": 2,
+   "change": "+37% in een jaar",
+   "asOf": "aug",
+   "src": "FINRA via Advisor Perspectives"
+  },
+  {
+   "key": "top10",
+   "label": "Gewicht top-10 in de S&P 500",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": 40,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 0,
+   "change": "dotcom-top: ca. 27%",
+   "asOf": "jul",
+   "src": "S&P DJI via PrimeXBT"
+  },
+  {
+   "key": "pcDefault",
+   "label": "Wanbetaling private credit (Fitch)",
+   "group": "Macro",
+   "pillar": "krediet",
+   "value": 6.0,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 1,
+   "change": "record · Proskauer-index 2,5% (Q2)",
+   "asOf": "apr",
+   "src": "Fitch via Forbes / Proskauer"
+  },
+  {
+   "key": "sahm",
+   "label": "Sahm-regel (recessiesignaal)",
+   "group": "Macro",
+   "pillar": "groei",
+   "value": 0.0,
+   "prefix": "",
+   "suffix": "",
+   "decimals": 2,
+   "change": "alarm vanaf 0,50",
+   "asOf": "sep",
+   "src": "FRED"
+  }
+ ],
+ "sourcesAdd": [
+  {
+   "label": "TreasuryRateWatch: reële rente en inflatieverwachting",
+   "url": "https://treasuryratewatch.com/daily/tips-real-yields"
+  },
+  {
+   "label": "MacroRadar: junk-spread (HY OAS)",
+   "url": "https://www.macroradar.io/high-yield-spread"
+  },
+  {
+   "label": "FXStreet: WW-aanvragen week 10 okt",
+   "url": "https://www.fxstreet.com/news/us-initial-jobless-claims-rose-to-199k-last-week-202610151242"
+  },
+  {
+   "label": "eco3min: Net Liquidity Index",
+   "url": "https://eco3min.fr/en/net-liquidity-index-dataset/"
+  },
+  {
+   "label": "Equiti: Fed-balans en Warsh",
+   "url": "https://www.equiti.com/sc-en/news/global-macro-analysis/kevin-warsh-fed-balance-sheet-reserves-qt/"
+  },
+  {
+   "label": "TradersUnion: George Gammon in 2026",
+   "url": "https://tradersunion.com/news/tag/georgegammon/"
+  },
+  {
+   "label": "TradingView: Traders Reality Main (methode)",
+   "url": "https://www.tradingview.com/script/Etj1ixAs-Traders-Reality-Main"
+  },
+  {
+   "label": "Vantage Markets: S&P 500-record 6 okt 2026",
+   "url": "https://www.vantagemarkets.com/market-analysis/sp500-today-record-yields-earnings-cpi-october-12-2026/"
+  },
+  {
+   "label": "Multpl: Shiller-CAPE",
+   "url": "https://www.multpl.com/shiller-pe/table/by-year"
+  },
+  {
+   "label": "Forbes: wanbetalingen private credit 2026",
+   "url": "https://www.forbes.com/sites/mayrarodriguezvalladares/2026/05/24/rising-private-credit-defaults-are-testing-banks-and-insurers/"
+  },
+  {
+   "label": "Advisor Perspectives: margin debt aug 2026",
+   "url": "https://www.advisorperspectives.com/dshort/updates/2026/09/17/margin-debt-finra-august-2026.pdf"
+  },
+  {
+   "label": "PrimeXBT: concentratie top-10 S&P 500",
+   "url": "https://primexbt.com/news/sp-500-hits-its-most-concentrated-top-10-weighting-since-the-mid-1960s/"
+  },
+  {
+   "label": "FRED: Sahm-regel",
+   "url": "https://fred.stlouisfed.org/series/SAHMREALTIME"
+  },
+  {
+   "label": "Zeal: goudaandelen in crashes (2000–02, 2008)",
+   "url": "https://zealllc.com/2008/huipanic.htm"
+  },
+  {
+   "label": "Mining.com: goud in 1973–74 en 2008",
+   "url": "https://www.mining.com/web/will-next-market-crash-like-2008-1973-history-predicts-amazing-run-gold-gold-stocks/"
+  }
+ ]
+}

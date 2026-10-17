@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Inloggen · Handelsplan</title>
+<style>
+:root{--bg:#EDF0F3;--card:#fff;--ink:#13202C;--muted:#56636F;--line:#D3DAE1;--accent:#8A580A;--bad:#AF2F29}
+@media (prefers-color-scheme:dark){:root{--bg:#0C1217;--card:#131B23;--ink:#E3E9EF;--muted:#95A3B0;--line:#25313C;--accent:#D9A347;--bad:#F06A5F;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+form{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:28px;width:100%;max-width:340px;display:grid;gap:14px}
+h1{margin:0;font-size:1.4rem}h1 span{color:var(--accent)}label{font-size:.85rem;color:var(--muted);display:grid;gap:4px}
+input{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+button{font:600 1rem system-ui;padding:11px;border:0;border-radius:8px;background:var(--accent);color:var(--card);cursor:pointer}
+button:disabled{opacity:.6}.err{color:var(--bad);font-size:.9rem;min-height:1.2em}
+</style></head><body>
+<form id="f" autocomplete="on">
+  <h1>Handelsplan <span>2027</span></h1>
+  <input type="text" name="username" autocomplete="username" value="handelsplan" hidden>
+  <label>Wachtwoord<input id="p" name="password" type="password" autocomplete="current-password" required autofocus></label>
+  <button type="submit" id="b">Inloggen</button>
+  <div class="err" id="e" role="alert"></div>
+</form>
+<script>
+document.getElementById("f").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const e = document.getElementById("e"), b = document.getElementById("b"), p = document.getElementById("p");
+  e.textContent = ""; b.disabled = true;
+  try {
+    const r = await fetch("/login", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({password:p.value})});
+    if (r.ok) { location.href = "/"; return; }
+    let j = {}; try { j = await r.json(); } catch (x) {}
+    e.textContent = j.error || "Inloggen mislukt."; p.value = ""; p.focus();
+  } catch (x) { e.textContent = "De site is even niet bereikbaar. Probeer het zo opnieuw."; }
+  finally { b.disabled = false; }
+});
+</script></body></html>
