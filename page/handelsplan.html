@@ -1,0 +1,1964 @@
+<title>Handelsplan 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a dark instrument strip (live status, ticker, six tabs) over a cool working surface.
+   "Markt" reads top-down like the economy itself: verdict + regime compass → six things that matter →
+   the macro machine (causes → price of money → transmission → your positions) → two lenses → every number. */
+:root{
+  --bg:#EDF0F4; --surface:#FFFFFF; --surface-2:#F4F6F9; --surface-3:#E8ECF1;
+  --ink:#111C27; --muted:#55616D; --faint:#8692A0; --line:#D3D9E0; --line-2:#E4E8ED;
+  --band:#0F1923; --band-2:#172532; --band-ink:#EDF2F6; --band-muted:#93A2B0; --band-line:#243443;
+  --accent:#8B5A0A; --accent-2:#B07A1C; --accent-soft:#F5E8D0; --on-accent:#FFFFFF;
+  --good:#1A7848; --good-soft:#DAEFE2; --warn:#9A5A05; --warn-soft:#F8EAD1; --bad:#AE2E28; --bad-soft:#F7DDDA;
+  --info:#1F4F7C; --info-soft:#E1EBF5;
+  --sc1:#B07A1C; --sc2:#B0412F; --sc3:#2B5F92; --sc4:#2E8A6E;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:12px; --gap:clamp(14px,2vw,22px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1117; --surface:#121A22; --surface-2:#17212B; --surface-3:#1D2935;
+    --ink:#E4EAF0; --muted:#97A5B2; --faint:#6E7D8B; --line:#25313D; --line-2:#1E2933;
+    --band:#070B0F; --band-2:#0E151C; --band-ink:#E4EAF0; --band-muted:#8697A6; --band-line:#1D2833;
+    --accent:#DDA64B; --accent-2:#E8BC6C; --accent-soft:#3A2B12; --on-accent:#141006;
+    --good:#4FC48B; --good-soft:#12301F; --warn:#E8A53F; --warn-soft:#382811; --bad:#F06B60; --bad-soft:#3B1916;
+    --info:#86B6E3; --info-soft:#172A3C;
+    --sc1:#DDA64B; --sc2:#E26A55; --sc3:#6FA3D6; --sc4:#4DBA97;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1117; --surface:#121A22; --surface-2:#17212B; --surface-3:#1D2935;
+  --ink:#E4EAF0; --muted:#97A5B2; --faint:#6E7D8B; --line:#25313D; --line-2:#1E2933;
+  --band:#070B0F; --band-2:#0E151C; --band-ink:#E4EAF0; --band-muted:#8697A6; --band-line:#1D2833;
+  --accent:#DDA64B; --accent-2:#E8BC6C; --accent-soft:#3A2B12; --on-accent:#141006;
+  --good:#4FC48B; --good-soft:#12301F; --warn:#E8A53F; --warn-soft:#382811; --bad:#F06B60; --bad-soft:#3B1916;
+  --info:#86B6E3; --info-soft:#172A3C;
+  --sc1:#DDA64B; --sc2:#E26A55; --sc3:#6FA3D6; --sc4:#4DBA97;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+a{color:var(--info)}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15;letter-spacing:-.012em}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+.num,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)} .small{font-size:.84rem} .faint{color:var(--faint)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- instrument strip ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--band);color:var(--band-ink);border-bottom:1px solid var(--band-line)}
+.top .wrap{display:flex;flex-direction:column;gap:4px;padding-block:10px 0}
+.brandrow{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:700;font-size:1.12rem;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.live{display:inline-flex;align-items:center;gap:6px;font:500 .74rem var(--font-mono);color:var(--band-muted);white-space:nowrap}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--band-muted)}
+.live.on i{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
+.live.old i{background:var(--warn)}
+.ticker{display:flex;gap:6px 16px;flex-wrap:wrap;font:400 .76rem var(--font-mono);color:var(--band-muted);margin-left:auto}
+.ticker b{color:var(--band-ink);font-weight:500}
+.iconbtn{appearance:none;border:1px solid var(--band-line);background:var(--band-2);color:var(--band-muted);font:500 .76rem var(--font-body);border-radius:7px;padding:4px 9px;cursor:pointer}
+.iconbtn:hover{color:var(--band-ink)}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin:0 -6px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:none;color:var(--band-muted);font:500 .92rem var(--font-body);padding:10px 12px 11px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
+.tab:hover{color:var(--band-ink)}
+.tab[aria-selected="true"]{color:var(--band-ink);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (max-width:620px){.ticker{display:none}#logoutBtn{display:none}.tab{padding:9px 8px 10px;font-size:.88rem}.top .wrap{gap:2px}}
+.tab .count{font:500 .7rem var(--font-mono);background:var(--accent);color:var(--on-accent);border-radius:999px;padding:1px 6px;margin-left:6px}
+
+main{padding-block:var(--gap) 72px}
+section.panel{display:flex;flex-direction:column;gap:var(--gap)}
+.grid{display:grid;gap:var(--gap);grid-template-columns:minmax(0,1fr)}
+.g-2{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.g-2e{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:900px){.g-2,.g-2e{grid-template-columns:minmax(0,1fr)}}
+.panel > *,.grid > *,.box{min-width:0}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:clamp(16px,2.2vw,22px)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap}
+.secintro{max-width:72ch;color:var(--muted);font-size:.93rem}
+
+/* ---------- pills, chips, buttons ---------- */
+.pill{display:inline-flex;align-items:center;gap:6px;font:500 .76rem var(--font-body);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.plain::before{display:none}
+.t-good{background:var(--good-soft);color:var(--good)} .t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-bad{background:var(--bad-soft);color:var(--bad)} .t-neutral{background:var(--info-soft);color:var(--info)}
+.t-accent{background:var(--accent-soft);color:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:500 .74rem var(--font-mono);padding:2px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.btn{appearance:none;font:600 .9rem var(--font-body);border-radius:9px;padding:9px 15px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.sm{padding:5px 11px;font-size:.8rem;border-radius:7px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.status{font-size:.86rem;color:var(--muted)} .status.err{color:var(--bad)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--faint);flex:none}
+.dot.rustig{background:var(--good)} .dot.gespannen{background:var(--warn)} .dot.stress{background:var(--bad)} .dot.info{background:var(--info)}
+.dir{font:600 1rem var(--font-mono);line-height:1}
+.dir.pos{color:var(--good)} .dir.neg{color:var(--bad)} .dir.flat{color:var(--faint)}
+
+/* ---------- Markt: hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,3vw,34px)}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h1{font-size:clamp(1.85rem,3.9vw,2.85rem);font-weight:700;margin-top:10px}
+.hero .lede{font-size:1.04rem;max-width:62ch;margin-top:12px;color:var(--ink)}
+.hero .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hero .btnrow{margin-top:18px}
+.compass{margin:0;display:flex;flex-direction:column;gap:10px;align-items:center}
+.compass svg{width:100%;max-width:380px;height:auto}
+.compass figcaption{font-size:.86rem;color:var(--muted);max-width:44ch;text-align:center}
+.cq-stag{fill:var(--bad-soft)} .cq-refl{fill:var(--warn-soft)} .cq-gold{fill:var(--good-soft)} .cq-krimp{fill:var(--info-soft)}
+.c-axis{stroke:var(--line);stroke-width:1} .c-frame{fill:none;stroke:var(--line);stroke-width:1}
+.c-qn{font:700 12.5px var(--font-body);fill:var(--ink)} .c-qa{font:400 10.5px var(--font-body);fill:var(--muted)}
+.c-ax{font:500 10px var(--font-mono);fill:var(--faint);letter-spacing:.06em}
+.c-halo{fill:var(--accent);opacity:.18} .c-dot{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.c-now{font:600 11px var(--font-mono);fill:var(--accent)} .c-head{stroke:var(--accent);stroke-width:1.6;stroke-dasharray:4 3;fill:none}
+.c-arrow{fill:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.c-halo{animation:pulse 2.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}@keyframes pulse{50%{opacity:.06;transform:scale(1.5)}}}
+
+/* ---------- Markt: six points ---------- */
+.points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+.pt{padding:14px 18px;border-top:1px solid var(--line-2);display:grid;grid-template-columns:12px minmax(0,1fr);gap:4px 10px;align-content:start}
+.pt:nth-child(-n+3){border-top:0}
+.pt:not(:nth-child(3n+1)){border-left:1px solid var(--line-2)}
+.pt .dot{margin-top:6px}
+.pt b{font-weight:600;font-size:.97rem}
+.pt p{grid-column:2;color:var(--muted);font-size:.89rem}
+.dot.bad{background:var(--bad)} .dot.warn{background:var(--warn)} .dot.good{background:var(--good)}
+@media (max-width:980px){.points{grid-template-columns:repeat(2,minmax(0,1fr))}.pt:nth-child(-n+3){border-top:1px solid var(--line-2)}.pt:nth-child(-n+2){border-top:0}.pt:not(:nth-child(3n+1)){border-left:0}.pt:nth-child(2n){border-left:1px solid var(--line-2)}}
+@media (max-width:620px){.points{grid-template-columns:minmax(0,1fr)}.pt:nth-child(2){border-top:1px solid var(--line-2)}.pt:nth-child(2n){border-left:0}.pt{padding:12px 4px}}
+
+/* ---------- Markt: machine ---------- */
+.machine{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px;position:relative}
+.stage{position:relative;display:flex;flex-direction:column;gap:10px;min-width:0}
+.stage:not(:last-child)::after{content:"";position:absolute;right:-23px;top:50%;width:11px;height:11px;border-top:2px solid var(--faint);border-right:2px solid var(--faint);transform:translateY(-50%) rotate(45deg)}
+.stage-h{display:flex;gap:10px;align-items:center;min-height:42px}
+.stage-n{font:500 .78rem var(--font-mono);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--band);color:var(--band-ink);flex:none}
+.stage-h b{display:block;font-family:var(--font-display);font-size:1rem}
+.stage-h small{display:block;color:var(--muted);font-size:.78rem}
+.pl{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color .15s, box-shadow .15s}
+.pl:hover{border-color:var(--faint)}
+.pl.sel{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+.pl-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.pl-name{font-weight:600;font-size:.95rem;line-height:1.25}
+.pl-q{font-size:.78rem;color:var(--muted);margin-top:1px}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;font-size:.8rem}
+.kv span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kv b{font:500 .84rem var(--font-mono);text-align:right}
+.pl-read{font-size:.82rem;color:var(--ink);line-height:1.45}
+.pl-hint{font-size:.74rem;color:var(--faint)}
+.pc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 13px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;transition:opacity .15s, border-color .15s}
+.pc .nm{font-weight:600;font-size:.95rem}
+.pc .why{grid-column:1/-1;font-size:.8rem;color:var(--muted);line-height:1.4}
+.pc .eff{display:flex;align-items:center;gap:6px}
+.machine.focus .pc{opacity:.45}
+.machine.focus .pc.hit{opacity:1}
+.pc.hit.neg{border-color:var(--bad)} .pc.hit.pos{border-color:var(--good)}
+.selnote{font-size:.85rem;color:var(--muted);min-height:1.3em}
+@media (max-width:1100px){
+  .machine{grid-template-columns:minmax(0,1fr);gap:30px}
+  .stage-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+  .stage:not(:last-child)::after{right:auto;top:auto;left:50%;bottom:-21px;transform:translateX(-50%) rotate(135deg)}
+}
+.stage-body{display:flex;flex-direction:column;gap:10px}
+
+/* ---------- sparkline ---------- */
+.spark{display:block;overflow:visible}
+.sp-a{fill:var(--accent-soft)} .sp-l{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-linejoin:round} .sp-d{fill:var(--accent)}
+
+/* ---------- lenses ---------- */
+.lenses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media (max-width:980px){.lenses{grid-template-columns:minmax(0,1fr)}}
+.lens{display:flex;flex-direction:column;gap:14px}
+.lens-who{font-size:.86rem;color:var(--muted)}
+.lens-who b{color:var(--ink);font-weight:600}
+.lens-method{font-size:.86rem;color:var(--muted)}
+.lens-q{font-family:var(--font-display);font-size:1.08rem;font-weight:600;line-height:1.3}
+.ck{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:3px 10px;padding:11px 0;border-top:1px solid var(--line-2);align-items:start}
+.ck .dot{margin-top:6px}
+.ck b{font-weight:600;font-size:.92rem}
+.ck p{grid-column:2/-1;font-size:.86rem;color:var(--muted)}
+.ck .val{font:500 .8rem var(--font-mono);color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.take{background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+.take .eyebrow{color:var(--accent)}
+.take p{margin-top:6px;font-size:.95rem;line-height:1.5}
+.basis{font-size:.78rem;color:var(--faint)}
+.lvl{overflow-x:auto}
+.lvl table{min-width:860px}
+.trend{font:600 .78rem var(--font-mono)}
+.trend.op{color:var(--good)} .trend.neer{color:var(--bad)} .trend.gemengd{color:var(--warn)} .trend.range{color:var(--muted)}
+
+/* ---------- indicators ---------- */
+.ind{columns:2 380px;column-gap:34px}
+.ind-g{padding:6px 0 14px;break-inside:avoid;display:inline-block;width:100%}
+.ind-gh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0 6px;border-bottom:1px solid var(--line)}
+.ind-gh h3{font-size:.98rem}
+.ir{display:grid;grid-template-columns:minmax(0,1.35fr) 78px minmax(0,.9fr);grid-template-areas:"l s v" "c c m";gap:1px 12px;padding:8px 0;border-bottom:1px solid var(--line-2);align-items:center}
+.ir .l{grid-area:l;font-size:.9rem}
+.ir .s{grid-area:s}
+.ir .v{grid-area:v;font:500 .95rem var(--font-mono);text-align:right;white-space:nowrap}
+.ir .c{grid-area:c;font-size:.76rem;color:var(--muted)}
+.ir .m{grid-area:m;font-size:.72rem;color:var(--faint);text-align:right;white-space:nowrap}
+.ir .v.bad{color:var(--bad)} .ir .v.warn{color:var(--warn)}
+.ir .l{overflow-wrap:break-word;min-width:0}
+@media (max-width:620px){
+  .ir{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"l v" "c s" "m m"}
+  .ir .m{text-align:left;white-space:normal}
+}
+
+/* ---------- tables ---------- */
+.tbl{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.89rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font:500 .7rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.r,th.r{text-align:right} td.c,th.c{text-align:center}
+td .num{white-space:nowrap}
+.cell{display:inline-grid;place-items:center;min-width:42px;height:26px;border-radius:6px;font:500 .8rem var(--font-mono)}
+.i2{background:var(--good);color:var(--surface)} .i1{background:var(--good-soft);color:var(--good)}
+.i0{background:var(--surface-2);color:var(--muted)} .im1{background:var(--bad-soft);color:var(--bad)} .im2{background:var(--bad);color:var(--surface)}
+
+/* ---------- calendar ---------- */
+.cal{list-style:none;padding:0;margin:0}
+.cal li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 14px;padding:11px 0;border-top:1px solid var(--line-2)}
+.cal li:first-child{border-top:0}
+.cal .d{font:400 .84rem var(--font-mono)}
+.cal .d small{display:block;color:var(--muted);font-size:.72rem}
+.cal li.past{opacity:.45}
+.cal li.soon .d{color:var(--accent);font-weight:500}
+.cal b{font-weight:600}
+
+/* ---------- plan ---------- */
+.actions{list-style:none;padding:0;margin:0}
+.actions li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:9px 0;border-top:1px solid var(--line-2)}
+.actions li:first-child{border-top:0}
+.actions li::before{content:"→";font-family:var(--font-mono);color:var(--accent)}
+.sbar{display:flex;height:32px;border-radius:8px;overflow:hidden}
+.sbar div{display:flex;align-items:center;justify-content:center;font:500 .78rem var(--font-mono);color:var(--surface);min-width:0;overflow:hidden;white-space:nowrap}
+.slegend{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 18px}
+.slegend .it{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:8px;align-items:baseline;font-size:.9rem}
+.slegend .sw{width:12px;height:12px;border-radius:3px;transform:translateY(2px)}
+details.pos{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+details.pos > summary{list-style:none;cursor:pointer;padding:16px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 14px;align-items:center}
+details.pos > summary::-webkit-details-marker{display:none}
+details.pos > summary .chev{width:9px;height:9px;border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);transform:rotate(45deg);transition:transform .15s;margin-right:4px}
+details.pos[open] > summary .chev{transform:rotate(225deg)}
+details.pos .sumwhy{grid-column:1/-1;font-size:.86rem;color:var(--muted);display:flex;gap:8px;align-items:baseline}
+.posbody{padding:4px 18px 18px;display:grid;gap:16px;border-top:1px solid var(--line-2)}
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:700px){.cols2{grid-template-columns:minmax(0,1fr)}}
+.blist{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:5px;font-size:.9rem}
+.blist li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:6px}
+.blist.plus li::before{content:"+";color:var(--good);font-family:var(--font-mono);font-weight:500}
+.blist.minus li::before{content:"−";color:var(--bad);font-family:var(--font-mono);font-weight:500}
+.rules{list-style:none;padding:0;margin:4px 0 0;counter-reset:r}
+.rules li{counter-increment:r;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid var(--line-2);font-size:.92rem}
+.rules li::before{content:"R" counter(r);font:500 .76rem var(--font-mono);color:var(--accent);padding-top:3px}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:6px}
+.level{background:var(--surface-2);border-radius:8px;padding:9px 11px}
+.level b{font:500 .86rem var(--font-mono);display:block}
+.level span{font-size:.8rem;color:var(--muted)}
+.scrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+.scrow div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.72rem;color:var(--muted);text-align:center}
+.weight{display:flex;align-items:center;gap:8px;font-size:.86rem;color:var(--muted)}
+.weight input{width:80px}
+.sc{border-top:4px solid var(--c)}
+.sc .prob{font:500 2.1rem var(--font-mono);color:var(--c);line-height:1}
+.sc .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.check ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+
+/* ---------- signals ---------- */
+.sigsum{display:flex;gap:8px;flex-wrap:wrap}
+.trig{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:13px 0;border-top:1px solid var(--line-2)}
+.trig .name{font-weight:600}
+.trig .meaning{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.gauge{height:9px;border-radius:5px;overflow:hidden;display:flex}
+.gauge i{display:block;height:100%}
+.gwrap{position:relative;padding-top:2px}
+.gwrap .gd{position:absolute;top:-3px;width:4px;height:15px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.gwrap .lab{display:flex;justify-content:space-between;font:400 .68rem var(--font-mono);color:var(--muted);margin-top:4px}
+.trig .val{font:500 1rem var(--font-mono);text-align:right;white-space:nowrap}
+@media (max-width:640px){.trig{grid-template-columns:minmax(0,1fr) auto}.trig .gwrap{grid-column:1/-1;order:3}}
+
+/* ---------- forms, inbox ---------- */
+label{font-size:.82rem;font-weight:500;color:var(--muted);display:block;margin-bottom:4px}
+input,select,textarea{font:inherit;font-size:.92rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+textarea{min-height:200px;resize:vertical;font-family:var(--font-mono);font-size:.82rem;line-height:1.5}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.item{padding:14px 0;border-top:1px solid var(--line-2);display:grid;gap:6px}
+.item:first-child{border-top:0}
+.item .h{display:flex;gap:8px 12px;align-items:center;flex-wrap:wrap}
+.item details summary{cursor:pointer;font-size:.85rem;color:var(--info)}
+.pre{white-space:pre-wrap}
+.pending{border:1px solid var(--accent);background:var(--accent-soft)}
+.chg{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--accent) 25%,transparent);align-items:start;cursor:pointer;margin:0;color:var(--ink);font-weight:400;font-size:.92rem}
+.chg input{width:16px;height:16px;margin-top:3px;accent-color:var(--accent)}
+.chg .from{color:var(--muted);text-decoration:line-through}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:26px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
+.notice{border-radius:10px;padding:12px 14px;font-size:.92rem;background:var(--good-soft);color:var(--good)}
+.notice.bad{background:var(--bad-soft);color:var(--bad)}
+#notice:not([hidden]),#pendingPanel:not([hidden]){margin-bottom:var(--gap)}
+.kv .sk{display:block;width:54px;height:16px}
+.answer{white-space:pre-wrap;background:var(--surface-2);border-radius:8px;padding:12px 14px;font-size:.93rem}
+
+/* ---------- cyclus ---------- */
+:root{--viz-now:#b8650f;--viz-now-ink:#ffffff;--viz-x:#2a78d6;--viz-mute:#8692A0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--viz-now:#c98500;--viz-now-ink:#141006;--viz-x:#3987e5;--viz-mute:#6E7D8B}}
+:root[data-theme="dark"]{--viz-now:#c98500;--viz-now-ink:#141006;--viz-x:#3987e5;--viz-mute:#6E7D8B}
+.cyhero{align-items:start}
+@media (min-width:901px){.cyhero{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+.cy-like{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}
+@media (max-width:560px){.cy-like{grid-template-columns:minmax(0,1fr)}}
+.cy-like .lk{display:grid;gap:2px;align-content:start;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.84rem}
+.cy-like .lk b{font-weight:600}
+.cy-like .lk span{color:var(--muted);font-size:.78rem;line-height:1.35}
+.cy-stats{display:grid;gap:10px}
+.cy-stat{background:var(--surface-2);border-radius:12px;padding:14px 16px;display:grid;gap:2px}
+.cy-stat b{font:600 2rem/1.1 var(--font-body);letter-spacing:-.015em}
+.cy-stat span{font-size:.92rem;font-weight:500}
+.cy-stat small{font-size:.78rem;color:var(--muted)}
+@media (max-width:900px){.cy-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.cy-stats{grid-template-columns:minmax(0,1fr)}.cy-stat b{font-size:1.7rem}}
+.cy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+.cy-card{display:flex;flex-direction:column;gap:12px}
+.cy-head h3{margin-top:2px}
+.cy-fig{margin:0}
+.cy-fig svg{display:block;width:100%;height:auto;overflow:visible}
+.cy-txt{display:flex;flex-direction:column;gap:8px}
+.cy-now{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cy-txt p{font-size:.88rem;line-height:1.5}
+.cy-txt .xline{color:var(--muted)}
+.cy-txt .xline i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--viz-x);margin-right:6px}
+@media (max-width:1100px){
+  .cy-grid{grid-template-columns:minmax(0,1fr)}
+  .cy-card{display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:10px 26px;align-items:start}
+  .cy-head{grid-column:1/-1}
+}
+@media (max-width:680px){.cy-card{display:flex;flex-direction:column}}
+svg .cy-past{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.72}
+svg .cy-future{fill:none;stroke:var(--viz-mute);stroke-width:2;stroke-dasharray:3 5;stroke-linecap:round}
+svg .cy-guide{stroke:var(--line-2);stroke-width:1}
+svg .cy-col{fill:var(--accent-soft)}
+svg .cy-ph{font:500 10.5px var(--font-body);fill:var(--muted)}
+svg .cy-ph.on{font-weight:700;fill:var(--accent)}
+svg .cy-hit{fill:transparent}
+svg .cy-gdot{fill:var(--surface);stroke:var(--viz-mute);stroke-width:2}
+svg .cy-glab{font:500 10.5px var(--font-mono);fill:var(--muted)}
+svg .cy-halo{fill:var(--viz-now);opacity:.2}
+svg .cy-dot{fill:var(--viz-now);stroke:var(--surface);stroke-width:2.5}
+svg .cy-pill{fill:var(--viz-now)}
+svg .cy-pilltx{font:700 10.5px var(--font-body);fill:var(--viz-now-ink);letter-spacing:.08em}
+svg .cy-xdot{fill:var(--viz-x);stroke:var(--surface);stroke-width:2}
+svg .cy-xlab{font:600 11px var(--font-body);fill:var(--ink)}
+svg [tabindex]{cursor:help;outline:none}
+svg [tabindex]:focus-visible .cy-hit{stroke:var(--accent);stroke-width:2}
+@media (prefers-reduced-motion:no-preference){svg .cy-halo{animation:pulse 2.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}}
+.cy-key{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);align-items:center}
+.cy-key i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.cy-key .k-now{background:var(--viz-now)} .cy-key .k-ghost{border:2px solid var(--viz-mute);width:10px;height:10px;box-sizing:border-box}
+.cy-key .k-x{background:var(--viz-x)} .cy-key .k-line{width:18px;height:0;border-radius:0;border-top:2px dashed var(--viz-mute)}
+.tl-row{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.25fr) minmax(0,1.35fr);gap:6px 20px;padding:12px 10px;border-top:1px solid var(--line-2);align-items:start;border-radius:0}
+.tl-row.head{border-top:0;padding-top:2px;padding-bottom:6px}
+.tl-row.head span{font:500 .7rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tl-row.cur{background:var(--accent-soft);border-top-color:transparent;border-radius:10px}
+.tl-step{display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:.95rem}
+.tl-n{font:500 .74rem var(--font-mono);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);flex:none}
+.tl-row.cur .tl-n{background:var(--viz-now);color:var(--viz-now-ink)}
+.tl-then{font-size:.88rem;color:var(--muted)}
+.tl-now{font-size:.88rem;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+@media (max-width:760px){
+  .tl-row{grid-template-columns:minmax(0,1fr)}
+  .tl-row.head{display:none}
+  .tl-then::before{content:"2007–09: ";font-weight:600;color:var(--ink)}
+}
+.cr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media (max-width:900px){.cr-grid{grid-template-columns:minmax(0,1fr)}}
+.cr{display:flex;flex-direction:column;gap:12px}
+.cr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cr-like{background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.cr-like b{color:var(--accent)}
+.cr-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cr-stat{background:var(--surface-2);border-radius:8px;padding:9px 11px;display:grid;gap:1px}
+.cr-stat b{font:600 1.2rem/1.15 var(--font-body)}
+.cr-stat span{font-size:.76rem;color:var(--muted);line-height:1.3}
+.cr-diff{font-size:.84rem;color:var(--muted)}
+.hbars{display:grid;gap:6px}
+.hb{display:grid;grid-template-columns:70px minmax(0,1fr) 54px;grid-template-areas:"l t v" ". s s";gap:2px 10px;align-items:center;padding:4px 6px;margin:0 -6px;border-radius:8px;cursor:help;outline:none}
+.hb:hover,.hb:focus-visible{background:var(--surface-2)}
+.hb:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.hb-l{grid-area:l;font:500 .8rem var(--font-mono);color:var(--muted)}
+.hb.now .hb-l{color:var(--ink);font-weight:600}
+.hb-t{grid-area:t;position:relative;height:16px;border-left:1px solid var(--line)}
+.hb-t i{display:block;height:100%;background:var(--viz-mute);border-radius:0 4px 4px 0;min-width:3px}
+.hb.now .hb-t i{background:var(--viz-now)}
+.hb-v{grid-area:v;font:600 .9rem var(--font-body);text-align:right}
+.hb-s{grid-area:s;font-size:.74rem;color:var(--muted)}
+.hb-t .med{position:absolute;top:-6px;bottom:-6px;width:0;border-left:1px solid var(--muted);opacity:.55}
+.hb-medlab{display:grid;grid-template-columns:70px minmax(0,1fr) 54px;gap:0 10px;font-size:.72rem;color:var(--muted);margin-bottom:-2px}
+.hb-medlab span{position:relative;height:14px}
+.hb-medlab em{position:absolute;transform:translateX(-50%);font-style:normal;white-space:nowrap}
+.cmp table{min-width:780px}
+.cmp th,.cmp td{font-size:.86rem}
+.cmp td:first-child,.cmp th:first-child{position:sticky;left:0;background:var(--surface);z-index:1;min-width:170px;font-weight:500}
+.cmp th.nu,.cmp td.nu{background:var(--accent-soft);font-weight:600}
+.tp{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:4px 12px;padding:12px 0;border-top:1px solid var(--line-2);align-items:start}
+.tp:first-child{border-top:0}
+.tp .dot{margin-top:6px}
+.tp p{grid-column:2/-1;font-size:.84rem;color:var(--muted)}
+.tp-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.you{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:1100px){.you{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.you{grid-template-columns:repeat(2,minmax(0,1fr))}.you div:last-child:nth-child(odd){grid-column:1/-1}}
+@media (max-width:480px){.you{grid-template-columns:minmax(0,1fr)}}
+.you div{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:.88rem}
+.you b{display:block;margin-bottom:3px}
+#tip{position:fixed;z-index:40;max-width:300px;background:var(--band);color:var(--band-ink);font:400 .82rem/1.45 var(--font-body);padding:9px 12px;border-radius:9px;pointer-events:none;white-space:pre-line;box-shadow:0 8px 28px rgba(0,0,0,.22)}
+
+/* ---------- post ---------- */
+.po-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.po-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.po-stat{background:var(--surface-2);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.po-stat b{font:600 1.5rem/1.1 var(--font-body)} .po-stat span{font-size:.8rem;color:var(--muted)}
+.po-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.po-filters > div{flex:1 1 160px}
+.po-doc{padding:14px 0;border-top:1px solid var(--line-2);display:grid;gap:6px}
+.po-doc:first-child{border-top:0}
+.po-h{display:flex;gap:6px 10px;align-items:center;flex-wrap:wrap}
+.po-meta{font-size:.8rem;color:var(--muted)}
+.po-amts{display:flex;gap:6px;flex-wrap:wrap}
+.po-amt{font:500 .8rem var(--font-mono);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.po-dates{margin:0;padding-left:18px;font-size:.84rem;color:var(--muted)}
+.qt{display:grid;grid-template-columns:minmax(0,1fr) auto 86px 22px;gap:4px 10px;align-items:center;padding:8px 0;border-top:1px solid var(--line-2);font-size:.9rem}
+.qt:first-child{border-top:0}
+.qt .num{text-align:right;white-space:nowrap}
+.qt .up{color:var(--good)} .qt .down{color:var(--bad)}
+.ev{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;font-size:.82rem;padding:7px 0;border-top:1px solid var(--line-2)}
+.ev:first-child{border-top:0}
+.ev p{grid-column:1/-1;color:var(--muted);margin:0;overflow-wrap:anywhere}
+.xbtn{appearance:none;border:0;background:none;color:var(--faint);cursor:pointer;font-size:1.1rem;line-height:1;padding:2px}
+.xbtn:hover{color:var(--bad)}
+.note{padding:10px 0;border-top:1px solid var(--line-2);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px}
+.note:first-child{border-top:0}
+.note p{grid-column:1/-1;white-space:pre-wrap;font-size:.88rem;margin:0}
+
+/* ---------- uitleg ---------- */
+.flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.flow .st{flex:1 1 150px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.flow .st b{display:block;font-family:var(--font-display);margin-bottom:2px}
+.flow .ar{align-self:center;font-family:var(--font-mono);color:var(--accent)}
+@media (max-width:640px){.flow .ar{display:none}}
+.conn{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-top:1px solid var(--line-2);align-items:center}
+.conn:first-child{border-top:0}
+.conn p{grid-column:1/-1;font-size:.82rem;color:var(--muted)}
+pre.cmd{background:var(--band);color:var(--band-ink);font:400 .8rem/1.6 var(--font-mono);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:0;white-space:pre}
+code{font-family:var(--font-mono);font-size:.85em;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:1px 5px;word-break:break-word}
+footer{color:var(--muted);font-size:.82rem;display:grid;gap:10px;padding-top:6px}
+footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<!--BODY-->
+<header class="top">
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="brand">Handelsplan <span>2027</span></div>
+      <span class="live" id="live"><i></i><span id="liveText">laden…</span></span>
+      <div class="ticker" id="ticker"></div>
+      <button class="iconbtn" type="button" id="logoutBtn" hidden>Uitloggen</button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Onderdelen">
+      <button class="tab" role="tab" id="tb-markt" data-tab="markt">Markt</button>
+      <button class="tab" role="tab" id="tb-cyclus" data-tab="cyclus">Cyclus</button>
+      <button class="tab" role="tab" id="tb-plan" data-tab="plan">Plan</button>
+      <button class="tab" role="tab" id="tb-signalen" data-tab="signalen">Signalen</button>
+      <button class="tab" role="tab" id="tb-inbox" data-tab="inbox">Inbox<span class="count" id="inboxCount" hidden></span></button>
+      <button class="tab" role="tab" id="tb-post" data-tab="post" hidden>Post</button>
+      <button class="tab" role="tab" id="tb-historie" data-tab="historie">Historie</button>
+      <button class="tab" role="tab" id="tb-uitleg" data-tab="uitleg">Uitleg</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="notice" hidden></div>
+  <div id="pendingPanel" hidden></div>
+
+  <!-- MARKT -->
+  <section class="panel" id="p-markt" role="tabpanel" aria-labelledby="tb-markt">
+    <div id="mk-hero"><div class="empty"><b>Marktstatus laden…</b><span>Je macro-overzicht, cijfers en signalen verschijnen zodra de opslag antwoordt.</span></div></div>
+    <div id="mk-points"></div>
+    <div id="mk-machine"></div>
+    <div id="mk-lenses"></div>
+    <div id="mk-ind"></div>
+    <div id="mk-cal"></div>
+  </section>
+
+  <!-- CYCLUS -->
+  <section class="panel" id="p-cyclus" role="tabpanel" aria-labelledby="tb-cyclus" hidden>
+    <div id="cy-body" class="grid"><div class="empty"><b>Cyclus laden…</b><span>De cyclusgrafieken en de crashvergelijking verschijnen zodra de opslag antwoordt.</span></div></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="tb-plan" hidden>
+    <div id="pl-top"></div>
+    <div id="pl-pos"></div>
+    <div id="pl-sc"></div>
+    <div id="pl-check"></div>
+    <div class="box stack" id="askBox">
+      <div class="sechead"><h2>Vraag het plan</h2><span class="muted small">Claude antwoordt met je plan, het marktbeeld en de laatste cijfers als context.</span></div>
+      <form id="askForm" class="btnrow" autocomplete="off">
+        <input id="askQ" placeholder="Bijv. Wat doe ik volgens mijn plan als goud deze week onder $4.000 sluit?" style="flex:1 1 280px" aria-label="Je vraag">
+        <button class="btn primary" type="submit" id="askBtn" disabled>Vraag</button>
+        <button class="btn" type="button" id="askStop" hidden>Stop</button>
+      </form>
+      <div id="askOut" class="answer" hidden></div>
+      <span class="status" id="askStatus" role="status"></span>
+    </div>
+  </section>
+
+  <!-- SIGNALEN -->
+  <section class="panel" id="p-signalen" role="tabpanel" aria-labelledby="tb-signalen" hidden>
+    <div id="sig-body" class="grid"></div>
+  </section>
+
+  <!-- INBOX -->
+  <section class="panel" id="p-inbox" role="tabpanel" aria-labelledby="tb-inbox" hidden>
+    <div class="grid g-2">
+      <form class="box stack" id="inForm" autocomplete="off">
+        <div class="sechead"><h2>Nieuw transcript of notitie</h2><span class="muted small" id="inWords"></span></div>
+        <div class="frow">
+          <div><label for="inSource">Bron</label>
+            <select id="inSource">
+              <option>TradersReality</option><option>Rebel Capitalist</option><option>Wolf of Washington</option>
+              <option>Eigen video</option><option>Eigen notitie</option><option>Overig</option>
+            </select></div>
+          <div><label for="inDate">Datum video of notitie</label><input id="inDate" type="date"></div>
+        </div>
+        <div class="frow">
+          <div><label for="inTitle">Titel</label><input id="inTitle" placeholder="Bijv. Weekly outlook: Fed, olie, goud"></div>
+          <div><label for="inUrl">Link (optioneel)</label><input id="inUrl" type="url" placeholder="https://youtube.com/watch?v=…"></div>
+        </div>
+        <div><label for="inText">Transcript of tekst</label>
+          <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag)."></textarea></div>
+        <div class="btnrow">
+          <button class="btn primary" type="submit" id="inAnalyze">Analyseer en stel wijzigingen voor</button>
+          <button class="btn" type="button" id="inSave">Alleen bewaren</button>
+          <button class="btn" type="button" id="inStop" hidden>Stop</button>
+          <span class="status" id="inStatus" role="status"></span>
+        </div>
+      </form>
+      <div class="box stack">
+        <h3>Wat er gebeurt</h3>
+        <ul class="actions">
+          <li><span>Claude leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
+          <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
+          <li><span>Is de bron TradersReality of Rebel Capitalist, dan wordt hun <b>bril</b> op de Markt-pagina bijgewerkt met hún visie.</span></li>
+          <li><span>Je krijgt voorstellen voor scenario's, posities, triggers, kalender en marktbeeld. Jij vinkt aan wat je overneemt; alles is terug te draaien.</span></li>
+        </ul>
+        <p class="muted small">Een analyse duurt meestal 30–90 seconden.</p>
+      </div>
+    </div>
+    <div class="box">
+      <div class="sechead"><h2>Inbox</h2><span class="muted small" id="inboxMeta"></span></div>
+      <div id="inboxList"></div>
+    </div>
+  </section>
+
+  <!-- HISTORIE -->
+  <!-- POST: verwerkte e-mails en documenten -->
+  <section class="panel" id="p-post" role="tabpanel" aria-labelledby="tb-post" hidden>
+    <div id="po-body"><div class="empty"><b>Post laden…</b></div></div>
+  </section>
+
+  <section class="panel" id="p-historie" role="tabpanel" aria-labelledby="tb-historie" hidden>
+    <div class="sechead"><h2>Historie</h2><span class="muted small">Elke planwijziging, met reden. Terugzetten kan per stap.</span></div>
+    <div class="box" id="hist-body"></div>
+  </section>
+
+  <!-- UITLEG -->
+  <section class="panel" id="p-uitleg" role="tabpanel" aria-labelledby="tb-uitleg" hidden>
+    <div id="ux-body" class="grid"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</main>
+
+<script>
+(() => {
+"use strict";
+/* ================= constants ================= */
+const POS_IDS = ["miners","crcl","mag7","insider"];
+const POS_SHORT = {miners:"Mijnen", crcl:"Circle", mag7:"Mag 7", insider:"Insider"};
+const STANCES = {opbouwen:{label:"Opbouwen",tone:"t-good"}, aanhouden:{label:"Aanhouden",tone:"t-neutral"}, voorzichtig:{label:"Voorzichtig",tone:"t-warn"}, afbouwen:{label:"Afbouwen",tone:"t-bad"}};
+const LV = {rustig:{tone:"t-good",label:"Rustig",rank:0}, gespannen:{tone:"t-warn",label:"Gespannen",rank:1}, stress:{tone:"t-bad",label:"Stress",rank:2}, info:{tone:"t-neutral",label:"Info",rank:-1}};
+const RISK = {"risk-on":{tone:"t-good",label:"Risk-on"}, neutraal:{tone:"t-neutral",label:"Neutraal"}, defensief:{tone:"t-warn",label:"Defensief"}, "risk-off":{tone:"t-bad",label:"Risk-off"}};
+const PILLAR_ORDER = ["inflatie","groei","rente","liquiditeit","dollar","krediet","sentiment","posities"];
+const PILLAR_NAME = {inflatie:"Inflatie & energie", groei:"Groei & werk", rente:"Rente & obligaties", liquiditeit:"Liquiditeit", dollar:"Dollar & yen", krediet:"Krediet", sentiment:"Sentiment & AI", posities:"Jouw posities"};
+const STAGES = [{n:1,title:"Oorzaken",sub:"Wat zet de toon?"},{n:2,title:"Prijs van geld",sub:"Rente en liquiditeit"},{n:3,title:"Doorgifte",sub:"Dollar, krediet en sentiment"},{n:4,title:"Jouw posities",sub:"Wat het voor jou betekent"}];
+const SC_COLORS = {s1:"var(--sc1)", s2:"var(--sc2)", s3:"var(--sc3)", s4:"var(--sc4)"};
+const IMPACT = {"-2":["im2","↓↓"],"-1":["im1","↓"],"0":["i0","→"],"1":["i1","↑"],"2":["i2","↑↑"]};
+const TABS = ["markt","cyclus","plan","signalen","inbox","post","historie","uitleg"];
+const SIGNED = new Set(["nfp3m","netLiqChg","kospiDay","curve"]);
+const LENS_SOURCE = {tr:"TradersReality", rebel:"Rebel Capitalist"};
+const SOURCE_LENS = {"TradersReality":"tr", "Rebel Capitalist":"rebel"};
+const MAX_TEXT = 180000;
+const HIDE_CODES = ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"];
+
+const S = {plan:null, planLoaded:false, market:null, series:{}, levels:null, inbox:[], history:[], db:null, sample:null, downloads:null, server:null, srvStatus:null,
+  canWrite:true, offline:false, pending:null, anaCtl:null, askCtl:null, histConfirm:null, sel:null, tab:"markt"};
+
+/* ================= helpers ================= */
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nf = (v, d=0) => (typeof v === "number" && isFinite(v)) ? new Intl.NumberFormat("nl-NL",{minimumFractionDigits:d,maximumFractionDigits:d}).format(v) : "–";
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const arr = v => Array.isArray(v) ? v : [];
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const todayISO = () => { const d = new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); };
+function fmtDate(iso, opts={day:"numeric",month:"short"}){ if(!iso) return ""; const d=new Date(iso.length===10? iso+"T12:00:00" : iso); return isNaN(d)? String(iso) : new Intl.DateTimeFormat("nl-NL",opts).format(d); }
+function fmtDT(iso){ if(!iso) return ""; const d=new Date(iso); return isNaN(d)? "" : new Intl.DateTimeFormat("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Amsterdam"}).format(d); }
+function daysFrom(iso){ const a=new Date(todayISO()+"T12:00:00"), b=new Date(iso+"T12:00:00"); return Math.round((b-a)/864e5); }
+function ago(iso){ const h=(Date.now()-new Date(iso).getTime())/36e5; if(!isFinite(h)) return ""; if(h<1) return Math.max(1,Math.round(h*60))+" min geleden"; if(h<36) return Math.round(h)+" uur geleden"; return Math.round(h/24)+" dagen geleden"; }
+function setStatus(el, msg, err=false){ if(!el) return; el.textContent = msg||""; el.classList.toggle("err", !!err); }
+function lvPill(lv, extra=""){ const L=LV[lv]; return L? `<span class="pill ${L.tone}"${extra}>${L.label}</span>` : ""; }
+function stancePill(s){ const st=STANCES[s]||STANCES.aanhouden; return `<span class="pill ${st.tone}">${st.label}</span>`; }
+function dirMark(d){ const v=Math.round(+d||0); return v>0? `<span class="dir pos" aria-label="positief">${v>1?"↑↑":"↑"}</span>` : v<0? `<span class="dir neg" aria-label="negatief">${v<-1?"↓↓":"↓"}</span>` : `<span class="dir flat" aria-label="neutraal">→</span>`; }
+function impactCell(v){ const k=IMPACT[String(clamp(Math.round(v||0),-2,2))]; return `<span class="cell ${k[0]}">${k[1]}</span>`; }
+function posName(id){ return S.plan?.positions?.find(x=>x.id===id)?.name || POS_SHORT[id] || id; }
+function chipsFor(ids){ return arr(ids).map(id=>`<span class="chip">${esc(POS_SHORT[id]||id)}</span>`).join(""); }
+
+/* market items */
+function item(key){ return S.market?.items?.find(i=>i.key===key); }
+function itemText(it){
+  if(!it) return "–";
+  if(it.display) return it.display;
+  if(typeof it.value!=="number") return "–";
+  const sign = it.value<0 ? "−" : (SIGNED.has(it.key) && it.value>0 ? "+" : "");
+  return sign + (it.prefix||"") + nf(Math.abs(it.value), it.decimals ?? 2) + (it.suffix||"");
+}
+
+/* triggers */
+function trigValue(t){
+  if(t.computed==="gold/wti"){ const g=item("gold"), w=item("wti"); return (g&&w&&w.value)? {v:g.value/w.value, asOf:"goud ÷ WTI"} : {v:null}; }
+  const m = t.marketKey ? item(t.marketKey) : null;
+  if(m && typeof m.value==="number") return {v:m.value, asOf:m.asOf};
+  return {v: typeof t.current==="number"? t.current : null, asOf:t.asOf};
+}
+function trigLevel(t, v){
+  if(v==null) return null;
+  if(t.dir==="up") return v>=t.danger? "stress" : v>=t.warn? "gespannen" : "rustig";
+  return v<=t.danger? "stress" : v<=t.warn? "gespannen" : "rustig";
+}
+function fmtTrig(t, v){
+  if(v==null) return "–";
+  const u=t.unit||"";
+  if(u==="$") return "$"+nf(v, Math.abs(v)>=1000?0:2);
+  if(u==="k") return nf(v,0)+"k";
+  if(u==="Δk") return (v>0?"+":"")+nf(v,0)+"k";
+  if(u==="Δ$mld") return (v>0?"+":"−")+"$"+nf(Math.abs(v),0)+" mld";
+  if(u==="×") return nf(v,1)+"×";
+  if(u==="%") return nf(v, Number.isInteger(v)?0:(Math.abs(v)>=10?1:2))+"%";
+  return nf(v, Math.abs(v)>=1000?0:2)+u;
+}
+function pillarLevel(p){
+  const ts = arr(S.plan?.triggers).filter(t=>t.pillar===p.id);
+  let worst=null, n=0;
+  ts.forEach(t=>{ const {v}=trigValue(t); const l=trigLevel(t,v); if(l){ n++; if(!worst || LV[l].rank>LV[worst].rank) worst=l; } });
+  return worst ? {lv:worst, auto:true, n} : {lv:p.status||"info", auto:false, n:0};
+}
+
+/* sparkline */
+function spark(key, w=72, h=22){
+  const s = arr(S.series?.[key]).slice(-90).map(p=>+p[1]).filter(isFinite);
+  if(s.length<5) return "";
+  const mn=Math.min(...s), mx=Math.max(...s), rg=(mx-mn)||1;
+  const X=i=> (i/(s.length-1))*(w-4)+2, Y=v=> h-2-((v-mn)/rg)*(h-5);
+  const line = s.map((v,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(v).toFixed(1)).join(" ");
+  const area = line+` L${X(s.length-1).toFixed(1)} ${h} L${X(0).toFixed(1)} ${h} Z`;
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><path class="sp-a" d="${area}"/><path class="sp-l" d="${line}"/><circle class="sp-d" cx="${X(s.length-1).toFixed(1)}" cy="${Y(s[s.length-1]).toFixed(1)}" r="2.4"/></svg>`;
+}
+
+/* ================= tabs & global events ================= */
+function showTab(name){
+  if(!TABS.includes(name)) name="markt";
+  S.tab=name;
+  TABS.forEach(t=>{ $("p-"+t).hidden = t!==name; $("tb-"+t).setAttribute("aria-selected", String(t===name)); });
+  if(name==="post" && typeof loadPost==="function") loadPost();
+  try{ localStorage.setItem("hp-tab2", name); }catch(e){}
+}
+let startTab=(location.hash||"").replace("#","");
+if(!TABS.includes(startTab)){ try{ startTab=localStorage.getItem("hp-tab2")||"markt"; }catch(e){ startTab="markt"; } }
+showTab(startTab);
+
+document.addEventListener("click", (ev)=>{
+  const t = ev.target.closest("[data-tab],[data-goto],[data-pillar],[data-act],[data-ana],[data-undo]");
+  if(!t) return;
+  if(t.dataset.tab || t.dataset.goto){ showTab(t.dataset.tab||t.dataset.goto); window.scrollTo({top:0}); return; }
+  if(t.dataset.pillar){ S.sel = S.sel===t.dataset.pillar? null : t.dataset.pillar; renderMachine(); return; }
+  if(t.dataset.ana){ const it=S.inbox.find(x=>x.id===t.dataset.ana); if(it) runAnalysis(it.id,{source:it.source,title:it.title,url:it.url,date:it.date}, it.text); return; }
+  if(t.dataset.undo){ undo(t.dataset.undo); return; }
+  const a=t.dataset.act;
+  if(a==="paste"){ $("inSource").value=t.dataset.source||"Overig"; showTab("inbox"); window.scrollTo({top:0}); $("inText").focus(); }
+  if(a==="refresh-macro") refreshMacro();
+  if(a==="export") exportMd();
+  if(a==="apply") applyPending();
+  if(a==="dismiss") dismissPending();
+  if(a==="logout") S.server?.logout();
+});
+document.addEventListener("keydown", (ev)=>{
+  const t=ev.target.closest?.("[data-pillar]");
+  if(t && (ev.key==="Enter"||ev.key===" ")){ ev.preventDefault(); t.click(); }
+});
+$("logoutBtn").addEventListener("click", ()=>S.server?.logout());
+
+/* ================= header ================= */
+function renderHeader(){
+  const m=S.market, live=$("live");
+  if(m?.updatedAt){
+    const h=(Date.now()-new Date(m.updatedAt).getTime())/36e5;
+    const auto=/Server|Automatisch/.test(m.updatedBy||"");
+    live.className = "live " + (auto && h<3 ? "on" : "old");
+    $("liveText").textContent = (auto && h<3 ? "Live · " : "Cijfers ") + ago(m.updatedAt);
+  } else { live.className="live"; $("liveText").textContent = S.offline? "geen opslag" : "laden…"; }
+  const keys=[["realYield10","Reële rente"],["us10y","10j"],["gold","Goud"],["brent","Brent"],["crcl","CRCL"]];
+  $("ticker").innerHTML = keys.map(([k,l])=>{ const it=item(k); return it&&typeof it.value==="number"? `<span>${l} <b>${esc(itemText(it))}</b></span>` : ""; }).join("");
+}
+
+/* ================= MARKT ================= */
+function compassSVG(c){
+  const W=360, pad=26, r=(W-2*pad)/2, cx=W/2, cy=W/2;
+  const g=clamp(+c.growth||0,-1,1), inf=clamp(+c.inflation||0,-1,1);
+  const x=cx+g*r*.86, y=cy-inf*r*.86;
+  const hd=c.heading||{}; const hx=x+clamp(+hd.growth||0,-1,1)*r*.86, hy=y-clamp(+hd.inflation||0,-1,1)*r*.86;
+  const hasHead = Math.hypot(hx-x,hy-y)>8;
+  const ang = Math.atan2(hy-y,hx-x);
+  const ah = hasHead? `<path class="c-arrow" d="M${hx.toFixed(1)} ${hy.toFixed(1)} l${(-9*Math.cos(ang-0.45)).toFixed(1)} ${(-9*Math.sin(ang-0.45)).toFixed(1)} l${(9*Math.cos(ang-0.45)-9*Math.cos(ang+0.45)).toFixed(1)} ${(9*Math.sin(ang-0.45)-9*Math.sin(ang+0.45)).toFixed(1)} Z"/>` : "";
+  const q=(cls,qx,qy,anchor,name,l1,l2)=>{
+    const tx = anchor==="start"? qx+12 : qx-12;
+    return `<text class="c-qn" x="${tx}" y="${qy}" text-anchor="${anchor}">${name}</text><text class="c-qa" x="${tx}" y="${qy+15}" text-anchor="${anchor}">${l1}</text><text class="c-qa" x="${tx}" y="${qy+28}" text-anchor="${anchor}">${l2}</text>`;
+  };
+  return `<svg viewBox="0 0 ${W} ${W+22}" role="img" aria-label="Regimekompas: groei ${g<0?"zwak":"sterk"}, inflatie ${inf>0?"stijgend":"dalend"}">
+    <rect class="cq-stag" x="${pad}" y="${pad}" width="${r}" height="${r}" rx="10"/>
+    <rect class="cq-refl" x="${cx}" y="${pad}" width="${r}" height="${r}" rx="10"/>
+    <rect class="cq-krimp" x="${pad}" y="${cy}" width="${r}" height="${r}" rx="10"/>
+    <rect class="cq-gold" x="${cx}" y="${cy}" width="${r}" height="${r}" rx="10"/>
+    <line class="c-axis" x1="${pad}" y1="${cy}" x2="${W-pad}" y2="${cy}"/><line class="c-axis" x1="${cx}" y1="${pad}" x2="${cx}" y2="${W-pad}"/>
+    ${q("",pad,pad+24,"start","Stagflatie","goud, energie, cash","aandelen vaak zwak")}
+    ${q("",W-pad,pad+24,"end","Reflatie","grondstoffen, value","small caps, cyclisch")}
+    ${q("",pad,W-pad-40,"start","Krimp","staatsobligaties","dollar; goud na Fed")}
+    ${q("",W-pad,W-pad-40,"end","Goldilocks","tech en groei","brede aandelenmarkt")}
+    <text class="c-ax" x="${cx}" y="${pad-9}" text-anchor="middle">INFLATIE ↑</text>
+    <text class="c-ax" x="${cx}" y="${W-pad+16}" text-anchor="middle">INFLATIE ↓</text>
+    <text class="c-ax" x="${pad}" y="${W+16}" text-anchor="start">← GROEI ZWAKT</text>
+    <text class="c-ax" x="${W-pad}" y="${W+16}" text-anchor="end">GROEI STERK →</text>
+    ${hasHead? `<line class="c-head" x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${hx.toFixed(1)}" y2="${hy.toFixed(1)}"/>${ah}` : ""}
+    <circle class="c-halo" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15"/>
+    <circle class="c-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7"/>
+    <text class="c-now" x="${(x+12).toFixed(1)}" y="${(y-11).toFixed(1)}">NU</text>
+  </svg>`;
+}
+
+function renderMarkt(){
+  const p=S.plan, m=p?.macro;
+  if(!p){
+    $("mk-hero").innerHTML = S.offline
+      ? `<div class="empty"><b>Opslag niet bereikbaar in deze weergave</b><span>Open je plan via plan.vsonsbeek.nl of in de Claude-app.</span></div>`
+      : S.planLoaded ? `<div class="empty"><b>Nog geen plan opgeslagen</b><span>Plak een transcript in de Inbox om te beginnen.</span></div>`
+      : `<div class="empty"><b>Marktstatus laden…</b><span>Je macro-overzicht, cijfers en signalen verschijnen zodra de opslag antwoordt.</span></div>`;
+    ["mk-points","mk-machine","mk-lenses","mk-ind","mk-cal"].forEach(id=>$(id).innerHTML="");
+    return;
+  }
+  if(!m){
+    $("mk-hero").innerHTML = `<div class="empty"><b>Het macro-overzicht ontbreekt nog in je plan</b><span>Werk je site bij (zie Uitleg); daarna verschijnt het hier vanzelf.</span></div>`;
+  } else {
+    const rk=RISK[m.riskMode]||RISK.neutraal;
+    $("mk-hero").innerHTML = `<div class="hero">
+      <div>
+        <span class="eyebrow">Marktstatus · ${esc(fmtDT(m.updatedAt))}</span>
+        <div class="pills"><span class="pill ${rk.tone}">${rk.label}</span>${m.regime? `<span class="pill t-accent plain">Regime: ${esc(m.regime)}</span>`:""}</div>
+        <h1>${esc(m.headline||"")}</h1>
+        <p class="lede">${esc(m.summary||"")}</p>
+        <div class="btnrow">
+          ${m.cycle? `<button class="btn primary" type="button" data-goto="cyclus">Waar staan we in de cyclus?</button>`:""}
+          <button class="btn" type="button" data-act="refresh-macro" id="refreshBtn" ${S.sample?"":"disabled"}>Marktstatus bijwerken met Claude</button>
+          <span class="status" id="refreshStatus" role="status">${S.sample? "Herschrijft dit overzicht op basis van de cijfers hieronder; jij keurt goed." : ""}</span>
+        </div>
+        <p class="faint small" style="margin-top:10px">${esc(m.source||"")}</p>
+      </div>
+      <figure class="compass">${compassSVG(m.compass||{})}<figcaption>${esc(m.compass?.why||"")}</figcaption></figure>
+    </div>`;
+  }
+
+  $("mk-points").innerHTML = arr(m?.keyPoints).length ? `<div class="box">
+    <div class="sechead" style="margin-bottom:6px"><h2>Wat nu het verschil maakt</h2><span class="muted small">De kern van het marktbeeld in zes punten</span></div>
+    <div class="points">${arr(m.keyPoints).slice(0,6).map(k=>`<div class="pt"><span class="dot ${esc(k.tone)}"></span><b>${esc(k.title)}</b><p>${esc(k.text)}</p></div>`).join("")}</div></div>` : "";
+
+  renderMachine();
+  renderLenses();
+  renderIndicators();
+  renderMiniCal();
+}
+
+function renderMachine(){
+  const p=S.plan, m=p?.macro; const el=$("mk-machine");
+  if(!m){ el.innerHTML=""; return; }
+  const pillars=arr(m.pillars);
+  const sel = pillars.find(x=>x.id===S.sel);
+  const effects = sel?.effects||{};
+  const stageHTML = (st)=>{
+    if(st.n===4){
+      return arr(p.positions).map(x=>{
+        const pi=m.positionImpact?.[x.id]||{};
+        const e = sel? (effects[x.id]||0) : null;
+        const cls = sel? (e? "hit "+(e>0?"pos":"neg") : "") : "";
+        return `<div class="pc ${cls}"><span class="nm">${esc(POS_SHORT[x.id]||x.name)}</span><span class="eff">${sel? (e? dirMark(e) : `<span class="dir flat">·</span>`) : dirMark(pi.dir)}${stancePill(x.stance)}</span>
+          <span class="why">${sel? (e? (e>0? "Profiteert van ":"Last van ")+esc(sel.name.toLowerCase()) : "Weinig effect") : esc(pi.why||"")}</span></div>`;
+      }).join("");
+    }
+    return pillars.filter(x=>x.stage===st.n).map(x=>{
+      const pl=pillarLevel(x);
+      const vals = arr(x.keys).map(k=>{ const it=item(k); if(!it || (typeof it.value!=="number" && !it.display)) return ""; return `<div class="kv"><span>${esc(it.label)}</span><i class="sk">${spark(k,54,16)}</i><b>${esc(itemText(it))}</b></div>`; }).join("");
+      return `<article class="pl ${S.sel===x.id?"sel":""}" data-pillar="${esc(x.id)}" tabindex="0" role="button" aria-pressed="${S.sel===x.id}">
+        <div class="pl-top"><div><div class="pl-name">${esc(x.name)}</div><div class="pl-q">${esc(x.q||"")}</div></div>${lvPill(pl.lv, pl.auto? ` title="Automatisch op basis van ${pl.n} signalen"`:"")}</div>
+        ${vals? `<div class="stack" style="gap:4px">${vals}</div>`:""}
+        <p class="pl-read">${esc(x.reading||"")}</p>
+      </article>`;
+    }).join("");
+  };
+  const note = sel ? `Je bekijkt <b>${esc(sel.name)}</b>: groen omrande posities profiteren, rood omrande hebben er last van. Klik nogmaals om te sluiten.` : `Klik op een blok om te zien welke van je posities erdoor geraakt worden.`;
+  el.innerHTML = `<div class="box stack">
+    <div class="sechead"><h2>Hoe het in elkaar zit</h2><span class="muted small">Van oorzaak naar jouw portefeuille · status volgt automatisch uit je signalen</span></div>
+    <p class="selnote">${note}</p>
+    <div class="machine ${sel?"focus":""}">${STAGES.map(st=>`<div class="stage"><div class="stage-h"><span class="stage-n">${st.n}</span><div><b>${st.title}</b><small>${st.sub}</small></div></div><div class="stage-body">${stageHTML(st)}</div></div>`).join("")}</div>
+  </div>`;
+}
+
+function lensCheckValue(c){ if(!c.key) return ""; const it=item(c.key); return it&&(typeof it.value==="number"||it.display)? `<span class="val">${esc(itemText(it))}</span>` : ""; }
+function rangePos(r){
+  if(r.prevWkHigh==null || r.prevWkLow==null) return {t:"–", cls:""};
+  if(r.last>r.prevWkHigh) return {t:"Boven vorige-week hoog", cls:"op"};
+  if(r.last<r.prevWkLow) return {t:"Onder vorige-week laag", cls:"neer"};
+  const pct=(r.last-r.prevWkLow)/((r.prevWkHigh-r.prevWkLow)||1)*100;
+  return {t:`In de range (${nf(pct,0)}%)`, cls:"range"};
+}
+function renderLevels(){
+  const L=S.levels;
+  const head = `<div class="sechead"><div><span class="eyebrow">Niveaubord · in de stijl van TradersReality</span><h3 style="margin-top:3px">Trend en liquiditeitszones per markt</h3></div><span class="muted small">${L?.updatedAt? "Berekend "+esc(fmtDT(L.updatedAt))+" uit daggrafieken" : ""}</span></div>`;
+  if(!L?.rows?.length) return `<div class="box stack">${head}<div class="empty small"><b>Nog geen niveaus berekend</b><span>Trend (50- en 200-daags gemiddelde), het hoog en laag van vorige week en de gemiddelde dagbeweging worden elke handelsdag na slot berekend zodra Twelve Data en FRED gekoppeld zijn.</span></div></div>`;
+  const f=(r,v)=> v==null? "–" : (r.prefix||"")+nf(v, r.decimals)+(r.suffix||"");
+  return `<div class="box stack">${head}
+  <p class="secintro">Rond het hoog en laag van vorige week liggen vaak stops: daar zit liquiditeit waar grote partijen op mikken. Breekt de prijs zo'n niveau, kijk dan of het een echte uitbraak is of een stop-run die terugvalt.</p>
+  <div class="lvl"><table><thead><tr><th>Markt</th><th class="r">Slot</th><th>Trend</th><th class="r">50-daags</th><th class="r">200-daags</th><th class="r">Vorige week hoog</th><th class="r">Vorige week laag</th><th>Positie</th><th class="r">Gem. dagbeweging</th></tr></thead><tbody>
+  ${L.rows.map(r=>{ const rp=rangePos(r); return `<tr><td style="white-space:nowrap"><b style="font-weight:600">${esc(r.label)}</b><div class="faint small">${esc(r.asOf)} · ${esc(r.src)}</div></td><td class="r"><span class="num">${f(r,r.last)}</span></td>
+    <td style="white-space:nowrap"><span class="trend ${esc(r.trend)}">${r.trend==="op"?"▲ op":r.trend==="neer"?"▼ neer":"◆ gemengd"}</span></td>
+    <td class="r"><span class="num">${f(r,r.ema50)}</span></td><td class="r"><span class="num">${f(r,r.ema200)}</span></td>
+    <td class="r"><span class="num">${f(r,r.prevWkHigh)}</span></td><td class="r"><span class="num">${f(r,r.prevWkLow)}</span></td>
+    <td style="white-space:nowrap"><span class="trend ${rp.cls}" style="font-weight:500">${esc(rp.t)}</span></td>
+    <td class="r"><span class="num">${f(r,r.adr)}</span> <span class="num faint">${r.adrPct!=null? "("+nf(r.adrPct,1)+"%)":""}</span></td></tr>`; }).join("")}
+  </tbody></table></div>
+  <p class="faint small">Trend: ▲ slot boven het 50-daags en 50 boven 200 · ▼ omgekeerd · ◆ gemengd. Gem. dagbeweging = gemiddelde afstand tussen dag-hoog en -laag over 14 dagen (bij FRED-reeksen: slot tot slot).</p></div>`;
+}
+function renderLenses(){
+  const m=S.plan?.macro; const el=$("mk-lenses");
+  if(!arr(m?.lenses).length){ el.innerHTML=""; return; }
+  el.innerHTML = `<div class="stack">
+    <div class="sechead"><h2>Twee brillen op dezelfde markt</h2><span class="muted small">Plak een transcript van de bron en hun bril wordt bijgewerkt met hún visie</span></div>
+    <div class="lenses">${m.lenses.map(l=>`<article class="box lens">
+      <div><span class="eyebrow">Bril</span><h2 style="margin-top:4px">${esc(l.name)}</h2><p class="lens-who">Zoals <b>${esc(l.who)}</b> ernaar kijkt</p></div>
+      <p class="lens-method">${esc(l.method||"")}</p>
+      <p class="lens-q">${esc(l.question||"")}</p>
+      <div>${arr(l.checks).map(c=>`<div class="ck"><span class="dot ${esc(c.status||"info")}"></span><b>${esc(c.q)}</b>${lensCheckValue(c)}<p>${esc(c.auto==="levels" && levelsSummary()? levelsSummary() : (c.answer||""))}</p></div>`).join("")}</div>
+      <div class="take"><span class="eyebrow">Conclusie van deze bril</span><p>${esc(l.take||"")}</p></div>
+      <div class="sechead"><span class="basis">${esc(l.basis||"")} · ${esc(fmtDT(l.updatedAt))}</span>
+        <button class="btn sm" type="button" data-act="paste" data-source="${esc(LENS_SOURCE[l.id]||"Overig")}">Plak een ${esc(LENS_SOURCE[l.id]||"")}-transcript</button></div>
+    </article>`).join("")}</div>
+    ${renderLevels()}</div>`;
+}
+function levelsSummary(){
+  const rows=arr(S.levels?.rows); if(!rows.length) return "";
+  const by=t=>rows.filter(r=>r.trend===t).map(r=>r.label.replace(/ \(.*\)$/,""));
+  const parts=[["Op",by("op")],["Neer",by("neer")],["Gemengd",by("gemengd")]].filter(x=>x[1].length).map(x=>`${x[0]}: ${x[1].join(", ")}`);
+  return parts.join(" · ")+". Zie het niveaubord hieronder.";
+}
+function renderIndicators(){
+  const items=arr(S.market?.items); const el=$("mk-ind");
+  if(!items.length){ el.innerHTML=""; return; }
+  const pillars=arr(S.plan?.macro?.pillars);
+  const trigByKey={}; arr(S.plan?.triggers).forEach(t=>{ if(t.marketKey) trigByKey[t.marketKey]=t; });
+  const groups = PILLAR_ORDER.map(pid=>({pid, rows: items.filter(i=>(i.pillar||"posities")===pid)})).filter(g=>g.rows.length);
+  const m=S.market; const stale = m?.updatedAt ? (Date.now()-new Date(m.updatedAt).getTime())/36e5 > 36 : true;
+  el.innerHTML = `<div class="box stack">
+    <div class="sechead"><h2>Alle cijfers</h2><span class="small ${stale?"":"muted"}">${m?.updatedAt? (stale? `<span class="pill t-warn">Verouderd</span> `:"")+"Bijgewerkt "+esc(fmtDT(m.updatedAt))+" · "+esc(m.updatedBy||"") : ""}</span></div>
+    <div class="ind">${groups.map(g=>{
+      const pl=pillars.find(x=>x.id===g.pid); const lv = pl? pillarLevel(pl).lv : null;
+      return `<div class="ind-g"><div class="ind-gh"><h3>${esc(PILLAR_NAME[g.pid]||g.pid)}</h3>${lv? lvPill(lv):""}</div>
+      ${g.rows.map(it=>{ const t=trigByKey[it.key]; const l = t? trigLevel(t, typeof it.value==="number"? it.value : null) : null;
+        return `<div class="ir"><span class="l">${esc(it.label)}</span><span class="s">${spark(it.key)}</span><span class="v ${l==="stress"?"bad":l==="gespannen"?"warn":""}">${esc(itemText(it))}</span><span class="c">${esc(it.change||"")}</span><span class="m">${esc(it.asOf||"")} · ${esc(it.src||"")}</span></div>`; }).join("")}
+      </div>`; }).join("")}</div>
+    <details id="mEdit"><summary class="muted small" style="cursor:pointer">Cijfers handmatig aanpassen (bijv. S&P 500, Kospi)</summary><div id="mEditBody" style="margin-top:10px"></div></details>
+  </div>`;
+  const det=$("mEdit"); det.open=!!S.mEditOpen; det.addEventListener("toggle",()=>{ S.mEditOpen=det.open; if(det.open) renderMarketEditor(); });
+  if(det.open) renderMarketEditor();
+}
+function renderMiniCal(){
+  const p=S.plan; const el=$("mk-cal");
+  const up=arr(p?.calendar).filter(c=>daysFrom(c.date)>=0).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  el.innerHTML = up.length? `<div class="box"><div class="sechead"><h2>Komende momenten</h2><span class="muted small">Tijden in Nederlandse tijd</span></div><ul class="cal" style="margin-top:6px">${up.map(calItem).join("")}</ul>
+    ${arr(p.calendar).length>up.length? `<details style="margin-top:8px"><summary class="muted small" style="cursor:pointer">Volledige kalender (${p.calendar.length})</summary><ul class="cal">${p.calendar.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(calItem).join("")}</ul></details>`:""}</div>` : "";
+}
+function calItem(c){
+  const dd=daysFrom(c.date), rel = dd===0? "vandaag" : dd===1? "morgen" : dd>1? "over "+dd+" dagen" : Math.abs(dd)+" dagen geleden";
+  return `<li class="${dd<0?"past":dd<=3?"soon":""}"><div class="d">${esc(fmtDate(c.date,{weekday:"short",day:"numeric",month:"short"}))}<small>${esc(c.time||"")}${c.time?" · ":""}${esc(rel)}</small></div>
+    <div><b>${esc(c.event)}</b><div class="muted small">${esc(c.why||"")}</div><div class="chips" style="margin-top:5px">${chipsFor(c.affects)}</div></div></li>`;
+}
+function renderMarketEditor(){
+  const body=$("mEditBody"); if(!body) return;
+  const items=arr(S.market?.items);
+  body.innerHTML = `<div class="tbl"><table><thead><tr><th>Cijfer</th><th>Waarde</th><th>Tijdstip</th></tr></thead><tbody>${items.map((i,ix)=>`
+    <tr><td>${esc(i.label)}</td><td><input id="me-v-${ix}" inputmode="decimal" value="${esc(i.value??"")}" style="max-width:130px" aria-label="Waarde ${esc(i.label)}"></td><td><input id="me-a-${ix}" value="${esc(i.asOf||"")}" style="max-width:200px" aria-label="Tijdstip ${esc(i.label)}"></td></tr>`).join("")}</tbody></table></div>
+    <div class="btnrow" style="margin-top:10px"><button class="btn primary sm" type="button" id="meSave" ${S.canWrite&&S.db?"":"disabled"}>Cijfers opslaan</button><span class="status" id="meStatus"></span></div>`;
+  $("meSave").addEventListener("click", async ()=>{
+    const st=$("meStatus"); const next=clone(items);
+    for(let ix=0; ix<next.length; ix++){
+      const raw=$("me-v-"+ix).value.trim().replace(/\s/g,"").replace(",",".");
+      if(raw===""){ continue; }
+      const v=Number(raw); if(!isFinite(v)){ setStatus(st,"Ongeldige waarde bij "+next[ix].label+". Gebruik alleen cijfers.",true); return; }
+      if(v!==next[ix].value){ next[ix].value=v; next[ix].change=""; next[ix].src="Handmatig"; next[ix].display=null; }
+      next[ix].asOf=$("me-a-"+ix).value.trim();
+    }
+    setStatus(st,"Opslaan…");
+    try{ await S.db.doc("market/latest").update({items:next, updatedAt:new Date().toISOString(), updatedBy:"Handmatig"}); S.mEditOpen=false; notice("Cijfers opgeslagen."); }
+    catch(e){ setStatus(st, dbErrText(e), true); }
+  });
+}
+
+/* ================= CYCLUS ================= */
+const CYCLE_ORDER=["sentiment","credit","economy"];
+const CYCLE_DEF={
+  sentiment:{n:1, name:"Euforie-cyclus", sub:"Hoe beleggers zich voelen (Amerikaanse aandelen)",
+    phases:[["Hoop",.16],["Optimisme",.18],["Euforie",.20],["Onrust",.14],["Paniek",.16],["Wanhoop",.16]],
+    ghosts:[
+      {pos:.54,label:"okt '07",when:"okt 2007",tip:"9 okt 2007: S&P 500 op record (1.565), een maand na de eerste renteverlaging. De angst was laag."},
+      {pos:.79,label:"sep '08",when:"sep 2008",tip:"15 sep 2008: Lehman Brothers failliet. Paniek op alle markten."},
+      {pos:.97,label:"mrt '09",when:"mrt 2009",tip:"9 mrt 2009: bodem op 677 (−57%). Wanhoop, en daarna een sterk herstel."}]},
+  credit:{n:2, name:"Kredietcyclus", sub:"Hoe makkelijk bedrijven geld lenen, inclusief private credit",
+    phases:[["Herstel",.17],["Groei",.19],["Losse normen",.20],["Stress",.14],["Crisis",.17],["Opruimen",.13]],
+    ghosts:[
+      {pos:.47,label:"2006",when:"2005–06",tip:"2005–06: subprimehypotheken en complexe kredietproducten op hun hoogtepunt. De leennormen waren nooit zo los."},
+      {pos:.58,label:"aug '07",when:"aug 2007",tip:"Jun–aug 2007: twee Bear Stearns-hedgefondsen klappen; BNP Paribas bevriest op 9 augustus drie fondsen."},
+      {pos:.80,label:"sep '08",when:"sep 2008",tip:"Sep 2008: Lehman failliet, de kredietmarkt bevriest. De junk-spread loopt op tot ca. 20% (dec 2008)."}]},
+  economy:{n:3, name:"Economische cyclus", sub:"Groei, banen, inflatie en de Fed",
+    phases:[["Herstel",.17],["Groei",.19],["Laat",.20],["Afkoeling",.14],["Recessie",.30]],
+    ghosts:[
+      {pos:.58,label:"aug '07",when:"zomer 2007",tip:"Zomer 2007: de groei vlakt af en de werkloosheid begint op te lopen (vanaf 4,4%). De Fed staat op 5,25% en verlaagt in september voor het eerst."},
+      {pos:.72,label:"dec '07",when:"dec 2007",tip:"Dec 2007: begin van de recessie (achteraf vastgesteld)."},
+      {pos:.98,label:"jun '09",when:"jun 2009",tip:"Jun 2009: einde van de recessie. De werkloosheid loopt nog door tot 10,0% (okt 2009)."}]},
+};
+const TIMELINE_2008=[
+  {step:"Goedkoop geld en euforie", then:"2003–06: Fed-rente op 1%, huizenprijzen schieten omhoog, banken verpakken subprimehypotheken in complexe producten.", now:"2023–26: AI-boom. S&P 500 +119% sinds okt 2022, margin debt $1,45 bln (+37% in een jaar), private credit gegroeid tot ca. $2 bln.", st:"done"},
+  {step:"Rente omhoog", then:"2004–06: de Fed verhoogt van 1% naar 5,25%.", now:"De Fed verlaagde eind 2025, maar verhoogt weer (sep 2026: 3,75–4,00%). De 30-jaarsrente piekte op 5,73%, het hoogste sinds 2002.", st:"done"},
+  {step:"Eerste barsten in de schaduw", then:"Jun–aug 2007: twee Bear Stearns-hedgefondsen klappen; BNP Paribas bevriest drie fondsen (9 aug).", now:"Private-creditfondsen laten maar 5% per kwartaal uitstappen terwijl 17% (Blue Owl) tot 39% (techfonds) eruit wil. Wanbetalingen op een record (Fitch: 6,0%).", st:"now"},
+  {step:"Beurs nog op de top, angst laag", then:"9 okt 2007: S&P 500 record (1.565), kort na de eerste renteverlaging.", now:"6 okt 2026: S&P 500 record (7.819); nu ca. 1% lager. Angstindex VIX 16,9.", st:"now"},
+  {step:"Olie en inflatie pieken", then:"Jul 2008: olie $147, inflatie 5,6%.", now:"Brent ca. $105 (top $126 in maart), inflatie 3,7% en oplopend.", st:"part"},
+  {step:"Het breekpunt", then:"15 sep 2008: Lehman Brothers failliet. De kredietmarkt bevriest.", now:"Geen groot faillissement; de kredietmarkt werkt nog.", st:"no"},
+  {step:"Bodem en redding", then:"9 mrt 2009: S&P 500 op 677 (−57%), Fed-rente op 0%, werkloosheid op weg naar 10%.", now:"", st:"no"},
+];
+const TL_ST={done:["t-neutral","Gebeurd"], now:["t-accent","Hier staan we"], part:["t-warn","Deels"]};
+const DIFF_2008=[
+  "Banken zijn sterker. Het risico zit nu vooral bij fondsen, pensioenfondsen en verzekeraars (Amerikaanse levensverzekeraars hebben zo'n 10% in private credit). Wel lenen banken samen ca. $300 mld aan deze fondsen.",
+  "Een fonds met een uitstapplafond loopt niet in één dag leeg. Dat maakt het eerder een langzaam lek dan een bankrun, maar het kan wel lang duren.",
+  "In 2008 vluchtte iedereen naar staatsobligaties. Nu is de obligatiemarkt zelf een zwakke plek (30-jaarsrente 5,73%), dus die veilige haven werkt mogelijk minder goed.",
+  "De inflatie is hoger dan in de zomer van 2007 (3,7% tegen ca. 2%). Daardoor kan de Fed minder makkelijk snel redden zonder de inflatie aan te wakkeren.",
+];
+const CRASHES=[
+  {years:"1973–74", name:"Oliecrisis en stagflatie", like:"olie",
+   why:"Een olie-embargo (okt 1973) maakte olie vier keer zo duur. De inflatie liep op naar ruim 12% en de Fed zette de rente op ca. 13%. De populaire groeiaandelen van toen, de 'Nifty Fifty', stortten in.",
+   likeNow:"een oorlog maakt olie duur, de inflatie loopt op en de Fed verhoogt.",
+   diff:"olie is nu ca. 1,5 keer zo duur in plaats van 4 keer, en de economie gebruikt veel minder olie per euro groei.",
+   stats:[["−48%","S&P 500 in 21 maanden"],["7,5 jaar","tot het oude record"],["+189%","goudaandelen (goud +139%)"],["−70 à −87%","groeiaandelen zoals Coca-Cola en Avon"]]},
+  {years:"2000–02", name:"Dotcom-crash", like:"euforie",
+   why:"Beleggers betaalden recordprijzen voor internetbedrijven, vaak zonder winst (CAPE 44). De Fed verhoogde naar 6,5%. Toen de groei tegenviel, verdampten de winsten en kwam er in 2001 een recessie.",
+   likeNow:"een bijna-record waardering en een markt die leunt op een paar techreuzen.",
+   diff:"de grootste techbedrijven maken nu flinke winst; in 2000 hadden veel internetbedrijven die niet.",
+   stats:[["−49%","S&P 500 in 31 maanden"],["−78%","Nasdaq; herstel duurde 15 jaar"],["+65%","goudaandelen in dezelfde periode"],["3,8 → 6,3%","werkloosheid"]]},
+  {years:"2007–09", name:"Kredietcrisis", like:"krediet",
+   why:"Slechte hypotheken (subprime) zaten verpakt in complexe producten met veel schuld. Toen de huizenprijzen daalden, raakten fondsen klem (zomer 2007). Na het faillissement van Lehman Brothers (sep 2008) bevroor de kredietmarkt.",
+   likeNow:"fondsen in een schaduwhoek van de kredietmarkt raken klem terwijl de beurs op de top staat.",
+   diff:"banken zijn sterker en fondsen kunnen niet in één dag leeglopen. Maar nu is de obligatiemarkt zelf een zwakke plek.",
+   stats:[["−57%","S&P 500 in 17 maanden"],["5,5 jaar","tot het oude record"],["−71%","goudaandelen in 2008 (maart–oktober)"],["4,4 → 10%","werkloosheid"]]},
+  {years:"2022", name:"Renteschok", like:"rente",
+   why:"De inflatie liep op naar 9,1%. De Fed verhoogde in één jaar van 0% naar 4,5%. Aandelen én obligaties daalden, vooral dure tech en crypto. Er kwam geen recessie: de banenmarkt bleef sterk.",
+   likeNow:"een stijgende reële rente drukt goud(mijnen), tech en crypto.",
+   diff:"de Fed begon toen op 0% en staat nu al op ca. 4%: minder ruimte om te verhogen, meer om te verlagen.",
+   stats:[["−25%","S&P 500 in 9 maanden"],["2 jaar","tot het oude record"],["−46%","goudmijnen (GDX); goud −18%"],["−77%","bitcoin"]]},
+];
+const DD_HIST=[
+  {y:"1929–32", dd:86, m:"33 mnd", rec:"25 jaar", tip:"Sep 1929 → jun 1932. Pas in 1954 terug op het oude record."},
+  {y:"1973–74", dd:48, m:"21 mnd", rec:"7,5 jaar", tip:"120 (11 jan 1973) → 62 (3 okt 1974)."},
+  {y:"2000–02", dd:49, m:"31 mnd", rec:"7 jaar", tip:"1.527 (24 mrt 2000) → 777 (9 okt 2002). De Nasdaq viel 78%."},
+  {y:"2007–09", dd:57, m:"17 mnd", rec:"5,5 jaar", tip:"1.565 (9 okt 2007) → 677 (9 mrt 2009)."},
+  {y:"2020", dd:34, m:"1 mnd", rec:"6 mnd", tip:"3.386 (19 feb) → 2.237 (23 mrt). De snelste daling en het snelste herstel."},
+  {y:"2022", dd:25, m:"9 mnd", rec:"2 jaar", tip:"4.797 (3 jan) → 3.577 (12 okt)."},
+];
+const CAPE_PEAKS=[
+  {y:"1929", v:32.6, sub:"sep 1929", tip:"Vlak voor de grote crash."},
+  {y:"1973", v:18.7, sub:"jan 1973", tip:"Niet duur, toch −48%: de oorzaak was olie en inflatie, geen waardering."},
+  {y:"2000", v:44.2, sub:"dec 1999 · record", tip:"Het hoogste niveau ooit gemeten."},
+  {y:"2007", v:27.2, sub:"2007", tip:"Matig duur; het probleem zat in het krediet."},
+  {y:"2021", v:38.6, sub:"nov 2021", tip:"Vlak voor de renteschok van 2022."},
+];
+const CMP_COLS=["1973–74","2000–02","2007–09","2022"];
+const CMP_ROWS=[
+  {l:"Beurs op de top (S&P 500)", v:["120","1.527","1.565","4.797"], now:()=>{ const d=item("spxDD"); return d?.ath? `${nf(d.ath,0)} (${fmtDate(d.athDate)})` : "–"; }},
+  {l:"Stijging sinds de vorige bodem", v:["+74% (sinds 1970)","+417% (sinds 1990)","+101% (sinds 2002)","+114% (sinds 2020)"], now:()=>{ const d=item("spxDD"); return d?.ath? `+${nf((d.ath/3577.03-1)*100,0)}% (sinds 2022)` : "–"; }},
+  {l:"Waardering (CAPE) op de top", v:["18,7","44,2","ca. 27","38,6"], now:()=>itemText(item("cape"))},
+  {l:"Daling top → bodem", v:["−48%","−49%","−57%","−25%"], now:()=>{ const d=item("spxDD"); return d && typeof d.value==="number"? itemText(d)+" tot nu" : "–"; }},
+  {l:"Tijd tot bodem · tot oud record", v:["21 mnd · 7,5 jr","31 mnd · 7 jr","17 mnd · 5,5 jr","9 mnd · 2 jr"], now:()=>"–"},
+  {l:"Fed-rente op het hoogst", v:["ca. 13%","6,5%","5,25%","4,5% (5,5% in 2023)"], now:()=>itemText(item("fedFunds"))},
+  {l:"Inflatie op het hoogst", v:["12,2%","ca. 3,8%","5,6%","9,1%"], now:()=>itemText(item("cpiYoY"))},
+  {l:"Werkloosheid begin → piek", v:["4,6 → 9,0%","3,8 → 6,3%","4,4 → 10,0%","3,5 → 3,7%"], now:()=>{ const u=item("unrate"), s=item("sahm"); return `${itemText(u)}${s&&typeof s.value==="number"? " · Sahm "+itemText(s):""}`; }},
+  {l:"Olie", v:["×4","×3 (naar ca. $35)","$147 (jul 2008)","Brent $128"], now:()=>`Brent ${itemText(item("brent"))} (top $126)`},
+  {l:"Goud · goudaandelen", v:["+139% · +189%","licht hoger · +65%","+26% · −46% (−71% in 2008)","−18% · −46%"], now:()=>{ const g=item("gold"); if(!g||typeof g.value!=="number") return "–"; const pct=(g.value/5590-1)*100; return pct>=0? "goud op record" : `goud ${nf(pct,0).replace("-","−")}% t.o.v. record (jan 2026)`; }},
+];
+const YOU=[
+  {pos:"Goud- en zilvermijnen", t:"Het soort crash bepaalt alles. Bij olie en inflatie (1973) stegen goudaandelen 189% en na de dotcom-top 65%. In een kredietpaniek vielen ze eerst 71% (2008), in een renteschok 46% (2022). Het herstel kwam toen de paniek voorbij was en de Fed de rente hard verlaagde."},
+  {pos:"Mag 7", t:"Na de dotcom-top viel de Nasdaq 78% en duurde het herstel 15 jaar; in 2022 ca. −35%. De markt leunt nu nog zwaarder op de grootste bedrijven (top-10 ca. 40% van de S&P 500, tegen ca. 27% in 2000), maar die maken wel echte winst."},
+  {pos:"Circle (CRCL)", t:"Heeft als beursfonds nog geen crash meegemaakt. In 2022 viel bitcoin 77%. In een crisis verlaagt de Fed de rente, en dat raakt Circles rente-inkomsten direct."},
+  {pos:"Insider-aandelen (small caps)", t:"Kleine bedrijven voelen dure leningen het eerst. Zolang de kredietcyclus op 'stress' staat: klein houden."},
+  {pos:"Cash", t:"Na elke bodem kwam een sterk herstel: +37% in 1975 en ruim +60% tussen maart en december 2009. Wie dan droog kruit heeft, profiteert."},
+];
+const CRASH_SOURCES=[
+  ["Wikipedia: Amerikaanse beursdaling 2007–2009","https://en.wikipedia.org/wiki/United_States_bear_market_of_2007%E2%80%932009"],
+  ["Vantage Markets: S&P 500-record op 6 okt 2026","https://www.vantagemarkets.com/market-analysis/sp500-today-record-yields-earnings-cpi-october-12-2026/"],
+  ["Multpl: CAPE per jaar","https://www.multpl.com/shiller-pe/table/by-year"],
+  ["thetrading.tools: CAPE-pieken 1929, 1999, 2021 en nu","https://www.thetrading.tools/manuals/shiller-cape"],
+  ["Zeal: goudaandelen tijdens 2000–02","https://zealllc.com/2008/huibears2.htm"],
+  ["Zeal: paniek in goudaandelen 2008","https://zealllc.com/2008/huipanic.htm"],
+  ["Zeal: goudmijnen in 2022","https://www.zealllc.com/2022/gmq322fn.htm"],
+  ["Mining.com: goud en goudaandelen in 1973–74 en 2008","https://www.mining.com/web/will-next-market-crash-like-2008-1973-history-predicts-amazing-run-gold-gold-stocks/"],
+  ["Gainesville Coins: goud in 2008","https://gainesvillecoins.com/blog/gold-price-2008-what-we-can-learn"],
+  ["Jason Zweig: de beursdaling van 1973–74","https://jasonzweig.com/?p=7006"],
+  ["Show-Me Banker: de Fed in 1973–74","https://the-show-me-banker.thenewslinkgroup.org/monetary-policy-for-the-win-the-fed-was-battling-inflation-50-years-ago-too/"],
+  ["HedgeNordic: de bodem van 1974","https://hedgenordic.com/2022/12/will-equities-bottom-out-like-in-1974"],
+  ["eco3min: recordniveau junk-spread (2008)","https://eco3min.fr/en/credit-spreads-recession-risk-dataset/"],
+  ["Forbes: wanbetalingen in private credit (2026)","https://www.forbes.com/sites/mayrarodriguezvalladares/2026/05/24/rising-private-credit-defaults-are-testing-banks-and-insurers/"],
+  ["Advisor Perspectives: margin debt augustus 2026","https://www.advisorperspectives.com/dshort/updates/2026/09/17/margin-debt-finra-august-2026.pdf"],
+  ["PrimeXBT: gewicht top-10 in de S&P 500","https://primexbt.com/news/sp-500-hits-its-most-concentrated-top-10-weighting-since-the-mid-1960s/"],
+  ["FRED: Sahm-regel","https://fred.stlouisfed.org/series/SAHMREALTIME"],
+];
+const TP_LABEL={rustig:"Nog niet", gespannen:"Dichtbij", stress:"Bereikt", info:"Onbekend"};
+
+function phaseAt(id,pos){ const D=CYCLE_DEF[id]; if(!D) return ""; let acc=0; for(const [n,w] of D.phases){ acc+=w; if(pos<acc-1e-9) return n; } return D.phases[D.phases.length-1][0]; }
+function nearestGhost(id,pos){ return CYCLE_DEF[id].ghosts.reduce((a,g)=>Math.abs(g.pos-pos)<Math.abs(a.pos-pos)? g : a); }
+function tipLevel(t){
+  if(t.key){ const it=item(t.key); const v=(it && typeof it.value==="number")? it.value : null;
+    if(v!=null) return t.dir==="down"? (v<=t.hit?"stress":v<=t.near?"gespannen":"rustig") : (v>=t.hit?"stress":v>=t.near?"gespannen":"rustig"); }
+  return LV[t.status]? t.status : "info";
+}
+function cycleSVG(id, c){
+  // golf: 0 = bodem, 0,5 = top, 1 = volgende bodem; fasenamen staan onder de golf, de huidige fase is gemarkeerd
+  const D=CYCLE_DEF[id], W=340, H=180, x0=14, x1=326, yT=42, yB=124, yLab=161;
+  const X=f=>x0+f*(x1-x0), Y=f=>(yT+yB)/2 + Math.cos(2*Math.PI*f)*(yB-yT)/2;
+  const seg=(a,b)=>{ const N=Math.max(2,Math.round((b-a)*90)); let d=""; for(let i=0;i<=N;i++){ const f=a+(b-a)*i/N; d+=(i?"L":"M")+X(f).toFixed(1)+" "+Y(f).toFixed(1); } return d; };
+  const pos=clamp(+c.pos||0,0,1), ph=phaseAt(id,pos);
+  let acc=0, col="", labels="", guides="";
+  D.phases.forEach(([n,w],i)=>{ const a=acc, b=acc+w; acc=b; const xa=X(a), xb=X(b), xm=(xa+xb)/2, on=n===ph;
+    if(on) col=`<rect class="cy-col" x="${(xa+1).toFixed(1)}" y="2" width="${(xb-xa-2).toFixed(1)}" height="${H-4}" rx="8"/>`;
+    if(i<D.phases.length-1) guides+=`<line class="cy-guide" x1="${xb.toFixed(1)}" y1="12" x2="${xb.toFixed(1)}" y2="${yLab-14}"/>`;
+    const words=n.split(" ");
+    labels+=`<text class="cy-ph${on?" on":""}" x="${xm.toFixed(1)}" y="${yLab}" text-anchor="middle">${words.length>1? words.map((t,k)=>`<tspan x="${xm.toFixed(1)}" dy="${k? 12 : 0}">${esc(t)}</tspan>`).join("") : esc(n)}</text>`; });
+  const mark=(cls, x, y, r, tip, inner)=>`<g class="${cls}" tabindex="0" role="button" data-tip="${esc(tip)}" aria-label="${esc(tip)}"><circle class="cy-hit" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>${inner}</g>`;
+  const ghosts=D.ghosts.map(g=>{ const gx=X(g.pos), gy=Y(g.pos), w=String(g.label||"").length*6.4, nearNow=Math.abs(g.pos-pos)<0.05;
+    // label aan de kant waar de lijn niet loopt: dalend → linksonder, stijgend → rechtsonder, top/bodem → eronder
+    let anchor="middle", tx=gx, ty=gy+(nearNow? 28 : 19);
+    // vlak bij NU: label linksonder NU, tenzij daar al een ander 2007–09-label staat
+    if(nearNow && !D.ghosts.some(o=>o!==g && o.pos<g.pos && g.pos-o.pos<0.14)){ anchor="end"; tx=X(pos)-2; }
+    if(!nearNow && g.pos>0.58 && g.pos<0.95){ anchor="end"; tx=gx-7; ty=gy+16; }
+    else if(!nearNow && g.pos>0.05 && g.pos<0.42){ anchor="start"; tx=gx+7; ty=gy+16; }
+    if(anchor==="middle" && gx+w/2>W){ anchor="end"; tx=gx+7; }
+    if(anchor==="middle" && gx-w/2<0){ anchor="start"; tx=gx-7; }
+    if(anchor==="end" && tx-w<0){ anchor="start"; tx=gx+7; }
+    if(anchor==="start" && tx+w>W){ anchor="end"; tx=gx-7; }
+    return mark("cy-g", gx, gy, 13, g.tip, `<circle class="cy-gdot" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="4.5"/><text class="cy-glab" x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}">${esc(g.label)}</text>`); }).join("");
+  const extras=arr(c.extra).map(e=>{ const ep=clamp(+e.pos||0,0,1), ex=X(ep), ey=Y(ep), w=String(e.label||"").length*6.2;
+    // dalend deel: label rechtsboven (daar ligt de lijn lager); stijgend deel: linksboven
+    let right = ep>0.5; if(right && ex+9+w>W+2) right=false; else if(!right && ex-9-w<-2) right=true;
+    return mark("cy-x", ex, ey, 13, `${e.label}: ${e.why||""}`, `<circle class="cy-xdot" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="6"/><text class="cy-xlab" x="${(right? ex+9 : ex-9).toFixed(1)}" y="${(ey-9).toFixed(1)}" text-anchor="${right?"start":"end"}">${esc(e.label)}</text>`); }).join("");
+  const nx=X(pos), ny=Y(pos), ng=D.ghosts.find(g=>Math.abs(g.pos-pos)<0.05);
+  const now=mark("cy-n", nx, ny, 16, `Nu: ${ph}. ${c.why||""}${ng? `\n\nToen op deze plek: ${ng.tip}` : ""}`, `<circle class="cy-halo" cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="15"/><circle class="cy-dot" cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="7"/><rect class="cy-pill" x="${(nx-17).toFixed(1)}" y="${(ny-36).toFixed(1)}" width="34" height="18" rx="9"/><text class="cy-pilltx" x="${nx.toFixed(1)}" y="${(ny-23.5).toFixed(1)}" text-anchor="middle">NU</text>`);
+  return `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="${esc(`${D.name}: nu in de fase ${ph}. Fasen: ${D.phases.map(p=>p[0]).join(", ")}`)}">${col}${guides}${labels}<path class="cy-future" d="${seg(pos,1)}"/><path class="cy-past" d="${seg(0,pos)}"/>${ghosts}${extras}${now}</svg>`;
+}
+function hbarsHTML(rows, max, med){
+  const mp = med? (med.v/max*100).toFixed(1) : null;
+  return `<div class="hbars">${med? `<div class="hb-medlab" aria-hidden="true"><span></span><span><em style="left:${mp}%">${esc(med.label)}</em></span><span></span></div>`:""}${rows.map(r=>`<div class="hb ${r.now?"now":""}" tabindex="0" data-tip="${esc(r.tip)}"><span class="hb-l">${esc(r.y)}</span><span class="hb-t"><i style="width:${clamp(Math.abs(r.v)/max*100,0.8,100).toFixed(1)}%"></i>${med? `<b class="med" style="left:${mp}%"></b>`:""}</span><span class="hb-v">${esc(r.vt)}</span><span class="hb-s">${esc(r.sub||"")}</span></div>`).join("")}</div>`;
+}
+function renderCyclus(){
+  const el=$("cy-body"), p=S.plan, cy=p?.macro?.cycle;
+  if(!p){ el.innerHTML = S.offline? `<div class="empty"><b>Opslag niet bereikbaar in deze weergave</b><span>Open je plan via plan.vsonsbeek.nl of in de Claude-app.</span></div>` : `<div class="empty"><b>Cyclus laden…</b><span>De cyclusgrafieken en de crashvergelijking verschijnen zodra de opslag antwoordt.</span></div>`; return; }
+  if(!cy){ el.innerHTML=`<div class="empty"><b>De cyclus-analyse ontbreekt nog in je plan</b><span>Werk je site bij (zie Uitleg); daarna verschijnt hij hier vanzelf.</span></div>`; return; }
+  const tps=arr(cy.tipping).map(t=>({...t, lv:tipLevel(t)}));
+  const hit=tps.filter(t=>t.lv==="stress").length, near=tps.filter(t=>t.lv==="gespannen").length;
+  const dd=item("spxDD"), cape=item("cape");
+  const hasDD = dd && typeof dd.value==="number";
+
+  const hero=`<div class="hero cyhero">
+    <div>
+      <span class="eyebrow">Cyclus · waar staan we ten opzichte van een crash? · ${esc(fmtDT(cy.updatedAt))}</span>
+      <h1>${esc(cy.verdict||"")}</h1>
+      <p class="lede">${esc(cy.summary||"")}</p>
+      <div class="cy-like">${arr(cy.analogs).map(a=>`<div class="lk"><b>Lijkt op ${esc(a.label)} · ${esc(a.what)}</b><span>${esc(a.why)}</span></div>`).join("")}</div>
+    </div>
+    <div class="cy-stats">
+      <div class="cy-stat"><b>${esc(hasDD? itemText(dd) : "–")}</b><span>S&amp;P 500 ten opzichte van het record</span><small>${esc(dd?.change||"")}${dd?.asOf? " · "+esc(dd.asOf):""}</small></div>
+      <div class="cy-stat"><b>${esc(cape? itemText(cape) : "–")}</b><span>Waardering (Shiller-CAPE)</span><small>Alleen eind 1999 was de beurs duurder (44,2); normaal is 16,6</small></div>
+      <div class="cy-stat"><b>${hit} van ${tps.length}</b><span>Kantelpunten naar een crash bereikt</span><small>${near} dichtbij · <a href="#cy-tp">bekijk ze</a></small></div>
+    </div>
+  </div>`;
+
+  const cards=CYCLE_ORDER.map(id=>{ const D=CYCLE_DEF[id], c=arr(cy.cycles).find(x=>x.id===id); if(!c) return "";
+    const pos=clamp(+c.pos||0,0,1), ph=phaseAt(id,pos), g=nearestGhost(id,pos);
+    return `<article class="box cy-card">
+      <div class="cy-head"><span class="eyebrow">Cyclus ${D.n}</span><h3>${esc(D.name)}</h3><p class="muted small">${esc(D.sub)}</p></div>
+      <figure class="cy-fig">${cycleSVG(id,c)}</figure>
+      <div class="cy-txt">
+        <div class="cy-now"><span class="pill t-accent">Nu: ${esc(ph)}</span><span class="muted small">${Math.abs(g.pos-pos)<=0.03? "zelfde plek als "+esc(g.when) : "het dichtst bij "+esc(g.when)}</span></div>
+        <p>${esc(c.why||"")}</p>
+        ${arr(c.extra).map(e=>`<p class="xline"><i></i><b style="color:var(--ink)">${esc(e.label)}:</b> ${esc(e.why||"")}</p>`).join("")}
+      </div>
+    </article>`; }).join("");
+  const cycles=`<div class="stack">
+    <div class="sechead"><h2>Waar in de cyclus?</h2><span class="muted small">Drie cycli die aan elke grote crash vooraf gingen. De cirkel is waar we nu staan.</span></div>
+    <div class="cy-key"><span><i class="k-now"></i>Nu</span><span><i class="k-ghost"></i>Zo liep 2007–09 (beweeg of tik voor uitleg)</span><span><i class="k-line"></i>Mogelijk verder verloop</span><span><i class="k-x"></i>Goud &amp; zilver</span></div>
+    <div class="cy-grid">${cards}</div>
+  </div>`;
+
+  const tl=`<div class="box stack">
+    <div class="sechead"><div><span class="eyebrow">Eén op één</span><h2 style="margin-top:3px">Zo ging het in 2008, stap voor stap</h2></div><span class="muted small">En waar we nu staan (half oktober 2026)</span></div>
+    <div>
+      <div class="tl-row head"><span>Fase</span><span>2007–2009</span><span>Nu</span></div>
+      ${TIMELINE_2008.map((r,i)=>{ const s=TL_ST[r.st]; return `<div class="tl-row ${r.st==="now"?"cur":""}"><div class="tl-step"><span class="tl-n">${i+1}</span><span>${esc(r.step)}</span></div><div class="tl-then">${esc(r.then)}</div><div class="tl-now">${s? `<span class="pill ${s[0]}">${s[1]}</span>` : `<span class="chip">Nog niet</span>`}${r.now? `<span>${esc(r.now)}</span>`:""}</div></div>`; }).join("")}
+    </div>
+    <div class="stack" style="gap:6px"><h3>Wat is anders dan in 2008?</h3><ul class="actions">${DIFF_2008.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>
+  </div>`;
+
+  const tipping=`<div class="box stack" id="cy-tp" style="scroll-margin-top:120px">
+    <div class="sechead"><div><span class="eyebrow">Waar je op let</span><h2 style="margin-top:3px">Kantelpunten van 'laat' naar 'crash'</h2></div><span class="pill ${hit? "t-bad" : near? "t-warn" : "t-good"}">${hit} van ${tps.length} bereikt · ${near} dichtbij</span></div>
+    <p class="secintro">Deze signalen markeerden in 2007–08 de overgang van de eerste barsten naar de echte klap. Waar het kan, worden ze automatisch bijgewerkt.</p>
+    <div>${tps.map(t=>{ const it=t.key? item(t.key) : null; const val=(it && typeof it.value==="number")? itemText(it) : "";
+      return `<div class="tp"><span class="dot ${esc(t.lv)}"></span><b>${esc(t.label)}</b><span class="tp-r">${val? `<span class="num small">${esc(val)}</span>`:""}<span class="pill ${LV[t.lv]?.tone||"t-neutral"}">${TP_LABEL[t.lv]||"Onbekend"}</span></span>
+        <p>${t.now? `<b style="color:var(--ink);font-weight:500">Nu:</b> ${esc(t.now)}. `:""}${t.rule? `<b style="color:var(--ink);font-weight:500">Grens:</b> ${esc(t.rule)}. `:""}<b style="color:var(--ink);font-weight:500">Toen:</b> ${esc(t.then||"")}</p></div>`; }).join("")}</div>
+  </div>`;
+
+  const crashes=`<div class="stack">
+    <div class="sechead"><h2>Vier grote crashes, vier oorzaken</h2><span class="muted small">Van elk zien we nu een stukje terug</span></div>
+    <div class="cr-grid">${CRASHES.map(c=>`<article class="box cr">
+      <div class="cr-top"><div><span class="eyebrow">${esc(c.years)}</span><h3 style="margin-top:2px">${esc(c.name)}</h3></div><span class="pill t-accent plain">Lijkt op nu: ${esc(c.like)}</span></div>
+      <p class="small">${esc(c.why)}</p>
+      <div class="cr-stats">${c.stats.map(s=>`<div class="cr-stat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join("")}</div>
+      <div class="cr-like"><b>Nu ook:</b> ${esc(c.likeNow)}</div>
+      <p class="cr-diff"><b style="color:var(--ink)">Nu anders:</b> ${esc(c.diff)}</p>
+    </article>`).join("")}</div>
+  </div>`;
+
+  const ddRows=DD_HIST.map(d=>({y:d.y, v:d.dd, vt:"−"+d.dd+"%", sub:`${d.m} tot de bodem · herstel ${d.rec}`, tip:`${d.y}: −${d.dd}% in ${d.m}, terug op het oude record na ${d.rec}. ${d.tip}`}));
+  if(hasDD) ddRows.push({y:"Nu", v:Math.min(0,dd.value), vt:itemText(dd), sub:dd.change||"ten opzichte van het record", tip:`Nu: ${itemText(dd)} ten opzichte van het record. ${dd.change||""}`, now:true});
+  const capeRows=CAPE_PEAKS.map(c=>({y:c.y, v:c.v, vt:nf(c.v,1), sub:c.sub, tip:`${c.y}: CAPE ${nf(c.v,1)} (${c.sub}). ${c.tip}`}));
+  if(cape && typeof cape.value==="number") capeRows.push({y:"Nu", v:cape.value, vt:nf(cape.value,1), sub:cape.asOf||"", tip:`Nu: CAPE ${nf(cape.value,1)} (${cape.asOf||""}). Alleen eind 1999 was hoger.`, now:true});
+  const charts=`<div class="grid g-2e">
+    <div class="box stack"><div><h3>Hoe diep viel de beurs?</h3><p class="muted small">S&amp;P 500 van top tot bodem</p></div>${hbarsHTML(ddRows, 90)}</div>
+    <div class="box stack"><div><h3>Hoe duur was de beurs op de top?</h3><p class="muted small">Shiller-CAPE: de koers gedeeld door de gemiddelde winst van 10 jaar</p></div>${hbarsHTML(capeRows, 48, {v:16.6, label:"normaal 16,6"})}<p class="faint small">Een hoge CAPE voorspelt geen datum, wel lagere rendementen in de jaren erna.</p></div>
+  </div>`;
+
+  const nowCol=CMP_ROWS.map(r=>{ try{ return r.now(); }catch(e){ return "–"; } });
+  const table=`<div class="box stack"><div class="sechead"><h2>Toen en nu in cijfers</h2><span class="muted small">Op je telefoon: scroll opzij</span></div>
+    <div class="tbl cmp"><table><thead><tr><th></th>${CMP_COLS.map(c=>`<th>${esc(c)}</th>`).join("")}<th class="nu">Nu</th></tr></thead>
+    <tbody>${CMP_ROWS.map((r,i)=>`<tr><td>${esc(r.l)}</td>${r.v.map(v=>`<td>${esc(v)}</td>`).join("")}<td class="nu">${esc(nowCol[i])}</td></tr>`).join("")}</tbody></table></div></div>`;
+
+  const you=`<div class="box stack"><h2>Wat dit betekent voor jouw posities</h2><div class="you">${YOU.map(y=>`<div><b>${esc(y.pos)}</b>${esc(y.t)}</div>`).join("")}</div></div>`;
+
+  const src=`<details class="box"><summary style="cursor:pointer"><b>Bronnen voor de cijfers</b> <span class="muted small">(${CRASH_SOURCES.length})</span></summary>
+    <ul class="small" style="margin:10px 0 0;padding-left:18px;columns:2 300px;column-gap:28px">${CRASH_SOURCES.map(([l,u])=>`<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a></li>`).join("")}</ul>
+    <p class="faint small" style="margin-top:10px">Geschiedenis herhaalt zich niet precies. Dit overzicht laat zien hoe kwetsbaar de markt is, niet wanneer het misgaat. Geen beleggingsadvies.</p></details>`;
+
+  el.innerHTML = hero + cycles + tl + tipping + crashes + charts + table + you + src;
+  if(tipFor && !document.body.contains(tipFor)) hideTip();
+}
+
+/* ================= tooltip ================= */
+const tipEl=document.createElement("div"); tipEl.id="tip"; tipEl.setAttribute("role","tooltip"); tipEl.hidden=true; document.body.appendChild(tipEl);
+let tipFor=null;
+function showTip(el, x, y){
+  tipEl.textContent=el.getAttribute("data-tip")||""; tipEl.hidden=false; tipFor=el;
+  const r=tipEl.getBoundingClientRect(), vw=window.innerWidth, vh=window.innerHeight;
+  let left=x+14, top=y+14;
+  if(left+r.width>vw-8) left=Math.max(8, x-r.width-14);
+  if(top+r.height>vh-8) top=Math.max(8, y-r.height-14);
+  tipEl.style.left=left+"px"; tipEl.style.top=top+"px";
+}
+function hideTip(){ tipEl.hidden=true; tipFor=null; }
+function tipAt(el){ const r=el.getBoundingClientRect(); showTip(el, r.left+r.width/2, r.top+r.height/2); }
+document.addEventListener("pointermove", (ev)=>{ if(ev.pointerType==="touch") return; const el=ev.target.closest?.("[data-tip]"); if(el) showTip(el, ev.clientX, ev.clientY); else if(tipFor) hideTip(); });
+document.addEventListener("focusin", (ev)=>{ const el=ev.target.closest?.("[data-tip]"); let kb=false; try{ kb=el && el.matches(":focus-visible"); }catch(e){} if(kb) tipAt(el); });
+document.addEventListener("focusout", ()=>hideTip());
+document.addEventListener("click", (ev)=>{ const el=ev.target.closest?.("[data-tip]"); if(!el){ if(tipFor) hideTip(); return; } if(ev.pointerType==="mouse") return; if(tipFor===el) hideTip(); else tipAt(el); });
+window.addEventListener("scroll", ()=>{ if(tipFor) hideTip(); }, {passive:true});
+
+/* ================= PLAN ================= */
+function renderPlan(){
+  const p=S.plan;
+  if(!p){ ["pl-top","pl-pos","pl-sc","pl-check"].forEach(id=>$(id).innerHTML=""); return; }
+  const sc=arr(p.scenarios);
+  $("pl-top").innerHTML = `<div class="grid g-2">
+    <div class="box stack"><div class="sechead"><h2>Nu doen</h2><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))}</span></div>
+      <ul class="actions">${arr(p.actionsNow).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
+    <div class="box stack"><div class="sechead"><h2>Scenario's</h2><span class="muted small">kans</span></div>
+      <div class="sbar" role="img" aria-label="${esc(sc.map(s=>s.name+" "+s.prob+"%").join(", "))}">${sc.map(s=>`<div style="flex-grow:${Math.max(0,+s.prob||0)};background:${SC_COLORS[s.id]||"var(--faint)"}">${s.prob>=10? esc(s.prob)+"%":""}</div>`).join("")}</div>
+      <div class="slegend">${sc.map(s=>`<div class="it"><span class="sw" style="background:${SC_COLORS[s.id]||"var(--faint)"}"></span><span>${esc(s.name)}</span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div></div>
+  </div>`;
+  if(!document.activeElement?.closest?.("#pl-pos")) renderPositions();
+  $("pl-sc").innerHTML = `<div class="stack"><div class="sechead"><h2>Scenario's in detail</h2><span class="muted small">Kansen zijn inschattingen; een bron kan ze per keer met maximaal 10 punt verschuiven</span></div>
+    <div class="grid g-2e">${sc.map(s=>`<article class="box sc stack" style="--c:${SC_COLORS[s.id]||"var(--faint)"}">
+      <div class="hd"><div><span class="eyebrow">${esc(s.horizon||"")}</span><h3 style="margin-top:3px">${esc(s.name)}</h3></div><div class="prob">${esc(s.prob)}%</div></div>
+      <p class="small">${esc(s.desc)}</p>
+      <div><span class="eyebrow">Herken je aan</span><div class="chips" style="margin-top:5px">${arr(s.signals).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div></div>
+      <div><span class="eyebrow">Effect op je posities</span><div class="scrow">${POS_IDS.map(id=>`<div>${impactCell(s.impact?.[id])}<span>${esc(POS_SHORT[id])}</span></div>`).join("")}</div></div>
+      <div><span class="eyebrow">Wat je dan doet</span><ul class="actions">${arr(s.actions).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
+    </article>`).join("")}</div>
+    <details class="box"><summary style="cursor:pointer"><b>Gewogen impact per positie</b> <span class="muted small">(kans × effect)</span></summary>
+      <div class="tbl" style="margin-top:10px"><table><thead><tr><th>Scenario</th><th class="c">Kans</th>${POS_IDS.map(id=>`<th class="c">${esc(POS_SHORT[id])}</th>`).join("")}</tr></thead>
+      <tbody>${sc.map(s=>`<tr><td>${esc(s.name)}</td><td class="c num">${esc(s.prob)}%</td>${POS_IDS.map(id=>`<td class="c">${impactCell(s.impact?.[id])}</td>`).join("")}</tr>`).join("")}
+      <tr><td><b>Gewogen</b></td><td class="c num">100%</td>${POS_IDS.map(id=>{ const w=sc.reduce((a,s)=>a+(s.prob||0)*(s.impact?.[id]||0),0)/100; return `<td class="c"><span class="num">${w>0?"+":""}${nf(w,2)}</span></td>`; }).join("")}</tr></tbody></table></div>
+    </details></div>`;
+  const pc=p.portfolioCheck, r=p.regime||{};
+  $("pl-check").innerHTML = pc? `<div class="grid g-2e">
+    <div class="box stack check"><span class="eyebrow">Portefeuille-check</span><h2>${esc(pc.headline)}</h2><ul>${arr(pc.points).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="box stack"><span class="eyebrow">Veranderd sinds het juli-plan</span><ul class="actions">${arr(r.changesSinceJuly).map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div></div>` : "";
+}
+function renderPositions(){
+  const p=S.plan, m=p.macro;
+  const sc=arr(p.scenarios);
+  const ws=arr(p.positions).map(x=>x.myWeight).filter(v=>typeof v==="number"), sum=ws.reduce((a,b)=>a+b,0);
+  $("pl-pos").innerHTML = `<div class="stack"><div class="sechead"><h2>Posities</h2><span class="muted small">Klik open voor regels, niveaus en scenario's. Je weging wordt bewaard.</span></div>
+  ${arr(p.positions).map((x,ix)=>{ const pi=m?.positionImpact?.[x.id]||{}; return `<details class="pos" ${S.openPos===x.id?"open":""} data-pos="${esc(x.id)}">
+    <summary><div><span class="eyebrow">${esc(x.role||"")}</span><h3 style="margin-top:2px">${esc(x.name)}</h3></div><span style="display:flex;gap:8px;align-items:center">${dirMark(pi.dir)}${stancePill(x.stance)}</span><span class="chev" aria-hidden="true"></span>
+      <span class="sumwhy"><b style="color:var(--ink);font-weight:600">${esc(x.stanceNote||"")}</b></span></summary>
+    <div class="posbody">
+      <div class="sechead" style="padding-top:12px"><span class="muted mono small">${esc(x.tickers||"")}</span>
+        <div class="weight"><label for="w-${ix}" style="margin:0">Mijn weging</label><input id="w-${ix}" data-ix="${ix}" class="wIn" inputmode="decimal" placeholder="%" value="${x.myWeight==null?"":esc(x.myWeight)}" ${S.canWrite&&S.db?"":"disabled"}><span>%</span></div></div>
+      ${pi.why? `<p><b>Marktbeeld nu:</b> ${esc(pi.why)}</p>`:""}
+      <p>${esc(x.now||"")}</p>
+      <div class="cols2"><div><span class="eyebrow">Wind mee</span><ul class="blist plus">${arr(x.bull).map(b=>`<li><span>${esc(b)}</span></li>`).join("")}</ul></div>
+        <div><span class="eyebrow">Wind tegen</span><ul class="blist minus">${arr(x.bear).map(b=>`<li><span>${esc(b)}</span></li>`).join("")}</ul></div></div>
+      <div><span class="eyebrow">Niveaus</span><div class="levels">${arr(x.levels).map(l=>`<div class="level"><b>${esc(l.label)}</b><span>${esc(l.meaning)}</span></div>`).join("")}</div></div>
+      <div><span class="eyebrow">Planregels</span><ol class="rules">${arr(x.rules).map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>
+      <div class="cols2"><div><span class="eyebrow">Per scenario</span><div class="scrow">${sc.map(s=>`<div>${impactCell(s.impact?.[x.id])}<span>${esc(s.name)}</span></div>`).join("")}</div></div>
+        <div><span class="eyebrow">Momenten</span><div class="chips" style="margin-top:8px">${arr(x.catalysts).map(c=>`<span class="chip">${esc(c)}</span>`).join("")}</div></div></div>
+    </div></details>`; }).join("")}
+  ${ws.length? `<div class="notice ${sum>100?"bad":""}">Ingevulde wegingen samen: <b class="num">${nf(sum,1)}%</b>. ${sum<100? "De rest ("+nf(100-sum,1)+"%) is cash of overig: je droog kruit." : sum>100? "Meer dan 100%: controleer je invoer." : "Geen cashbuffer."}</div>`:""}</div>`;
+  $("pl-pos").querySelectorAll("details.pos").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open) S.openPos=d.dataset.pos; else if(S.openPos===d.dataset.pos) S.openPos=null; }));
+  $("pl-pos").querySelectorAll(".wIn").forEach(inp=>inp.addEventListener("change", ()=>saveWeight(+inp.dataset.ix, inp.value)));
+}
+async function saveWeight(ix, raw){
+  const v = raw.trim()==="" ? null : Number(raw.replace(",","."));
+  if(v!==null && (!isFinite(v)||v<0||v>100)){ notice("Weging moet een getal tussen 0 en 100 zijn.", true); return; }
+  const positions=clone(S.plan.positions); positions[ix].myWeight=v;
+  try{ await S.db.doc("plan/current").update({positions}); }catch(e){ notice(dbErrText(e), true); }
+}
+
+/* ================= SIGNALEN ================= */
+function renderSignals(){
+  const p=S.plan, el=$("sig-body");
+  if(!p){ el.innerHTML=""; return; }
+  const all=arr(p.triggers).map(t=>{ const {v,asOf}=trigValue(t); return {t,v,asOf,lv:trigLevel(t,v)}; });
+  const cnt={stress:0,gespannen:0,rustig:0}; all.forEach(x=>{ if(cnt[x.lv]!=null) cnt[x.lv]++; });
+  const groups=PILLAR_ORDER.map(pid=>({pid, rows: all.filter(x=>(x.t.pillar||"posities")===pid)})).filter(g=>g.rows.length);
+  const ex=p.exposure;
+  el.innerHTML = `<div class="box stack">
+    <div class="sechead"><h2>Signalen</h2><div class="sigsum"><span class="pill t-bad">${cnt.stress} rood</span><span class="pill t-warn">${cnt.gespannen} oranje</span><span class="pill t-good">${cnt.rustig} groen</span></div></div>
+    <p class="secintro">Groen = geen actie. Oranje = let op. Rood = de bijbehorende planregel controleren. ${S.local? "Ze worden bijgewerkt zodra je koersen of macrocijfers ververst (zie Uitleg)." : "Met meldingen aan (zie Uitleg) krijg je een bericht zodra een signaal op rood springt."}</p>
+    ${groups.map(g=>`<div><div class="ind-gh"><h3>${esc(PILLAR_NAME[g.pid]||g.pid)}</h3></div>${g.rows.map(({t,v,asOf,lv})=>`
+      <div class="trig"><div><div class="name">${esc(t.label)}</div><div class="faint small">${esc(asOf||"")}</div></div>${gauge(t,v)}
+      <div class="val">${esc(fmtTrig(t,v))} ${lv? lvPill(lv) : `<span class="pill t-neutral">Onbekend</span>`}</div>
+      <div class="meaning">${esc(t.meaning||"")} <span class="chips" style="display:inline-flex;margin-left:4px">${chipsFor(t.affects)}</span></div></div>`).join("")}</div>`).join("")}
+  </div>
+  ${ex? `<div class="box stack"><h2>Factorkaart</h2><p class="secintro">Hoe elke positie reageert als een factor stijgt. Kijk naar de kolom <b>Rente ↑</b>: drie van de vier posities lijden, alleen Circle profiteert.</p>
+    <div class="tbl"><table><thead><tr><th>Positie</th>${ex.factors.map(f=>`<th class="c">${esc(f)}</th>`).join("")}</tr></thead>
+    <tbody>${ex.rows.map(r=>`<tr><td>${esc(posName(r.id))}</td>${r.values.map(v=>`<td class="c">${impactCell(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+    <p class="muted small">${esc(ex.note||"")}</p></div>`:""}
+  <div class="box stack"><div class="sechead"><h2>Claimregister</h2><span class="muted small">Wat bronnen beweren, en of het uitkomt</span></div>
+    <div class="tbl"><table><thead><tr><th>Claim</th><th>Bron</th><th>Status</th><th>Toelichting</th></tr></thead><tbody>
+    ${arr(p.claims).map(c=>{ const tone=c.status==="bevestigd"?"t-good":c.status==="weerlegd"?"t-bad":"t-neutral"; return `<tr><td style="min-width:220px">${esc(c.text)}</td><td><span class="muted small">${esc(c.source||"")}<br>${esc(fmtDate(c.date))}</span></td><td><span class="pill ${tone}">${esc(c.status||"open")}</span></td><td class="muted small">${esc(c.note||"")}</td></tr>`; }).join("")}
+    </tbody></table></div></div>`;
+}
+function gauge(t, v){
+  const lo=Math.min(t.warn,t.danger), hi=Math.max(t.warn,t.danger), span=(hi-lo)||1;
+  const min=lo-span*1.6, max=hi+span*1.0, pct=x=>clamp((x-min)/(max-min)*100,0,100);
+  const a=pct(lo), b=pct(hi);
+  const z = t.dir==="up" ? [["var(--good-soft)",a],["var(--warn-soft)",b-a],["var(--bad-soft)",100-b]] : [["var(--bad-soft)",a],["var(--warn-soft)",b-a],["var(--good-soft)",100-b]];
+  const lab = t.dir==="up" ? [fmtTrig(t,t.warn)+" let op", fmtTrig(t,t.danger)+" alarm"] : [fmtTrig(t,t.danger)+" alarm", fmtTrig(t,t.warn)+" let op"];
+  return `<div class="gwrap"><div class="gauge">${z.map(q=>`<i style="background:${q[0]};width:${q[1].toFixed(1)}%"></i>`).join("")}</div>${v==null?"":`<span class="gd" style="left:${pct(v).toFixed(1)}%"></span>`}<div class="lab"><span>${esc(lab[0])}</span><span>${esc(lab[1])}</span></div></div>`;
+}
+
+/* ================= UITLEG ================= */
+async function loadServerStatus(){ if(!S.server) return; try{ S.srvStatus = await S.server.status(); }catch(e){ S.srvStatus=null; } renderUitleg(); if(S.tab==="post" && PO.docs && !poBusyTyping()) renderPost(); }
+const JOB_NAME={post:"mail ophalen en analyseren", koersen:"koersen ophalen", markt:"koersen ophalen (Twelve Data)", dagelijks:"macrocijfers ophalen", melding:"testmelding sturen"};
+function renderUitleg(){
+  if(document.activeElement?.closest?.("#kForm")) return;   // niet wissen wat je aan het typen bent
+  const st=S.srvStatus;
+  const row=(ok,name,desc,extra="",off="Nog niet gekoppeld")=>`<div class="conn"><b>${name}</b>${ok? `<span class="pill t-good">Actief</span>` : `<span class="pill t-warn">${off}</span>`}<p>${desc}${extra}</p></div>`;
+  const J=st?.jobs||{};
+  const last=(k)=>{ const l=J.last?.[k]; return l? ` Laatste run: ${esc(fmtDT(l.at))}${l.ok? "" : " (mislukt: "+esc(l.error||"zie logs")+")"}.` : ""; };
+  const nx=(k)=> J.next?.[k]? ` Volgende: ${esc(fmtDT(J.next[k]))}.` : "";
+  const ch=st?.notify||{}, chName=[ch.ntfy&&"de ntfy-app", ch.resend&&"e-mail (Resend)", ch.smtp&&"e-mail (SMTP)"].filter(Boolean).join(" en ");
+  const conn = S.local ? localBox() : S.server ? (st? `<div class="box stack"><div class="sechead"><h2>Koppelingen</h2><span class="btnrow"><button class="btn sm" type="button" id="stRefresh">Vernieuwen</button><button class="btn sm" type="button" data-act="logout">Uitloggen</button></span></div>
+      ${!st.database? `<div class="notice bad"><b>De database is niet bereikbaar.</b> Controleer in Railway of de PostgreSQL-dienst draait en DATABASE_URL gekoppeld is.</div>`:""}
+      <div>${row(st.database,"Database · PostgreSQL","Je plan, verwerkte mails, documenten, koersen en notities (DATABASE_URL).", "", "Niet bereikbaar")}
+      ${row(!!st.ai?.provider, st.ai?.provider==="claude"? "AI · Claude" : "AI · Grok", st.ai?.provider? `Analyseert e-mails, bijlagen en transcripts en beantwoordt vragen (model ${esc(st.ai.model||"")}).` : "Zet XAI_API_KEY in Railway om e-mails, bijlagen en transcripts te laten analyseren.")}
+      ${row(st.mail?.configured,"E-mail · IMAP", st.mail?.configured? `Leest map ${esc(st.mail.folder)} op ${esc(st.mail.host)}, alleen lezen; bijlagen worden omgezet naar tekst.` : "Zet EMAIL_HOST, EMAIL_PORT, EMAIL_USER en EMAIL_PASS in Railway.", last("post")+nx("post"))}
+      ${row(st.finnhub,"Koersen · Finnhub","Aandelen en ETF's van je volglijst elk kwartier; crypto via CoinGecko.", last("koersen")+nx("koersen"), "Optioneel")}
+      ${row(st.fred||st.twelvedata,"Macrocijfers · FRED / Twelve Data","Rente, inflatie, banen en kredietspread voor de Markt-pagina (FRED_API_KEY, TWELVEDATA_API_KEY).", last("dagelijks"), "Optioneel")}
+      ${row(ch.any,"Meldingen", ch.any? `Bericht via ${esc(chName)} zodra een signaal op rood springt.` : "Push naar je telefoon met de app ntfy: zet NTFY_TOPIC in Railway.", "", "Optioneel")}
+      ${row(st.inboxToken,"Transcripts vanaf je laptop","Het script stuurt nieuwe video's automatisch naar je Inbox (INBOX_TOKEN).", "", "Optioneel")}</div>
+      <div class="btnrow">
+        <button class="btn sm" type="button" data-run="post" ${st.mail?.configured||st.ai?.provider?"":"disabled"}>Mail nu ophalen</button>
+        <button class="btn sm" type="button" data-run="koersen">Koersen nu ophalen</button>
+        <button class="btn sm" type="button" data-run="dagelijks" ${(st.fred||st.twelvedata)?"":"disabled"}>Macrocijfers nu ophalen</button>
+        <button class="btn sm" type="button" data-run="melding" ${ch.any?"":"disabled"}>Testmelding sturen</button>
+        <a class="btn sm" style="text-decoration:none" href="${esc(S.server.backupUrl||"/api/export")}" download>Back-up downloaden</a>
+        <label class="btn sm" style="margin:0">Back-up terugzetten<input type="file" id="restoreIn" accept=".json,application/json" hidden></label>
+      </div>
+      <span class="status" id="runStatus" role="status">${J.running? "Bezig: "+esc(JOB_NAME[J.running]||J.running)+"…" : ""}</span>
+      ${S.restoreFile? `<div class="notice bad stack" style="gap:8px"><span>Je plan en gegevens worden vervangen door <b>${esc(S.restoreFile.name)}</b>. De huidige stand wordt eerst apart bewaard.</span><span class="btnrow"><button class="btn sm primary" type="button" id="restoreGo">Terugzetten</button><button class="btn sm" type="button" id="restoreNo">Annuleren</button></span></div>`:""}
+      ${arr(st.dailyErrors).length? `<details><summary class="muted small" style="cursor:pointer">Meldingen van de laatste macro-run (${st.dailyErrors.length})</summary><ul class="small muted">${st.dailyErrors.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></details>`:""}
+    </div>` : `<div class="box"><p class="muted">Status van koppelingen laden…</p></div>`)
+    : `<div class="box"><p class="muted">Dit is de voorbeeldversie in Claude. Op plan.vsonsbeek.nl zie je hier welke koppelingen actief zijn.</p></div>`;
+  $("ux-body").innerHTML = `${conn}
+  <div class="box stack"><h2>Zo stroomt informatie door je site</h2>
+    <div class="flow"><div class="st"><b>Bronnen</b><span class="muted small">${S.local? "Koersen (automatisch), macrocijfers (Claude zoekt ze op), transcripts (plakken)" : "Koersen en macrocijfers (automatisch), transcripts (plakken of laptop-script)"}</span></div><div class="ar">→</div>
+    <div class="st"><b>${S.local? "Chrome" : "Server"}</b><span class="muted small">${S.local? "Bewaart alles op deze computer en rekent signalen uit" : "Slaat alles op en rekent signalen, trends en niveaus uit"}</span></div><div class="ar">→</div>
+    <div class="st"><b>Claude</b><span class="muted small">Leest transcripts en cijfers, stelt wijzigingen voor</span></div><div class="ar">→</div>
+    <div class="st"><b>Jij</b><span class="muted small">Keurt goed; alles komt in de historie en is terug te draaien</span></div></div></div>
+  <div class="grid g-2e">
+    <div class="box stack"><h3>Transcript toevoegen</h3><ul class="actions">
+      <li><span>Open de video op YouTube (computer) → <b>…meer</b> → <b>Transcript weergeven</b> → alles selecteren en kopiëren.</span></li>
+      <li><span>Ga naar <b>Inbox</b>, kies de bron, plak en klik <b>Analyseer</b>.</span></li>
+      <li><span>Bron TradersReality of Rebel Capitalist? Dan wordt hun bril op de Markt-pagina bijgewerkt.</span></li></ul></div>
+    <div class="box stack"><h3>${S.local? "Een nieuwe versie gebruiken" : "Je site bijwerken"}</h3>${S.local? `<ul class="actions">
+        <li><span>Nieuwe versie van Claude gekregen? Open het nieuwe bestand gewoon in Chrome.</span></li>
+        <li><span>Je plan, inbox en sleutels staan in Chrome, niet in het bestand, dus ze blijven staan.</span></li>
+        <li><span>Gebruik steeds dezelfde Chrome op deze computer. Op een andere computer zet je eerst een back-up terug.</span></li></ul>` : `<ul class="actions">
+        <li><span>Claude zet een nieuwe versie als pull request in je GitHub-repo.</span></li>
+        <li><span>Open hem op github.com en klik <b>Merge pull request</b>.</span></li>
+        <li><span>Railway zet de nieuwe versie binnen een paar minuten live. Je plan, gegevens en sleutels blijven staan.</span></li></ul>`}</div>
+  </div>
+  <div class="box stack"><h3>Exporteren</h3><div class="btnrow"><button class="btn sm" type="button" data-act="export" ${S.downloads?"":"disabled"}>Plan exporteren als Markdown</button><span class="status" id="exStatus"></span></div></div>`;
+  $("stRefresh")?.addEventListener("click", loadServerStatus);
+  $("ux-body").querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click", ()=>runJob(b.dataset.run)));
+  $("restoreIn")?.addEventListener("change", (ev)=>{ const f=ev.target.files?.[0]; if(f){ S.restoreFile=f; renderUitleg(); } });
+  $("restoreNo")?.addEventListener("click", ()=>{ S.restoreFile=null; renderUitleg(); });
+  $("restoreGo")?.addEventListener("click", doRestore);
+  if(S.local) bindLocal();
+}
+
+
+/* ================= POST: verwerkte e-mails en documenten ================= */
+const PO={docs:null, quotes:null, notes:null, events:null, f:{q:"",type:"",relevance:""}, open:null, openText:"", msg:"", err:"", noteDel:null};
+const DOC_TYPE_LABEL={transactiebevestiging:"Transactie", factuur:"Factuur", rekeningoverzicht:"Rekeningoverzicht", jaaropgave:"Jaaropgave", dividend:"Dividend", koersalert:"Koersalert", "insider-melding":"Insidermelding", nieuwsbrief:"Nieuwsbrief", analyse:"Analyse", overig:"Overig"};
+const DOC_ST={nieuw:["t-warn","Wacht op analyse"], wacht:["t-warn","Wacht op analyse"], fout:["t-bad","Analyse mislukt"], overgeslagen:["t-neutral","Niet geanalyseerd"]};
+const REL={hoog:["t-accent","Belangrijk"], middel:["t-warn","Middel"], laag:["t-neutral","Laag"]};
+function money(a){ try{ return a.currency && /^[A-Z]{3}$/.test(a.currency)? new Intl.NumberFormat("nl-NL",{style:"currency",currency:a.currency}).format(a.value) : nf(a.value,2)+(a.currency? " "+a.currency:""); }catch(e){ return nf(a.value,2)+" "+(a.currency||""); } }
+function poBusyTyping(){ const a=document.activeElement; return !!(a && a.closest && a.closest("#po-body") && /INPUT|TEXTAREA|SELECT/.test(a.tagName)); }
+async function loadPost(quiet){
+  if(!S.server) return;
+  if(quiet && poBusyTyping()) return;
+  const qs=new URLSearchParams(Object.entries(PO.f).filter(([,v])=>v));
+  try{
+    const [d,q,n,e]=await Promise.all([S.server.api("GET","/api/documents?"+qs), S.server.api("GET","/api/quotes"), S.server.api("GET","/api/notes"), S.server.api("GET","/api/events?limit=40")]);
+    Object.assign(PO,{docs:d, quotes:q, notes:n.notes, events:e.events, err:""});
+  }catch(err){ PO.err=err?.message||"De gegevens konden niet worden geladen. Probeer het zo opnieuw."; }
+  if(quiet && poBusyTyping()) return;
+  renderPost();
+}
+function poDoc(d){
+  const title=d.kind==="email"? (d.subject||"(geen onderwerp)") : (d.filename||"bijlage");
+  const rel=REL[d.relevance], st=d.status!=="geanalyseerd"? DOC_ST[d.status] : null;
+  const chips=[...arr(d.tickers).map(t=>`<span class="chip">${esc(t)}</span>`), ...arr(d.companies).map(c=>`<span class="chip">${esc(c)}</span>`)].join("");
+  return `<article class="po-doc">
+    <div class="po-h">${rel? `<span class="pill ${rel[0]}">${rel[1]}</span>`:""}${st? `<span class="pill ${st[0]}">${st[1]}</span>`:""}${d.doc_type? `<span class="chip">${esc(DOC_TYPE_LABEL[d.doc_type]||d.doc_type)}</span>`:""}<b>${esc(title)}</b></div>
+    <div class="po-meta">${d.kind==="bijlage"? "Bijlage bij “"+esc(d.subject||"")+"” · ":""}${esc(d.from_addr||"")}${d.received_at||d.created_at? " · "+esc(fmtDT(d.received_at||d.created_at)):""}</div>
+    ${d.summary? `<p class="small">${esc(d.summary)}</p>`:""}
+    ${d.error && d.status!=="geanalyseerd"? `<p class="small muted">${esc(d.error)}</p>`:""}
+    ${chips? `<div class="chips">${chips}</div>`:""}
+    ${arr(d.amounts).length? `<div class="po-amts">${d.amounts.map(a=>`<span class="po-amt">${esc(money(a))}${a.what? " · "+esc(a.what):""}</span>`).join("")}</div>`:""}
+    ${arr(d.dates).length? `<ul class="po-dates">${d.dates.map(x=>`<li>${esc(fmtDate(x.date,{day:"numeric",month:"short",year:"numeric"}))}: ${esc(x.what||"")}</li>`).join("")}</ul>`:""}
+    ${arr(d.actions).length? `<ul class="actions">${d.actions.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul>`:""}
+    <div class="btnrow"><button class="btn sm" type="button" data-po="inbox" data-id="${d.id}">Naar plan-inbox</button><button class="btn sm" type="button" data-po="again" data-id="${d.id}">Opnieuw analyseren</button><button class="btn sm" type="button" data-po="text" data-id="${d.id}">${PO.open===d.id? "Tekst verbergen":"Tekst bekijken"}</button></div>
+    ${PO.open===d.id? `<div class="answer small" style="max-height:340px;overflow:auto">${esc(PO.openText||"Laden…")}</div>`:""}
+  </article>`;
+}
+function renderPost(){
+  const el=$("po-body"); if(!el) return;
+  if(!S.server){ el.innerHTML=`<div class="empty"><b>Alleen op je eigen site</b><span>Post en documenten werken op je Railway-site met e-mail en Grok.</span></div>`; return; }
+  if(!PO.docs){ el.innerHTML = PO.err? `<div class="notice bad">${esc(PO.err)}</div>` : `<div class="empty"><b>Post laden…</b></div>`; return; }
+  const D=PO.docs, c=D.counts||{}, st=S.srvStatus, Q=PO.quotes||{quotes:[]};
+  const wait=(c.nieuw||0)+(c.wacht||0);
+  const types=Object.keys(DOC_TYPE_LABEL);
+  el.innerHTML = `${PO.err? `<div class="notice bad">${esc(PO.err)}</div>`:""}
+  <div class="box stack">
+    <div class="sechead"><div><span class="eyebrow">Post · e-mail en bijlagen</span><h2 style="margin-top:3px">Wat er binnenkwam</h2></div>
+      <button class="btn sm primary" type="button" id="poRun">Mail nu ophalen</button></div>
+    ${st && !st.mail?.configured? `<div class="notice bad">E-mail is nog niet gekoppeld: zet EMAIL_HOST, EMAIL_PORT, EMAIL_USER en EMAIL_PASS in Railway.</div>`:""}
+    ${st && !st.ai?.provider? `<div class="notice bad">Grok is nog niet gekoppeld: zet XAI_API_KEY in Railway. Mails worden wel bewaard.</div>`:""}
+    <div class="po-stats">
+      <div class="po-stat"><b>${nf(c.geanalyseerd||0)}</b><span>Geanalyseerd</span></div>
+      <div class="po-stat"><b>${nf(D.important||0)}</b><span>Belangrijk voor je plan</span></div>
+      <div class="po-stat"><b>${nf(wait)}</b><span>Wacht op analyse</span></div>
+      <div class="po-stat"><b>${nf(c.fout||0)}</b><span>Mislukt</span></div>
+    </div>
+    <p class="po-meta">${nf(D.mails||0)} e-mails gelezen${D.last?.at? " · laatste controle "+esc(fmtDT(D.last.at)):""}${st?.mail?.folder? " · map "+esc(st.mail.folder):""}</p>
+    <span class="status" id="poStatus" role="status">${esc(PO.msg||"")}</span>
+  </div>
+  <div class="grid g-2">
+    <div class="box stack">
+      <form class="po-filters" id="poF" autocomplete="off">
+        <div><label for="poQ">Zoeken</label><input id="poQ" value="${esc(PO.f.q)}" placeholder="Bedrijf, ticker of onderwerp"></div>
+        <div><label for="poT">Soort</label><select id="poT"><option value="">Alle soorten</option>${types.map(t=>`<option value="${t}" ${PO.f.type===t?"selected":""}>${DOC_TYPE_LABEL[t]}</option>`).join("")}</select></div>
+        <div><label for="poR">Belang</label><select id="poR"><option value="">Alles</option>${["hoog","middel","laag"].map(r=>`<option value="${r}" ${PO.f.relevance===r?"selected":""}>${REL[r][1]}</option>`).join("")}</select></div>
+      </form>
+      <div>${arr(D.documents).length? D.documents.map(poDoc).join("") : `<div class="empty"><b>${PO.f.q||PO.f.type||PO.f.relevance? "Niets gevonden met deze filters" : "Nog geen e-mails verwerkt"}</b><span>${st?.mail?.configured? "Nieuwe mails worden elk kwartier opgehaald. Klik op Mail nu ophalen om niet te wachten." : "Koppel eerst je e-mail in Railway."}</span></div>`}</div>
+    </div>
+    <div class="stack">
+      <div class="box stack"><div class="sechead"><h3>Koersen</h3><span class="muted small">${Q.last?.at? "bijgewerkt "+esc(fmtDT(Q.last.at)):""}</span></div>
+        ${!Q.finnhub? `<p class="small muted">Zet FINNHUB_API_KEY in Railway voor aandelen en ETF's. Crypto komt van CoinGecko.</p>`:""}
+        <div>${arr(Q.quotes).map(r=>{ const ch=r.change_pct; return `<div class="qt"><span><b>${esc(r.symbol)}</b> <span class="muted small">${esc(r.name||"")}</span></span>
+          <span class="num">${r.price!=null? "$"+nf(r.price, r.price>=1000?0:2) : "–"}</span>
+          <span class="num small ${ch>0?"up":ch<0?"down":"muted"}">${ch!=null? (ch>0?"▲ +":ch<0?"▼ −":"")+nf(Math.abs(ch),2)+"%" : esc(r.error||"")}</span>
+          <button class="xbtn" type="button" data-qdel="${esc(r.symbol)}" aria-label="${esc(r.symbol)} verwijderen">×</button></div>`; }).join("")}</div>
+        <form class="btnrow" id="qAdd" autocomplete="off"><input id="qSym" placeholder="Symbool, bijv. AMD" aria-label="Symbool" style="flex:1 1 110px;width:auto"><select id="qKind" aria-label="Soort" style="flex:0 0 auto;width:auto"><option value="aandeel">Aandeel</option><option value="etf">ETF</option><option value="crypto">Crypto</option></select><button class="btn sm" type="submit">Toevoegen</button></form>
+        <button class="btn sm" type="button" id="qRun" style="align-self:flex-start">Koersen nu ophalen</button>
+      </div>
+      <div class="box stack"><h3>Notities</h3>
+        <form class="stack" id="nAdd" style="gap:8px" autocomplete="off"><textarea id="nBody" style="min-height:90px;font-family:var(--font-body);font-size:.9rem" placeholder="Bijv. CRCL bijkopen als hij onder de $80 sluit"></textarea><button class="btn sm primary" type="submit" style="align-self:flex-start">Notitie opslaan</button></form>
+        <div>${arr(PO.notes).map(n=>`<div class="note"><span class="muted small">${esc(fmtDT(n.updated_at))}</span><button class="xbtn" type="button" data-ndel="${n.id}" aria-label="Notitie verwijderen">${PO.noteDel===n.id? "zeker?":"×"}</button><p>${esc(n.body)}</p></div>`).join("") || `<p class="muted small">Nog geen notities.</p>`}</div>
+      </div>
+      <div class="box stack"><h3>Logboek</h3>
+        <div>${arr(PO.events).map(e=>`<div class="ev"><span class="pill ${e.level==="fout"?"t-bad":e.level==="let op"?"t-warn":"t-neutral"}">${esc(e.source)}</span><span class="muted">${esc(fmtDT(e.at))}</span><p>${esc(e.message)}</p></div>`).join("") || `<p class="muted small">Nog niets gebeurd.</p>`}</div>
+      </div>
+    </div>
+  </div>`;
+  const msg=(t,bad)=>{ PO.msg=t; setStatus($("poStatus"), t, bad); };
+  $("poRun").addEventListener("click", async ()=>{ try{ const r=await S.server.run("post"); msg(r.started? "Mail wordt opgehaald en geanalyseerd; dit duurt meestal 10 seconden tot een paar minuten." : "Er loopt al een taak; probeer het zo opnieuw."); setTimeout(()=>loadPost(true), 15000); setTimeout(()=>loadPost(true), 60000); }catch(e){ msg("Starten lukte niet.", true); } });
+  let tmr; const refilter=()=>{ PO.f={q:$("poQ").value.trim(), type:$("poT").value, relevance:$("poR").value}; clearTimeout(tmr); tmr=setTimeout(()=>loadPost(), 300); };
+  $("poQ").addEventListener("input", refilter); $("poT").addEventListener("change", refilter); $("poR").addEventListener("change", refilter);
+  $("poF").addEventListener("submit", ev=>ev.preventDefault());
+  el.querySelectorAll("[data-po]").forEach(b=>b.addEventListener("click", async ()=>{
+    const id=+b.dataset.id, what=b.dataset.po;
+    try{
+      if(what==="text"){ if(PO.open===id){ PO.open=null; renderPost(); return; } PO.open=id; PO.openText=""; renderPost(); const r=await S.server.api("GET","/api/documents/"+id); PO.openText=r.text||"(geen tekst)"; renderPost(); }
+      if(what==="again"){ await S.server.api("POST","/api/documents/"+id+"/reanalyze"); msg("Opnieuw in de wachtrij; Grok analyseert hem zo."); setTimeout(()=>loadPost(true), 12000); }
+      if(what==="inbox"){ await S.server.api("POST","/api/documents/"+id+"/to-inbox"); msg("In je plan-inbox gezet. Ga naar Inbox en klik Analyseer om plan-voorstellen te krijgen."); }
+    }catch(e){ msg(e?.message||"Dat lukte niet.", true); }
+  }));
+  $("qAdd").addEventListener("submit", async ev=>{ ev.preventDefault(); const sym=$("qSym").value.trim(); if(!sym) return; try{ await S.server.api("POST","/api/watchlist",{symbol:sym, kind:$("qKind").value}); msg(sym.toUpperCase()+" toegevoegd; de koers volgt zo."); document.activeElement?.blur?.(); setTimeout(()=>loadPost(true), 6000); loadPost(); }catch(e){ msg(e?.message||"Toevoegen lukte niet.", true); } });
+  el.querySelectorAll("[data-qdel]").forEach(b=>b.addEventListener("click", async ()=>{ try{ await S.server.api("DELETE","/api/watchlist/"+encodeURIComponent(b.dataset.qdel)); loadPost(); }catch(e){ msg("Verwijderen lukte niet.", true); } }));
+  $("qRun").addEventListener("click", async ()=>{ try{ const r=await S.server.run("koersen"); msg(r.started? "Koersen worden opgehaald." : "Er loopt al een taak; probeer het zo opnieuw."); setTimeout(()=>loadPost(true), 8000); }catch(e){ msg("Starten lukte niet.", true); } });
+  $("nAdd").addEventListener("submit", async ev=>{ ev.preventDefault(); const body=$("nBody").value.trim(); if(!body) return; try{ await S.server.api("POST","/api/notes",{body}); document.activeElement?.blur?.(); msg("Notitie opgeslagen."); loadPost(); }catch(e){ msg("Opslaan lukte niet.", true); } });
+  el.querySelectorAll("[data-ndel]").forEach(b=>b.addEventListener("click", async ()=>{ const id=+b.dataset.ndel; if(PO.noteDel!==id){ PO.noteDel=id; renderPost(); return; } PO.noteDel=null; try{ await S.server.api("DELETE","/api/notes/"+id); loadPost(); }catch(e){ msg("Verwijderen lukte niet.", true); } }));
+}
+
+/* ================= losse Chrome-versie: instellingen ================= */
+async function loadLocalStatus(){ if(!S.local) return; try{ S.localSt=await S.local.status(); }catch(e){ S.localSt=null; } renderUitleg(); }
+function localBox(){
+  const L=S.localSt;
+  if(!L) return `<div class="box"><p class="muted">Instellingen laden…</p></div>`;
+  const row=(ok,name,desc,off="Niet ingesteld")=>`<div class="conn"><b>${name}</b>${ok? `<span class="pill t-good">Actief</span>` : `<span class="pill t-warn">${off}</span>`}<p>${desc}</p></div>`;
+  const lp=L.lastPrices, lm=L.lastMacro, M=S.macroProp;
+  const store = L.storage==="idb"? `In Chrome op deze computer${L.persisted? " (blijvend bewaard)":""}. Maak af en toe een back-up.` : L.storage==="ls"? "In Chrome, met beperkte ruimte. Maak af en toe een back-up." : "Chrome bewaart op deze pagina niets: je wijzigingen verdwijnen als je hem sluit.";
+  return `<div class="box stack">
+    <div class="sechead"><h2>Instellingen</h2><span class="muted small">Deze versie draait helemaal in Chrome op deze computer</span></div>
+    <div>${row(L.keys.anthropic,"Claude API","Analyseert transcripts, beantwoordt vragen en zoekt nieuwe macrocijfers op. Sleutel maken: platform.claude.com → API Keys."+(L.usage? ` Verbruik tot nu: ${nf(L.usage.input)} invoer- en ${nf(L.usage.output)} uitvoertokens${L.usage.searches? ", "+nf(L.usage.searches)+" zoekopdrachten":""}.`:""))}
+    ${row(L.keys.twelvedata,"Koersen · Twelve Data",`Goud, zilver, USD/JPY, CRCL en de Mag 7-mand, elk halfuur zolang deze pagina open staat. Bitcoin komt van CoinGecko (zonder sleutel).${lp? " Laatst: "+esc(fmtDT(lp.at))+(lp.errors?.length? " · "+esc(lp.errors[0]):"")+"." : ""}`)}
+    ${row(!!lm,"Macrocijfers",`Rente, inflatie, banen, kredietspread en de S&P 500: Claude zoekt ze online op en jij kiest wat je overneemt.${lm? " Laatst: "+esc(fmtDT(lm.at))+".":""}`,"Nog niet bijgewerkt")}
+    ${row(L.storage!=="mem","Opslag",store,"Let op")}</div>
+    <form class="stack" id="kForm" autocomplete="off" style="gap:10px">
+      <div class="frow">
+        <div><label for="kA">Claude API-sleutel</label><input id="kA" type="password" autocomplete="off" spellcheck="false" placeholder="${L.keys.anthropic? "ingesteld · plak een nieuwe om te vervangen" : "sk-ant-…"}"></div>
+        <div><label for="kT">Twelve Data-sleutel</label><input id="kT" type="password" autocomplete="off" spellcheck="false" placeholder="${L.keys.twelvedata? "ingesteld · plak een nieuwe om te vervangen" : "gratis via twelvedata.com"}"></div>
+      </div>
+      <div class="btnrow"><button class="btn primary sm" type="submit">Sleutels opslaan</button>${(L.keys.anthropic||L.keys.twelvedata)? `<button class="btn sm" type="button" id="kClear">${S.kClearArm? "Zeker? Klik nogmaals" : "Sleutels wissen"}</button>`:""}<span class="status" id="kStatus" role="status"></span></div>
+    </form>
+    <div class="btnrow">
+      <button class="btn sm" type="button" data-l="prices">Koersen nu ophalen</button>
+      <button class="btn sm" type="button" data-l="macro" ${L.keys.anthropic?"":"disabled"}>Macrocijfers bijwerken met Claude</button>
+      <button class="btn sm" type="button" data-l="export">Back-up downloaden</button>
+      <label class="btn sm" style="margin:0">Back-up terugzetten<input type="file" id="lImport" accept=".json,application/json" hidden></label>
+    </div>
+    <span class="status" id="lStatus" role="status">${esc(S.localMsg||"")}</span>
+    ${S.importFile? `<div class="notice bad stack" style="gap:8px"><span>Je huidige gegevens in Chrome worden vervangen door <b>${esc(S.importFile.name)}</b>. Download eerst een back-up als je de huidige stand wilt bewaren.</span><span class="btnrow"><button class="btn sm primary" type="button" id="imGo">Terugzetten</button><button class="btn sm" type="button" id="imNo">Annuleren</button></span></div>`:""}
+    ${M? `<div class="box pending stack" style="gap:6px"><b>Nieuwe cijfers van Claude (${M.rows.length})</b>${M.note? `<p class="small muted">${esc(M.note)}</p>`:""}
+      <div>${M.rows.map((r,i)=>`<label class="chg" for="mp-${i}"><input type="checkbox" id="mp-${i}" data-mp="${i}" ${r.on?"checked":""}><span><b>${esc(r.label)}</b> <span class="from">${esc(r.fromT)}</span> → <b>${esc(r.toT)}</b><br><span class="muted small">${esc([r.asOf,r.src].filter(Boolean).join(" · "))}</span></span></label>`).join("")}</div>
+      <div class="btnrow"><button class="btn primary sm" type="button" id="mpApply" ${M.rows.length?"":"disabled"}>Overnemen</button><button class="btn sm" type="button" id="mpNo">Niet overnemen</button></div></div>`:""}
+    <p class="faint small">Je sleutels staan alleen in deze browser. Gebruik dit bestand op je eigen computer en zet het niet openbaar online: er zit geen inlog op.</p>
+  </div>`;
+}
+function bindLocal(){
+  $("kForm")?.addEventListener("submit", async (ev)=>{
+    ev.preventDefault();
+    const a=$("kA").value.trim(), t=$("kT").value.trim();
+    if(!a && !t){ setStatus($("kStatus"),"Plak eerst een sleutel.",true); return; }
+    if(a && !/^sk-ant-/.test(a)){ setStatus($("kStatus"),"Een Claude-sleutel begint met sk-ant-.",true); return; }
+    await S.local.saveKeys({anthropic:a||null, twelvedata:t||null});
+    document.activeElement?.blur?.();
+    S.sample=await window.claude.use("sample"); $("askBtn").disabled=!S.sample;
+    S.localMsg="Sleutels opgeslagen."; await loadLocalStatus(); renderAll(); renderInbox();
+    if(t) localAct("prices");
+  });
+  $("kClear")?.addEventListener("click", async ()=>{
+    document.activeElement?.blur?.();
+    if(!S.kClearArm){ S.kClearArm=true; renderUitleg(); return; }
+    S.kClearArm=false; await S.local.clearKeys(); S.sample=null; $("askBtn").disabled=true;
+    S.localMsg="Sleutels gewist."; await loadLocalStatus(); renderAll(); renderInbox();
+  });
+  $("ux-body").querySelectorAll("[data-l]").forEach(b=>b.addEventListener("click", ()=>localAct(b.dataset.l)));
+  $("lImport")?.addEventListener("change", (ev)=>{ const f=ev.target.files?.[0]; if(f){ S.importFile=f; renderUitleg(); } });
+  $("imNo")?.addEventListener("click", ()=>{ S.importFile=null; renderUitleg(); });
+  $("imGo")?.addEventListener("click", doImport);
+  $("ux-body").querySelectorAll("[data-mp]").forEach(cb=>cb.addEventListener("change", ()=>{ S.macroProp.rows[+cb.dataset.mp].on=cb.checked; }));
+  $("mpApply")?.addEventListener("click", applyMacroProp);
+  $("mpNo")?.addEventListener("click", ()=>{ S.macroProp=null; S.localMsg=""; renderUitleg(); });
+}
+function localMsg(msg, bad=false){ S.localMsg=msg; setStatus($("lStatus"), msg, bad); }
+async function localAct(what){
+  if(S.localBusy) return;
+  S.localBusy=true;
+  try{
+    if(what==="export"){ const n=await S.local.exportBackup(); localMsg("Back-up gedownload: "+n+". Bewaar hem bijvoorbeeld in iCloud Drive."); }
+    if(what==="prices"){ localMsg("Koersen ophalen…"); const r=await S.local.refreshPrices(); await loadLocalStatus(); localMsg(r.updated.length? `Bijgewerkt: ${r.updated.length} koers${r.updated.length===1?"":"en"}.${r.errors.length? " Let op: "+r.errors.join("; ")+".":""}` : (r.errors.length? r.errors.join("; ")+"." : "Geen koersen opgehaald."), !r.updated.length); }
+    if(what==="macro"){ localMsg("Claude zoekt de nieuwste cijfers op. Dit duurt meestal 30 tot 90 seconden…"); const p=await S.local.findMacro(); S.macroProp=p; S.localMsg=p.rows.length? "Kies hieronder wat je overneemt." : "Claude vond geen nieuwere cijfers."; renderUitleg(); }
+  }catch(e){ localMsg(e?.message||sampleErrText(e), true); }
+  finally{ S.localBusy=false; }
+}
+async function applyMacroProp(){
+  const P=S.macroProp; if(!P) return;
+  const rows=P.rows.filter(r=>r.on); if(!rows.length){ localMsg("Vink minstens één cijfer aan.", true); return; }
+  try{ const n=await S.local.applyMacro(rows); S.macroProp=null; S.localMsg=`${n} cijfer${n===1?"":"s"} bijgewerkt. Klik op Markt → "Marktstatus bijwerken met Claude" als je ook het oordeel wilt laten herzien.`; await loadLocalStatus(); }
+  catch(e){ localMsg("Opslaan lukte niet.", true); }
+}
+async function doImport(){
+  const f=S.importFile; if(!f) return;
+  try{ const r=await S.local.importBackup(f); S.importFile=null; notice(`Back-up teruggezet (${r.docs} onderdelen). De pagina wordt ververst…`); setTimeout(()=>location.reload(), 1500); }
+  catch(e){ S.importFile=null; renderUitleg(); notice(e?.message||"Terugzetten mislukt.", true); }
+}
+async function runJob(name){
+  try{
+    const r=await S.server.run(name);
+    setStatus($("runStatus"), r.started? `Gestart: ${JOB_NAME[name]||name}. Dit duurt meestal 10 tot 90 seconden.` : `Er loopt al een taak (${JOB_NAME[r.running]||r.running}). Probeer het zo opnieuw.`);
+    if(r.started){ setTimeout(loadServerStatus, 15000); setTimeout(loadServerStatus, 80000); }
+  }catch(e){ setStatus($("runStatus"), "Starten lukte niet. Probeer het opnieuw.", true); }
+}
+async function doRestore(){
+  const f=S.restoreFile; if(!f||!S.server?.restore) return;
+  const btn=$("restoreGo"); if(btn) btn.disabled=true;
+  setStatus($("runStatus"), "Terugzetten…");
+  try{
+    const r=await S.server.restore(f);
+    S.restoreFile=null;
+    notice(`Back-up teruggezet (${r.docs} onderdelen). De vorige stand is apart bewaard. De pagina wordt ververst…`);
+    setTimeout(()=>location.reload(), 2500);
+  }catch(e){ S.restoreFile=null; renderUitleg(); notice(e?.message||"Terugzetten mislukt.", true); }
+}
+
+/* ================= FOOTER ================= */
+function renderFooter(){
+  const p=S.plan;
+  $("footer").innerHTML = `<p>${esc(p?.meta?.disclaimer || "Persoonlijk educatief plan. Geen beleggingsadvies.")} De brillen zijn een samenvatting van de aanpak van deze bronnen, geen eigen uitspraken van hen, tenzij ze uit een geplakt transcript komen.</p>
+    ${arr(p?.sources).length? `<details><summary style="cursor:pointer">Bronnen bij dit plan (${p.sources.length})</summary><ul>${p.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join("")}</ul></details>`:""}`;
+}
+async function exportMd(){
+  const p=S.plan, st=$("exStatus"); if(!p||!S.downloads) return;
+  const m=p.macro||{}, L=[];
+  L.push(`# Handelsplan 2026 — v${p.meta?.version||1} (${fmtDate(p.meta?.updatedAt,{day:"numeric",month:"long",year:"numeric"})})`,"");
+  if(m.headline){ L.push(`## Marktstatus: ${m.headline}`,"",`Regime: ${m.regime||""} · ${RISK[m.riskMode]?.label||""}`,"",m.summary||"","");
+    arr(m.keyPoints).forEach(k=>L.push(`- **${k.title}** — ${k.text}`)); L.push("");
+    L.push("### Pijlers",...arr(m.pillars).map(x=>`- **${x.name}** (${LV[pillarLevel(x).lv]?.label||""}): ${x.reading}`),"");
+    arr(m.lenses).forEach(l=>{ L.push(`### Bril: ${l.name} (${l.who})`,"",...arr(l.checks).map(c=>`- ${c.q}: ${c.answer}`),"",`**Conclusie:** ${l.take}`,""); }); }
+  if(m.cycle){ const cc=m.cycle; L.push(`## Cyclus: ${cc.verdict||""}`,"",cc.summary||"","",...arr(cc.cycles).filter(c=>CYCLE_DEF[c.id]).map(c=>`- **${CYCLE_DEF[c.id].name}**: ${phaseAt(c.id,+c.pos||0)} — ${c.why||""}`),"",
+    "Kantelpunten:",...arr(cc.tipping).map(t=>`- ${t.label}: ${TP_LABEL[tipLevel(t)]||""}${t.now? " ("+t.now+")":""}`),""); }
+  L.push("## Nu doen",...arr(p.actionsNow).map(a=>"- "+a),"");
+  L.push("## Scenario's",...arr(p.scenarios).map(s=>`- **${s.name}** (${s.prob}%): ${s.desc}`),"");
+  arr(p.positions).forEach(x=>{ L.push(`## ${x.name} — ${STANCES[x.stance]?.label||x.stance}`,"",x.stanceNote||"","",x.now||"","","Planregels:",...arr(x.rules).map((r,i)=>`${i+1}. ${r}`),""); });
+  L.push("## Signalen",...arr(p.triggers).map(t=>{ const {v}=trigValue(t); return `- ${t.label}: ${fmtTrig(t,v)} (${LV[trigLevel(t,v)]?.label||"onbekend"}) — ${t.meaning}`; }),"");
+  L.push("## Kalender",...arr(p.calendar).map(c=>`- ${c.date} ${c.time||""}: ${c.event} — ${c.why}`),"","---",p.meta?.disclaimer||"");
+  try{ const r=await S.downloads.save({filename:`handelsplan-v${p.meta?.version||1}.md`, data:L.join("\n")}); setStatus(st, r?.status==="saved"?"Opgeslagen.":""); }
+  catch(e){ if(e?.code!=="cancelled") setStatus(st,"Exporteren lukte niet.",true); }
+}
+
+/* ================= prompts ================= */
+function planForPrompt(p){
+  const q=clone(p); delete q.sources;
+  q.triggers=arr(q.triggers).map(t=>{ const {v,asOf}=trigValue(t); return {...t, currentValue:v, currentAsOf:asOf, status:LV[trigLevel(t,v)]?.label||"onbekend"}; });
+  return q;
+}
+function marketForPrompt(){ return arr(S.market?.items).map(i=>`${i.label}: ${itemText(i)} (${i.asOf||"?"}${i.change? "; "+i.change:""})`).join("\n") || "geen cijfers"; }
+function levelsForPrompt(){ return arr(S.levels?.rows).map(r=>`${r.label}: slot ${r.last}, trend ${r.trend}, 50d ${r.ema50?.toFixed?.(2)}, 200d ${r.ema200?.toFixed?.(2)}, vorige week H ${r.prevWkHigh} / L ${r.prevWkLow}`).join("\n"); }
+const MACRO_SCHEMA = `"macro":{"headline":null,"summary":null,"riskMode":null,"regime":null,"keyPoints":null,"compass":null,"pillars":[{"id":"rente","status":"stress","reading":"…"}],"positionImpact":null,"lens":null,"cycle":null}`;
+const MACRO_RULES = `MARKTBEELD (changes.macro)
+- headline/summary/regime/keyPoints alleen bij een echt ander beeld. keyPoints = precies 6 objecten {"tone":"bad|warn|good","title":"…","text":"…"}.
+- riskMode: risk-on | neutraal | defensief | risk-off. compass: {"growth":-1..1,"inflation":-1..1,"why":"…"} (groei <0 = zwakker, inflatie >0 = stijgend).
+- pillars: bestaande ids (inflatie, groei, rente, liquiditeit, dollar, krediet, sentiment); status rustig|gespannen|stress; reading 1–2 zinnen met cijfers.
+- positionImpact: {"miners":{"dir":-1|0|1,"why":"…"},"crcl":…,"mag7":…,"insider":…}.
+- cycle (optioneel): {"verdict":"…","summary":"…","cycles":[{"id":"sentiment|credit|economy","pos":0.57,"why":"…"}],"tipping":[{"id":"tp_fund|tp_fed","status":"rustig|gespannen|stress","now":"…"}]}. pos = plek op de golf: 0 = bodem, 0,5 = top, 1 = volgende bodem. Verschuif pos hooguit 0,08 per keer en alleen met een concrete reden uit de cijfers of de bron. Wees eerlijk over onzekerheid: een late fase kan jaren duren.`;
+function analysisPrompt(meta, text){
+  const lensId = SOURCE_LENS[meta.source]||null;
+  const ids = {scenarios:arr(S.plan.scenarios).map(s=>s.id), macroTriggers:arr(S.plan.triggers).filter(t=>!t.computed && !(t.marketKey && item(t.marketKey))).map(t=>t.id)};
+  const lens = lensId? arr(S.plan.macro?.lenses).find(l=>l.id===lensId) : null;
+  return `Je bent de macro-analist achter het persoonlijke handelsplan van Floris (Nederlandse belegger, educatief gebruik). Posities: goud- en zilvermijnen (grootste), het aandeel Circle (CRCL), de Magnificent 7, en kleine aandelen op basis van politieke transactiemeldingen (Wolf of Washington).
+
+TAAK: lees het nieuwe transcript of de notitie, haal eruit wat relevant is, en stel kleine, onderbouwde wijzigingen voor.
+
+REGELS
+- Scheid feiten (controleerbaar, met datum), meningen en voorspellingen van de spreker. Neem claims niet over als feit.
+- De ACTUELE CIJFERS hieronder zijn de waarheid. Noemt de spreker andere cijfers, dan is het transcript waarschijnlijk ouder: weeg het lichter en zeg dat in caveats.
+- Scenariokansen alleen bij nieuwe, concrete informatie; max ±10 procentpunt per scenario; totaal 100. Anders null.
+- Houding per positie alleen wijzigen met een reden die naar een signaal of planregel verwijst (opbouwen, aanhouden, voorzichtig, afbouwen).
+- Triggers met handmatige waarde bijwerken mag alleen voor: ${ids.macroTriggers.join(", ")}, met een recenter cijfer uit het transcript.
+- Bij een Wolf of Washington-melding: toets aan de insider-planregels (leeftijd melding, positiegrootte, liquiditeit) en noem dat in keyPoints.
+${lens? `- BRIL: de bron is ${meta.source}. Vul changes.macro.lens in met HUN visie uit dit transcript (niet de jouwe): {"id":"${lensId}","take":"hun conclusie in 2-3 zinnen","checks":[{"id":"bestaande-id","answer":"…","status":"rustig|gespannen|stress|info"}],"newChecks":[{"q":"…","answer":"…","status":"…"}]}. Bestaande check-ids: ${arr(lens.checks).map(c=>c.id).join(", ")}. Zegt het transcript niets over een check, laat die dan weg.` : `- changes.macro.lens = null (deze bron heeft geen eigen bril).`}
+${MACRO_RULES}
+- Schrijf in het Nederlands, kort en concreet. Lege lijsten zijn prima.
+
+Antwoord met ALLEEN dit JSON-object:
+{"summary":"3-5 zinnen: kernboodschap en wat het betekent voor Floris","keyPoints":["max 8 korte punten"],"claims":[{"text":"…","type":"feit|mening|voorspelling","note":"…"}],"signals":[{"indicator":"…","reading":"…","direction":"positief|negatief|neutraal","affects":["miners"]}],"changes":{"scenarioProbabilities":null,"positionStances":[{"id":"miners","stance":"aanhouden","note":"…","reason":"…"}],"triggers":[{"id":"t_fed","current":20,"asOf":"…","reason":"…"}],"calendarAdd":[{"date":"YYYY-MM-DD","time":"","event":"…","why":"…","affects":["mag7"]}],"actionsNow":null,${MACRO_SCHEMA}},"confidence":"laag|middel|hoog","caveats":["…"]}
+
+VANDAAG: ${todayISO()}
+HUIDIG PLAN (JSON):
+${JSON.stringify(planForPrompt(S.plan))}
+
+ACTUELE CIJFERS:
+${marketForPrompt()}
+${levelsForPrompt()? "\nNIVEAUBORD:\n"+levelsForPrompt() : ""}
+
+NIEUW: bron "${meta.source}", titel "${meta.title||"(geen titel)"}", datum ${meta.date||"onbekend"}${meta.url? ", link "+meta.url:""}
+---
+${text}
+---`;
+}
+function macroPrompt(){
+  return `Je bent de macro-analist achter het handelsplan van Floris (posities: goud- en zilvermijnen, Circle/CRCL, Magnificent 7, kleine insider-aandelen). Werk het MARKTOVERZICHT bij op basis van de ACTUELE CIJFERS en SIGNALEN hieronder. Verander de brillen (lenses) niet. Wees precies met cijfers en noem ze.
+
+${MACRO_RULES}
+- Vul alleen in wat echt verandert; de rest null.
+
+Antwoord met ALLEEN dit JSON-object:
+{"summary":"wat er veranderd is in 2-3 zinnen","keyPoints":[],"claims":[],"signals":[],"changes":{${MACRO_SCHEMA}},"confidence":"laag|middel|hoog","caveats":["…"]}
+
+VANDAAG: ${todayISO()}
+HUIDIG MARKTOVERZICHT (JSON):
+${JSON.stringify({...S.plan.macro, lenses:undefined})}
+
+SIGNALEN:
+${arr(S.plan.triggers).map(t=>{ const {v,asOf}=trigValue(t); return `${t.label}: ${fmtTrig(t,v)} (${LV[trigLevel(t,v)]?.label||"onbekend"}; ${asOf||""}) — drempels let op ${t.warn}, alarm ${t.danger}`; }).join("\n")}
+
+ACTUELE CIJFERS:
+${marketForPrompt()}
+${levelsForPrompt()? "\nNIVEAUBORD:\n"+levelsForPrompt() : ""}`;
+}
+
+/* ================= ask the plan ================= */
+$("askForm").addEventListener("submit", async (ev)=>{
+  ev.preventDefault();
+  const q=$("askQ").value.trim(); if(!q||!S.sample||!S.plan) return;
+  const out=$("askOut"), st=$("askStatus"), btn=$("askBtn"), stop=$("askStop");
+  S.askCtl=new AbortController(); btn.disabled=true; stop.hidden=false; out.hidden=false; out.textContent="Claude denkt na…"; setStatus(st,"");
+  stop.onclick=()=>S.askCtl?.abort();
+  const prompt = `Je bent de analist achter Floris' persoonlijke handelsplan (educatief, geen beleggingsadvies). Beantwoord zijn vraag in het Nederlands, kort en concreet (max ~180 woorden), op basis van ZIJN plan en het marktbeeld hieronder. Verwijs naar planregels (R1, R2…) en signalen die van toepassing zijn. Zeg het eerlijk als het plan er niets over zegt.\n\nPLAN (JSON):\n${JSON.stringify(planForPrompt(S.plan))}\n\nCIJFERS:\n${marketForPrompt()}\n\nVRAAG: ${q}`;
+  try{ await S.sample(prompt,{signal:S.askCtl.signal, cache:false, onText:({text})=>{ out.textContent=text; }}); }
+  catch(e){ if(e?.code!=="cancelled"){ out.textContent=e?.text||""; out.hidden=!e?.text; setStatus(st, sampleErrText(e), true); if(HIDE_CODES.includes(e?.code)) S.sample=null; } }
+  finally{ btn.disabled=!S.sample; stop.hidden=true; }
+});
+
+/* ================= inbox ================= */
+const inText=$("inText");
+inText.addEventListener("input", ()=>{ const n=(inText.value.trim().match(/\S+/g)||[]).length; $("inWords").textContent = n? nf(n)+" woorden" : ""; });
+$("inDate").value = todayISO();
+function formMeta(){ return {source:$("inSource").value, title:$("inTitle").value.trim(), url:$("inUrl").value.trim(), date:$("inDate").value}; }
+async function saveInbox(meta, text){
+  const ref=S.db.collection("inbox").doc();
+  await ref.set({...meta, text:text.slice(0,MAX_TEXT), truncated:text.length>MAX_TEXT, createdAt:new Date().toISOString(), status:"nieuw", addedBy:"hand"});
+  return ref.id;
+}
+function clearForm(){ inText.value=""; $("inTitle").value=""; $("inUrl").value=""; $("inWords").textContent=""; }
+$("inSave").addEventListener("click", async ()=>{
+  const st=$("inStatus"), text=inText.value.trim();
+  if(!S.db){ setStatus(st,"Opslag is niet beschikbaar in deze weergave.",true); return; }
+  if(!text){ setStatus(st,"Plak eerst een transcript of notitie.",true); return; }
+  setStatus(st,"Bewaren…");
+  try{ await saveInbox(formMeta(), text); clearForm(); setStatus(st,"Bewaard in de inbox."); }catch(e){ setStatus(st, dbErrText(e), true); }
+});
+$("inForm").addEventListener("submit", async (ev)=>{
+  ev.preventDefault();
+  const st=$("inStatus"), text=inText.value.trim();
+  if(!S.db){ setStatus(st,"Opslag is niet beschikbaar in deze weergave.",true); return; }
+  if(!text){ setStatus(st,"Plak eerst een transcript of notitie.",true); return; }
+  if(!S.plan){ setStatus(st,"Het plan is nog niet geladen.",true); return; }
+  const meta=formMeta(); let id;
+  try{ id=await saveInbox(meta, text); clearForm(); }catch(e){ setStatus(st, dbErrText(e), true); return; }
+  runAnalysis(id, meta, text.slice(0,MAX_TEXT));
+});
+async function runAnalysis(inboxId, meta, text){
+  const st=$("inStatus"), btn=$("inAnalyze"), stop=$("inStop");
+  if(!S.sample){ setStatus(st,"Analyse met Claude is hier niet beschikbaar. Het transcript staat wel in de inbox.",true); return; }
+  if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
+  showTab("inbox");
+  S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
+  setStatus(st,"Claude leest het transcript… meestal 30–90 seconden.");
+  try{
+    const res=await S.sample.json(analysisPrompt(meta, text), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
+    if(!res || typeof res!=="object" || !res.summary) throw {code:"invalid_json"};
+    const analysis=normalizeAnalysis(res);
+    try{ await S.db.doc("inbox/"+inboxId).update({status:"geanalyseerd", analysis}); }catch(e){}
+    S.pending={inboxId, meta, analysis, items:buildChangeItems(analysis, meta)};
+    renderPending(); setStatus(st,"Analyse klaar. Kies bovenaan wat je overneemt.");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }catch(e){
+    if(e?.code==="cancelled") setStatus(st,"Gestopt. Het transcript staat in de inbox.");
+    else { setStatus(st, sampleErrText(e), true); if(HIDE_CODES.includes(e?.code)) S.sample=null; }
+  }finally{ S.anaCtl=null; btn.disabled=false; stop.hidden=true; }
+}
+async function refreshMacro(){
+  const st=$("refreshStatus"), btn=$("refreshBtn");
+  if(!S.sample||!S.plan?.macro) return;
+  if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
+  S.anaCtl=new AbortController(); if(btn) btn.disabled=true;
+  setStatus(st,"Claude leest de cijfers… meestal 30–60 seconden.");
+  try{
+    const res=await S.sample.json(macroPrompt(), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
+    if(!res || typeof res!=="object") throw {code:"invalid_json"};
+    const analysis=normalizeAnalysis({summary:"", ...res});
+    const meta={source:"Marktdata", title:"Marktstatus bijgewerkt", date:todayISO()};
+    S.pending={inboxId:null, meta, analysis, items:buildChangeItems(analysis, meta)};
+    renderPending(); setStatus($("refreshStatus"),"Voorstel klaar: zie bovenaan.");
+    window.scrollTo({top:0, behavior:"smooth"});
+  }catch(e){ setStatus($("refreshStatus"), sampleErrText(e), true); if(HIDE_CODES.includes(e?.code)) S.sample=null; }
+  finally{ S.anaCtl=null; const b=$("refreshBtn"); if(b) b.disabled=!S.sample; }
+}
+function normalizeAnalysis(res){
+  return {summary:String(res.summary||""), keyPoints:arr(res.keyPoints).map(String).slice(0,10), claims:arr(res.claims).slice(0,12), signals:arr(res.signals).slice(0,12),
+    confidence:String(res.confidence||""), caveats:arr(res.caveats).map(String).slice(0,6), changes:res.changes||{}, at:new Date().toISOString()};
+}
+
+/* ================= change proposals ================= */
+function buildChangeItems(a, meta){
+  const p=S.plan, c=a.changes||{}, items=[];
+  if(c.scenarioProbabilities && typeof c.scenarioProbabilities==="object"){
+    const next={};
+    arr(p.scenarios).forEach(s=>{ const raw=c.scenarioProbabilities[s.id]; const v=(typeof raw==="number"&&isFinite(raw))? raw : s.prob; next[s.id]=clamp(v, s.prob-10, s.prob+10); });
+    const tot=Object.values(next).reduce((x,y)=>x+Math.max(0,y),0);
+    if(tot>0){ let acc=0; const ids=Object.keys(next); ids.forEach((id,i)=>{ next[id]= i<ids.length-1? Math.round(Math.max(0,next[id])/tot*100) : 0; acc+=next[id]; }); next[ids[ids.length-1]]=100-acc;
+      if(arr(p.scenarios).some(s=>next[s.id]!==s.prob)) items.push({kind:"probs", on:true, label:"Scenariokansen", from:arr(p.scenarios).map(s=>s.prob+"%").join(" / "), to:arr(p.scenarios).map(s=>next[s.id]+"%").join(" / "), detail:arr(p.scenarios).map(s=>s.name).join(" / "), data:next}); }
+  }
+  arr(c.positionStances).forEach(x=>{ const pos=arr(p.positions).find(q=>q.id===x?.id); if(!pos||!STANCES[x.stance]) return; if(x.stance===pos.stance && !x.note) return;
+    items.push({kind:"stance", on:true, label:"Houding "+pos.name, from:STANCES[pos.stance]?.label, to:STANCES[x.stance].label, detail:[x.note,x.reason].filter(Boolean).join(" — "), data:{id:pos.id, stance:x.stance, note:x.note}}); });
+  arr(c.triggers).forEach(x=>{ const t=arr(p.triggers).find(q=>q.id===x?.id); if(!t||t.computed) return; if(t.marketKey && item(t.marketKey)) return; const v=Number(x.current); if(!isFinite(v)) return;
+    items.push({kind:"trigger", on:true, label:"Signaal "+t.label, from:fmtTrig(t,t.current), to:fmtTrig(t,v), detail:[x.asOf,x.reason].filter(Boolean).join(" — "), data:{id:t.id, current:v, asOf:x.asOf}}); });
+  arr(c.calendarAdd).forEach(x=>{ if(!x||!/^\d{4}-\d{2}-\d{2}$/.test(String(x.date))||!x.event) return; if(arr(p.calendar).some(q=>q.date===x.date&&q.event===x.event)) return;
+    items.push({kind:"calendar", on:true, label:"Kalender "+fmtDate(x.date), from:"", to:String(x.event), detail:String(x.why||""), data:{date:x.date, time:String(x.time||""), event:String(x.event), why:String(x.why||""), affects:arr(x.affects).filter(id=>POS_IDS.includes(id))}}); });
+  if(Array.isArray(c.actionsNow) && c.actionsNow.length) items.push({kind:"actions", on:false, label:"‘Nu doen’-lijst vervangen", from:arr(p.actionsNow).length+" punten", to:c.actionsNow.length+" punten", detail:c.actionsNow.map(String).join(" · "), data:c.actionsNow.map(String).slice(0,6)});
+  const m=c.macro||{}, pm=p.macro||{};
+  if(p.macro){
+    const kp = Array.isArray(m.keyPoints)&&m.keyPoints.length? m.keyPoints.filter(k=>k&&k.title).slice(0,6).map(k=>({tone:["bad","warn","good"].includes(k.tone)?k.tone:"warn", title:String(k.title), text:String(k.text||"")})) : null;
+    const rm = RISK[m.riskMode]? m.riskMode : null;
+    if(m.headline||m.summary||rm||m.regime||kp) items.push({kind:"macroText", on:true, label:"Marktstatus", from:pm.headline, to:m.headline||pm.headline, detail:[m.summary, rm? "Modus: "+RISK[rm].label:"", m.regime? "Regime: "+m.regime:"", kp? "6 nieuwe kernpunten":""].filter(Boolean).join(" · "), data:{headline:m.headline?String(m.headline):null, summary:m.summary?String(m.summary):null, riskMode:rm, regime:m.regime?String(m.regime):null, keyPoints:kp}});
+    if(m.compass && isFinite(+m.compass.growth) && isFinite(+m.compass.inflation)) items.push({kind:"compass", on:true, label:"Regimekompas", from:`groei ${nf(pm.compass?.growth,2)} · inflatie ${nf(pm.compass?.inflation,2)}`, to:`groei ${nf(+m.compass.growth,2)} · inflatie ${nf(+m.compass.inflation,2)}`, detail:String(m.compass.why||""), data:{growth:clamp(+m.compass.growth,-1,1), inflation:clamp(+m.compass.inflation,-1,1), why:m.compass.why?String(m.compass.why):null}});
+    arr(m.pillars).forEach(x=>{ const pl=arr(pm.pillars).find(q=>q.id===x?.id); if(!pl) return; const auto=pillarLevel(pl).auto;
+      const st=(!auto && LV[x.status] && x.status!=="info" && x.status!==pl.status)? x.status : null; if(!st && !x.reading) return;
+      items.push({kind:"pillar", on:true, label:"Pijler "+pl.name, from:st? LV[pl.status]?.label : "", to:st? LV[st].label : "nieuwe toelichting", detail:String(x.reading||""), data:{id:pl.id, status:st, reading:x.reading?String(x.reading):null}}); });
+    if(m.positionImpact && typeof m.positionImpact==="object"){ const pi={}; POS_IDS.forEach(id=>{ const v=m.positionImpact[id]; if(v&&typeof v==="object") pi[id]={dir:clamp(Math.round(+v.dir||0),-1,1), why:String(v.why||"")}; });
+      if(Object.keys(pi).length) items.push({kind:"impact", on:true, label:"Effect op je posities", from:"", to:"bijgewerkt", detail:Object.entries(pi).map(([k,v])=>`${POS_SHORT[k]} ${v.dir>0?"↑":v.dir<0?"↓":"→"}`).join(" · "), data:pi}); }
+    const lensId=SOURCE_LENS[meta?.source]; const ln=m.lens;
+    if(lensId && ln && typeof ln==="object" && (ln.take || arr(ln.checks).length || arr(ln.newChecks).length)){
+      const lens=arr(pm.lenses).find(l=>l.id===lensId);
+      if(lens) items.push({kind:"lens", on:true, label:"Bril "+lens.name, from:"", to:"bijgewerkt vanuit "+meta.source, detail:String(ln.take||""), data:{id:lensId, take:ln.take?String(ln.take):null,
+        checks:arr(ln.checks).filter(x=>x&&x.id).map(x=>({id:String(x.id), answer:x.answer?String(x.answer):null, status:LV[x.status]?x.status:null})),
+        newChecks:arr(ln.newChecks).filter(x=>x&&x.q).slice(0,3).map(x=>({id:"n"+Math.random().toString(36).slice(2,7), q:String(x.q), answer:String(x.answer||""), status:LV[x.status]?x.status:"info"}))}});
+    }
+    const cy=m.cycle, pcy=pm.cycle;
+    if(cy && pcy && typeof cy==="object"){
+      const cycles=arr(cy.cycles).map(x=>{ const o=arr(pcy.cycles).find(q=>q.id===x?.id); if(!o||!CYCLE_DEF[o.id]) return null;
+        const old=+o.pos||0, raw=+x.pos; const pos=isFinite(raw)? clamp(clamp(raw, old-0.08, old+0.08),0,1) : null;
+        if((pos===null || Math.abs(pos-old)<0.005) && !x.why) return null;
+        return {id:o.id, pos, why:x.why?String(x.why):null, from:phaseAt(o.id,old), to:phaseAt(o.id, pos ?? old)}; }).filter(Boolean);
+      const tips=arr(cy.tipping).map(x=>{ const t=arr(pcy.tipping).find(q=>q.id===x?.id); if(!t||t.key) return null;
+        const st=(LV[x.status] && x.status!=="info")? x.status : null; if(!st && !x.now) return null; return {id:t.id, status:st, now:x.now?String(x.now):null}; }).filter(Boolean);
+      if(cy.verdict||cy.summary||cycles.length||tips.length) items.push({kind:"cycle", on:true, label:"Cyclus", from:cy.verdict? pcy.verdict : "", to:cy.verdict? String(cy.verdict) : "bijgewerkt",
+        detail:[cy.summary? String(cy.summary) : "", ...cycles.map(x=>`${CYCLE_DEF[x.id].name}: ${x.from} → ${x.to}`), tips.length? `${tips.length} kantelpunt(en) bijgewerkt` : ""].filter(Boolean).join(" · "),
+        data:{verdict:cy.verdict?String(cy.verdict):null, summary:cy.summary?String(cy.summary):null, cycles, tips}});
+    }
+  }
+  if(a.claims.length && meta?.source!=="Marktdata") items.push({kind:"claims", on:true, label:"Claimregister", from:"", to:a.claims.length+" claims toevoegen", detail:a.claims.map(x=>x?.text).filter(Boolean).slice(0,4).join(" · "), data:a.claims});
+  return items;
+}
+function renderPending(){
+  const P=S.pending, el=$("pendingPanel");
+  if(!P){ el.hidden=true; el.innerHTML=""; return; }
+  const a=P.analysis; el.hidden=false;
+  el.innerHTML = `<div class="box pending stack">
+    <div class="sechead"><div><span class="eyebrow">Voorstel · ${esc(P.meta.source)} · ${esc(fmtDate(P.meta.date))}</span><h2 style="margin-top:3px">${esc(P.meta.title||"Zonder titel")}</h2></div>
+      ${a.confidence? `<span class="pill ${a.confidence==="hoog"?"t-good":a.confidence==="laag"?"t-bad":"t-warn"}">Betrouwbaarheid ${esc(a.confidence)}</span>`:""}</div>
+    ${a.summary? `<p>${esc(a.summary)}</p>`:""}
+    ${a.keyPoints.length? `<ul class="actions">${a.keyPoints.map(k=>`<li><span>${esc(k)}</span></li>`).join("")}</ul>`:""}
+    ${a.signals.length? `<div class="tbl"><table><tbody>${a.signals.map(s=>`<tr><td>${esc(s?.indicator)}</td><td>${esc(s?.reading)}</td><td><span class="pill ${s?.direction==="positief"?"t-good":s?.direction==="negatief"?"t-bad":"t-neutral"}">${esc(s?.direction||"neutraal")}</span></td><td><div class="chips">${chipsFor(arr(s?.affects))}</div></td></tr>`).join("")}</tbody></table></div>`:""}
+    ${a.caveats.length? `<div class="notice bad">${a.caveats.map(esc).join("<br>")}</div>`:""}
+    <div><span class="eyebrow">Voorgestelde wijzigingen</span>
+      ${P.items.length? P.items.map((it,ix)=>`<label class="chg" for="chg-${ix}"><input type="checkbox" id="chg-${ix}" data-ix="${ix}" ${it.on?"checked":""}>
+        <span><b>${esc(it.label)}</b> ${it.from? `<span class="from">${esc(it.from)}</span> → `:""}<b>${esc(it.to)}</b><br><span class="muted small">${esc(it.detail)}</span></span></label>`).join("") : `<p class="muted">Geen wijzigingen voorgesteld: het plan blijft zoals het is.</p>`}
+    </div>
+    <div class="btnrow"><button class="btn primary" type="button" data-act="apply" id="apApply" ${S.canWrite&&S.db&&P.items.length?"":"disabled"}>Toepassen op plan</button><button class="btn" type="button" data-act="dismiss">Niet toepassen</button><span class="status" id="apStatus"></span></div>
+  </div>`;
+  el.querySelectorAll(".chg input").forEach(cb=>cb.addEventListener("change",()=>{ P.items[+cb.dataset.ix].on=cb.checked; }));
+}
+async function dismissPending(){ const P=S.pending; if(P?.inboxId){ try{ await S.db.doc("inbox/"+P.inboxId).update({status:"bewaard"}); }catch(e){} } S.pending=null; renderPending(); }
+async function applyPending(){
+  const P=S.pending, st=$("apStatus"); if(!P) return;
+  const chosen=P.items.filter(i=>i.on); if(!chosen.length){ setStatus(st,"Vink minstens één wijziging aan.",true); return; }
+  const before=clone(S.plan), p=clone(S.plan), log=[], now=new Date().toISOString();
+  chosen.forEach(it=>{
+    const d=it.data;
+    if(it.kind==="probs"){ p.scenarios.forEach(s=>{ s.prob=d[s.id]; }); log.push(`Scenariokansen ${it.from} → ${it.to}`); }
+    if(it.kind==="stance"){ const x=p.positions.find(q=>q.id===d.id); if(x){ x.stance=d.stance; if(d.note) x.stanceNote=String(d.note); log.push(`${x.name}: ${it.from} → ${it.to}`); } }
+    if(it.kind==="trigger"){ const t=p.triggers.find(q=>q.id===d.id); if(t){ t.current=d.current; if(d.asOf) t.asOf=String(d.asOf); log.push(`${t.label}: ${it.from} → ${it.to}`); } }
+    if(it.kind==="calendar"){ p.calendar=arr(p.calendar).concat([d]).sort((a,b)=>a.date.localeCompare(b.date)); log.push(`Kalender: ${d.date} ${d.event}`); }
+    if(it.kind==="actions"){ p.actionsNow=d; log.push("‘Nu doen’-lijst vernieuwd"); }
+    if(it.kind==="claims"){ const add=d.filter(c=>c&&c.text).map(c=>({text:String(c.text), source:P.meta.source+(P.meta.title? " · "+P.meta.title:""), date:P.meta.date||todayISO(), status:"open", note:[c.type,c.note].filter(Boolean).map(String).join(" — ")})); p.claims=add.concat(arr(p.claims)).slice(0,60); log.push(`${add.length} claims toegevoegd`); }
+    if(p.macro){
+      if(it.kind==="macroText"){ ["headline","summary","riskMode","regime","keyPoints"].forEach(k=>{ if(d[k]) p.macro[k]=d[k]; }); log.push("Marktstatus: "+(d.headline||p.macro.headline)); }
+      if(it.kind==="compass"){ p.macro.compass={...(p.macro.compass||{}), growth:d.growth, inflation:d.inflation, ...(d.why? {why:d.why}:{})}; log.push(`Regimekompas: ${it.to}`); }
+      if(it.kind==="pillar"){ const pl=p.macro.pillars.find(q=>q.id===d.id); if(pl){ if(d.status) pl.status=d.status; if(d.reading) pl.reading=d.reading; log.push(`Pijler ${pl.name}: ${it.to}`); } }
+      if(it.kind==="impact"){ p.macro.positionImpact={...(p.macro.positionImpact||{}), ...d}; log.push("Effect op posities bijgewerkt"); }
+      if(it.kind==="lens"){ const l=p.macro.lenses.find(q=>q.id===d.id); if(l){ if(d.take) l.take=d.take;
+        d.checks.forEach(c=>{ const ck=l.checks.find(q=>q.id===c.id); if(ck){ if(c.answer) ck.answer=c.answer; if(c.status) ck.status=c.status; } });
+        l.checks=l.checks.concat(d.newChecks).slice(0,9); l.updatedAt=now; l.basis=`Bijgewerkt uit ${P.meta.source}${P.meta.title? ": “"+P.meta.title+"”":""} (${fmtDate(P.meta.date)})`; log.push(`Bril ${l.name} bijgewerkt`); } }
+      if(it.kind==="cycle" && p.macro.cycle){ const cc=p.macro.cycle; if(d.verdict) cc.verdict=d.verdict; if(d.summary) cc.summary=d.summary;
+        d.cycles.forEach(x=>{ const o=arr(cc.cycles).find(q=>q.id===x.id); if(o){ if(x.pos!=null) o.pos=x.pos; if(x.why) o.why=x.why; } });
+        d.tips.forEach(x=>{ const t=arr(cc.tipping).find(q=>q.id===x.id); if(t){ if(x.status) t.status=x.status; if(x.now) t.now=x.now; } });
+        cc.updatedAt=now; log.push("Cyclus bijgewerkt"+(d.verdict? ": "+d.verdict : "")); }
+    }
+  });
+  if(p.macro && chosen.some(i=>["macroText","compass","pillar","impact"].includes(i.kind))){ p.macro.updatedAt=now; p.macro.source = P.meta.source==="Marktdata"? "Bijgewerkt door Claude op basis van de cijfers" : `Bijgewerkt uit ${P.meta.source}`; }
+  p.meta={...(p.meta||{}), version:(+p.meta?.version||1)+1, updatedAt:now, lastSource:`${P.meta.source}${P.meta.title? ": "+P.meta.title:""}`};
+  setStatus(st,"Plan bijwerken…"); $("apApply").disabled=true;
+  try{
+    await S.db.doc("plan/current").set(p);
+    await S.db.collection("history").doc().set({at:now, version:p.meta.version, source:P.meta.source, title:P.meta.title||"", inboxId:P.inboxId||"", changelog:log, summary:P.analysis.summary, planBefore:before});
+    if(P.inboxId){ try{ await S.db.doc("inbox/"+P.inboxId).update({status:"verwerkt", appliedAt:now, appliedVersion:p.meta.version}); }catch(e){} }
+    S.pending=null; renderPending(); notice(`Plan bijgewerkt naar v${p.meta.version}: ${log.length} wijziging${log.length===1?"":"en"}.`);
+  }catch(e){ setStatus(st, dbErrText(e), true); $("apApply").disabled=false; }
+}
+
+/* ================= inbox list & history ================= */
+const INBOX_STATUS={nieuw:["t-warn","Nieuw"], "transcript nodig":["t-warn","Transcript nodig"], geanalyseerd:["t-neutral","Geanalyseerd"], verwerkt:["t-good","Verwerkt"], bewaard:["t-neutral","Bewaard"]};
+function renderInbox(){
+  const el=$("inboxList"), list=S.inbox;
+  const open=list.filter(i=>i.status==="nieuw"||i.status==="transcript nodig").length;
+  const c=$("inboxCount"); c.hidden=!open; c.textContent=open;
+  $("inboxMeta").textContent = list.length? `${list.length} item${list.length===1?"":"s"}` : "";
+  if(!S.db && !S.offline){ el.innerHTML=`<p class="muted">Inbox laden…</p>`; return; }
+  if(!list.length){ el.innerHTML=`<div class="empty"><b>De inbox is leeg</b><span>Plak hierboven je eerste transcript, of laat het laptop-script nieuwe video's toevoegen.</span></div>`; return; }
+  el.innerHTML = list.map(i=>{ const s=INBOX_STATUS[i.status]||["t-neutral",i.status||"–"]; const a=i.analysis; return `
+    <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}</span>
+      ${i.url? `<a href="${esc(i.url)}" target="_blank" rel="noopener" class="small">bron</a>`:""}
+      ${(i.text && i.status!=="verwerkt")? `<button class="btn sm" type="button" data-ana="${esc(i.id)}" ${S.sample?"":"disabled"}>${i.status==="geanalyseerd"||i.status==="bewaard"?"Opnieuw analyseren":"Analyseer"}</button>`:""}</div>
+      ${a?.summary? `<p class="small">${esc(a.summary)}</p>`:""}
+      ${i.text? `<details><summary>Tekst bekijken (${nf((i.text.match(/\S+/g)||[]).length)} woorden${i.truncated?", ingekort":""})</summary><div class="pre muted small" style="max-height:320px;overflow:auto;margin-top:6px">${esc(i.text.slice(0,20000))}${i.text.length>20000?"\n…":""}</div></details>`:""}
+    </div>`; }).join("");
+}
+function renderHistory(){
+  const el=$("hist-body"), list=S.history;
+  if(!list.length){ el.innerHTML=`<div class="empty"><b>Nog geen wijzigingen</b><span>Elke keer dat je een voorstel toepast of iets terugzet, verschijnt het hier.</span></div>`; return; }
+  el.innerHTML = list.map(h=>`<div class="item"><div class="h"><span class="pill t-accent plain">v${esc(h.version)}</span><b>${esc(h.title||h.source||"")}</b><span class="muted small">${esc(fmtDT(h.at))} · ${esc(h.source||"")}</span>
+      ${h.planBefore? `<button class="btn sm" type="button" data-undo="${esc(h.id)}" ${S.canWrite&&S.db?"":"disabled"}>${S.histConfirm===h.id?"Zeker? Klik nogmaals":"Terugzetten naar vóór deze stap"}</button>`:""}</div>
+    ${h.summary? `<p class="muted small">${esc(h.summary)}</p>`:""}
+    <ul class="blist plus">${arr(h.changelog).map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div>`).join("");
+}
+async function undo(id){
+  if(S.histConfirm!==id){ S.histConfirm=id; renderHistory(); return; }
+  S.histConfirm=null;
+  const h=S.history.find(x=>x.id===id); if(!h?.planBefore) return;
+  const p=clone(h.planBefore), before=clone(S.plan);
+  p.meta={...(p.meta||{}), version:(+S.plan?.meta?.version||1)+1, updatedAt:new Date().toISOString(), lastSource:`Teruggezet naar vóór v${h.version}`};
+  try{ await S.db.doc("plan/current").set(p);
+    await S.db.collection("history").doc().set({at:p.meta.updatedAt, version:p.meta.version, source:"Terugzetten", title:`Teruggezet naar vóór v${h.version}`, changelog:[`Plan teruggezet naar de stand vóór v${h.version}`], planBefore:before});
+    notice(`Plan teruggezet (nu v${p.meta.version}).`);
+  }catch(e){ notice(dbErrText(e), true); }
+}
+
+/* ================= notices & errors ================= */
+let noticeTimer;
+function notice(msg, bad=false){ const el=$("notice"); el.className="notice"+(bad?" bad":""); el.textContent=msg; el.hidden=false; clearTimeout(noticeTimer); noticeTimer=setTimeout(()=>{ el.hidden=true; }, 7000); }
+function dbErrText(e){
+  switch(e?.code){
+    case "invalid_argument": return "Opslaan werd geweigerd. Mogelijk heb je alleen leesrechten, of is de tekst te lang.";
+    case "quota_exceeded": return "De opslag is vol. Verwijder oude inbox-items en probeer opnieuw.";
+    case "resource_exhausted": return "Te veel bewerkingen tegelijk. Wacht even en probeer opnieuw.";
+    case "unavailable": return "Opslag tijdelijk niet bereikbaar. Probeer het zo opnieuw.";
+    default: return "Opslaan lukte niet. Probeer het opnieuw.";
+  }
+}
+function sampleErrText(e){
+  switch(e?.code){
+    case "not_granted": return "Claude-toegang voor deze pagina is niet toegestaan.";
+    case "sampling_disabled": case "not_declared": case "capability_disabled": case "capability_removed": return "Claude is hier niet beschikbaar.";
+    case "rate_limited": return "Je Claude-limiet of API-tegoed is even op. Probeer het later opnieuw.";
+    case "prompt_too_large": return "De tekst is te lang. Plak hem in delen.";
+    case "invalid_json": return "Het antwoord was onleesbaar. Probeer het opnieuw.";
+    case "refused": return "Claude wilde deze tekst niet verwerken.";
+    case "session_expired": return "Je sessie is verlopen. Log opnieuw in.";
+    default: return "De analyse is onderbroken. Controleer of je Claude API-sleutel is ingevuld en probeer het opnieuw.";
+  }
+}
+
+/* ================= render & boot ================= */
+function renderAll(){
+  renderHeader();
+  if(!document.activeElement?.closest?.("#mEditBody")) renderMarkt();
+  renderCyclus(); renderPlan(); renderSignals(); renderUitleg(); renderFooter();
+}
+renderAll(); renderInbox(); renderHistory();
+
+(async function boot(){
+  if(!window.claude || typeof window.claude.use!=="function"){ S.offline=true; renderAll(); return; }
+  const db=await window.claude.use("db");
+  if(!db){ S.offline=true; renderAll(); renderInbox(); return; }
+  S.db=db;
+  const onErr=(e)=>{ if(e?.code==="revoked"){ S.offline=true; renderAll(); } else notice(dbErrText(e), true); };
+  const seen={}; const changed=(k,d)=>{ const j=JSON.stringify(d??null); if(seen[k]===j) return false; seen[k]=j; return true; };
+  db.doc("plan/current").onSnapshot(s=>{ const d=s.exists? s.data() : null; S.planLoaded=true; if(!changed("plan",d) && S.plan) return; S.plan=d; renderAll(); }, onErr);
+  db.doc("market/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("market",d)) return; S.market=d; renderAll(); }, onErr);
+  db.doc("market/series").onSnapshot(s=>{ const d=s.exists? (s.data().series||{}) : {}; if(!changed("series",d)) return; S.series=d; renderAll(); }, onErr);
+  db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);
+  db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); }, onErr);
+  db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); }, onErr);
+  window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); }).catch(()=>{});
+  window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
+  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("tb-post").hidden=false; loadServerStatus(); if(S.tab==="post") loadPost();
+    setInterval(()=>{ if(S.tab==="post" && !document.hidden) loadPost(true); }, 60000); } }).catch(()=>{});
+  window.claude.use("local").then(l=>{ if(l){ S.local=l; loadLocalStatus(); window.addEventListener("hp-local", loadLocalStatus); } }).catch(()=>{});
+  window.claude.use("user").then(async u=>{ if(!u) return; const c=await u.can("data.write"); if(c===false){ S.canWrite=false; renderAll(); } }).catch(()=>{});
+})();
+})();
+</script>

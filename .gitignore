@@ -1,0 +1,6 @@
+# Geheimen horen niet in GitHub
+.env
+venv/
+.venv/
+__pycache__/
+dist/
