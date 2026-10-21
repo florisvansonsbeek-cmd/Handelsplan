@@ -781,14 +781,14 @@
    "label": "S&P 500 t.o.v. record",
    "group": "Aandelen",
    "pillar": "sentiment",
-   "value": -0.96,
+   "value": -2.05,
    "prefix": "",
    "suffix": "%",
    "decimals": 1,
    "ath": 7818.93,
    "athDate": "2026-10-06",
    "change": "record 7.819 op 6 okt",
-   "asOf": "15 okt",
+   "asOf": "16 okt",
    "src": "berekend (TheStreet, Vantage)"
   },
   {
@@ -855,6 +855,34 @@
    "change": "alarm vanaf 0,50",
    "asOf": "sep",
    "src": "FRED"
+  },
+  {
+   "key": "buffett",
+   "label": "Buffett-indicator (beurswaarde / bbp)",
+   "group": "Aandelen",
+   "pillar": "sentiment",
+   "value": 288,
+   "display": null,
+   "prefix": "",
+   "suffix": "%",
+   "decimals": 0,
+   "change": "2000: 172% · 2007: 131% · GuruFocus-methode 235%",
+   "asOf": "Q2 2026",
+   "src": "Fed Z.1 via thetrading.tools"
+  },
+  {
+   "key": "fedAssets",
+   "label": "Fed-balans",
+   "group": "Macro",
+   "pillar": "liquiditeit",
+   "value": 6.76,
+   "display": null,
+   "prefix": "$",
+   "suffix": " bln",
+   "decimals": 2,
+   "change": "+$159 mld in een jaar · QT gestopt",
+   "asOf": "14 okt",
+   "src": "Fed H.4.1"
   }
  ],
  "sourcesAdd": [
@@ -917,6 +945,14 @@
   {
    "label": "Mining.com: goud in 1973–74 en 2008",
    "url": "https://www.mining.com/web/will-next-market-crash-like-2008-1973-history-predicts-amazing-run-gold-gold-stocks/"
+  },
+  {
+   "label": "thetrading.tools: Buffett-indicator (Fed Z.1)",
+   "url": "https://www.thetrading.tools/buffett-indicator"
+  },
+  {
+   "label": "Federal Reserve H.4.1: balans",
+   "url": "https://www.federalreserve.gov/releases/h41/current/"
   }
  ]
 }
