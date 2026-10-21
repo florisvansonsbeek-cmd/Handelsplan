@@ -11,7 +11,7 @@
     { "key": "us2y", "label": "US 2-jaars", "group": "Rente & valuta", "value": 4.74, "prefix": "", "suffix": "%", "decimals": 2, "change": "", "asOf": "15 okt", "src": "Benzinga" },
     { "key": "dxy", "label": "Dollarindex", "group": "Rente & valuta", "value": 101.77, "prefix": "", "suffix": "", "decimals": 2, "change": "−0,3%", "asOf": "16 okt, vroege handel", "src": "Benzinga" },
     { "key": "usdjpy", "label": "USD/JPY", "group": "Rente & valuta", "value": 157.88, "prefix": "", "suffix": "", "decimals": 2, "change": "", "asOf": "16 okt", "src": "FXStreet" },
-    { "key": "spx", "label": "S&P 500", "group": "Aandelen", "value": 7744.06, "prefix": "", "suffix": "", "decimals": 0, "change": "+0,3%", "asOf": "15 okt, slot", "src": "TheStreet" },
+    { "key": "spx", "label": "S&P 500", "group": "Aandelen", "value": 7659, "prefix": "", "suffix": "", "decimals": 0, "change": "−1,1%", "asOf": "16 okt, slot", "src": "TheStreet" },
     { "key": "ndx", "label": "Nasdaq Comp.", "group": "Aandelen", "value": 26713.02, "prefix": "", "suffix": "", "decimals": 0, "change": "+0,1% · −1,9% op 14 okt", "asOf": "15 okt, slot", "src": "TheStreet / Yahoo" },
     { "key": "kospi", "label": "Kospi", "group": "Aandelen", "value": 5554.22, "prefix": "", "suffix": "", "decimals": 0, "change": "−7,6%", "asOf": "15 okt, slot", "src": "economy.com.pk (Reuters)" },
     { "key": "vix", "label": "VIX", "group": "Aandelen", "value": 16.87, "prefix": "", "suffix": "", "decimals": 1, "change": "+10,5%", "asOf": "14 okt, slot", "src": "Yahoo Finance" },
