@@ -1,10 +1,17 @@
 // Laat de handelsplan-pagina op je eigen server draaien: vervangt claude.use(...) door je eigen API.
+// Op de site zelf gaat alles via dezelfde server (inlogcookie). In de losse html zet remote.js
+// window.HP_REMOTE: dan gaat alles naar je Railway-adres met een inlogsleutel.
 (function () {
   "use strict";
+  const R = window.HP_REMOTE || null;
+  const U = (u) => (R ? R.base() : "") + u;
+  const H = (h) => { h = h || {}; const t = R && R.token(); if (t) h.Authorization = "Bearer " + t; return h; };
+  const CRED = R ? "omit" : "same-origin";
+  const unauth = () => { if (R) R.expired(); else location.href = "/login"; };
   const listeners = new Set();
   const api = async (method, url, body) => {
-    const r = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined, credentials: "same-origin" });
-    if (r.status === 401) { location.href = "/login"; throw { code: "revoked" }; }
+    const r = await fetch(U(url), { method, headers: H({ "Content-Type": "application/json" }), body: body ? JSON.stringify(body) : undefined, credentials: CRED, cache: "no-store" });
+    if (r.status === 401) { unauth(); throw { code: "revoked" }; }
     if (!r.ok) { let m = ""; try { const j = await r.json(); m = j.detail || ""; } catch (e) {} throw { code: r.status === 404 ? "invalid_argument" : r.status === 429 ? "resource_exhausted" : "unavailable", message: m }; }
     return r.json();
   };
@@ -56,10 +63,10 @@
     const prompt = typeof input === "string" ? input : input.map((m) => m.content).join("\n\n");
     let r;
     try {
-      r = await fetch("/api/ai", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin",
+      r = await fetch(U("/api/ai"), { method: "POST", headers: H({ "Content-Type": "application/json" }), credentials: CRED,
         body: JSON.stringify({ prompt, tier: opts.modelTier || "default" }), signal: opts.signal });
     } catch (e) { throw { code: e && e.name === "AbortError" ? "cancelled" : "upstream_error" }; }
-    if (r.status === 401) { location.href = "/login"; throw { code: "session_expired" }; }
+    if (r.status === 401) { unauth(); throw { code: "session_expired" }; }
     if (r.status === 429) throw { code: "rate_limited" };
     if (!r.ok) { let m = ""; try { const j = await r.json(); m = j.detail || ""; } catch (e) {} throw { code: r.status === 503 ? "upstream_error" : "upstream_error", message: m }; }
     const data = await r.json();
@@ -90,16 +97,24 @@
     api: (method, url, body) => api(method, url, body),
     status: () => api("GET", "/api/status"),
     run: (job) => api("POST", "/api/run/" + encodeURIComponent(job)),
-    backupUrl: "/api/export",
+    backupUrl: R ? null : "/api/export",
+    backup: async () => {
+      const r = await fetch(U("/api/export"), { headers: H(), credentials: CRED });
+      if (r.status === 401) { unauth(); throw { code: "revoked" }; }
+      if (!r.ok) throw { code: "unavailable", message: "Back-up downloaden lukte niet." };
+      const name = ((r.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/) || [])[1] || "handelsplan-backup.json";
+      await downloads.save({ filename: name, data: await r.blob() });
+    },
+    remote: R ? { base: () => R.base(), change: () => R.change() } : null,
     restore: async (file) => {
-      const r = await fetch("/api/import", { method: "POST", body: file, credentials: "same-origin", headers: { "Content-Type": "application/json" } });
-      if (r.status === 401) { location.href = "/login"; throw { code: "revoked" }; }
+      const r = await fetch(U("/api/import"), { method: "POST", body: file, credentials: CRED, headers: H({ "Content-Type": "application/json" }) });
+      if (r.status === 401) { unauth(); throw { code: "revoked" }; }
       let j = {}; try { j = await r.json(); } catch (e) {}
       if (!r.ok) throw { code: "restore_failed", message: j.detail || "Terugzetten mislukt." };
       return j;
     },
-    logout: async () => { await fetch("/logout", { method: "POST", credentials: "same-origin" }); location.href = "/login"; },
+    logout: async () => { if (R) { R.logout(); return; } await fetch("/logout", { method: "POST", credentials: "same-origin" }); location.href = "/login"; },
   };
   const caps = { db, sample, downloads, user, server };
-  window.claude = { use: async (name) => caps[name] || null };
+  window.claude = { use: async (name) => { if (R) await R.ready; return caps[name] || null; } };
 })();

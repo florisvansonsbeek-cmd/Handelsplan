@@ -772,6 +772,8 @@ document.addEventListener("click", (ev)=>{
   if(a==="apply") applyPending();
   if(a==="dismiss") dismissPending();
   if(a==="logout") S.server?.logout();
+  if(a==="backup") S.server?.backup?.().catch(e=>setStatus($("runStatus"), e?.message||"Back-up downloaden lukte niet.", true));
+  if(a==="server-change") S.server?.remote?.change();
 });
 document.addEventListener("keydown", (ev)=>{
   const t=ev.target.closest?.("[data-pillar]");
@@ -1529,9 +1531,9 @@ function renderConn(){
           <span class="muted small">${esc(sub)}</span><span>${esc(v.detail||"")}</span>${act.length? `<span class="act">${act.map(esc).join(" · ")}</span>`:""}</article>`; }).join("")}</div>`;
   p.innerHTML = `<div class="sechead"><h2>Verbinding met Railway</h2><span class="btnrow"><button class="btn sm" type="button" data-conn="test" ${CONN.busy?"disabled":""}>${CONN.busy?"Testen…":"Opnieuw testen"}</button><button class="btn sm" type="button" data-conn="close">Sluiten</button></span></div>
     ${cards}
-    <div class="cfoot"><span>${srv? `Server ${srv.railway? "op Railway"+(srv.environment? " ("+esc(srv.environment)+")":"") : "draait"}${srv.version? " · versie "+esc(srv.version):""} · gestart ${esc(fmtDT(srv.startedAt))}` : ""}</span>
+    <div class="cfoot">${S.server?.remote? `<span>Deze html praat met <b>${esc(S.server.remote.base().replace(/^https?:\/\//,""))}</b></span>`:""}<span>${srv? `Server ${srv.railway? "op Railway"+(srv.environment? " ("+esc(srv.environment)+")":"") : "draait"}${srv.version? " · versie "+esc(srv.version):""} · gestart ${esc(fmtDT(srv.startedAt))}` : ""}</span>
       <span>${CONN.at? "Getest om "+esc(new Intl.DateTimeFormat("nl-NL",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Amsterdam"}).format(new Date(CONN.at))) : ""}</span>
-      <span>Verbindingen worden elke minuut gecontroleerd; mail en API's elke 5 minuten echt getest.</span></div>`;
+      <span>Verbindingen worden elke minuut gecontroleerd; mail en API's elke 5 minuten echt getest.</span>${S.server?.remote? `<span class="btnrow"><button class="btn sm" type="button" data-act="server-change">Ander serveradres</button><button class="btn sm" type="button" data-act="logout">Uitloggen</button></span>`:""}</div>`;
   bindConn();
 }
 function bindConn(){
@@ -1566,7 +1568,7 @@ function renderUitleg(){
         <button class="btn sm" type="button" data-run="koersen">Koersen nu ophalen</button>
         <button class="btn sm" type="button" data-run="dagelijks" ${(st.fred||st.twelvedata)?"":"disabled"}>Macrocijfers nu ophalen</button>
         <button class="btn sm" type="button" data-run="melding" ${ch.any?"":"disabled"}>Testmelding sturen</button>
-        <a class="btn sm" style="text-decoration:none" href="${esc(S.server.backupUrl||"/api/export")}" download>Back-up downloaden</a>
+        ${S.server.backupUrl? `<a class="btn sm" style="text-decoration:none" href="${esc(S.server.backupUrl)}" download>Back-up downloaden</a>` : `<button class="btn sm" type="button" data-act="backup">Back-up downloaden</button>`}
         <label class="btn sm" style="margin:0">Back-up terugzetten<input type="file" id="restoreIn" accept=".json,application/json" hidden></label>
       </div>
       <span class="status" id="runStatus" role="status">${J.running? "Bezig: "+esc(JOB_NAME[J.running]||J.running)+"…" : ""}</span>

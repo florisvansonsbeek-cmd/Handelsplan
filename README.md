@@ -45,6 +45,13 @@ Gebruik één exemplaar (geen replicas) en laat Serverless uit: de planner voor 
 - **Klik erop** voor de details per koppeling, met wat je moet aanpassen, bijvoorbeeld een verkeerd app-wachtwoord of een modelnaam die niet in je xAI-account staat. *Opnieuw testen* test meteen opnieuw.
 - **Hoe vaak:** de database wordt elke minuut gecontroleerd. Mail, Grok en Finnhub worden hoogstens elke 5 minuten echt getest (inloggen bij IMAP, de modellijst van xAI, één koers bij Finnhub). Dat kost geen AI-tokens. Gaat een koppeling stuk of werkt hij weer, dan staat dat in het logboek (tab Post).
 
+## Losse html (in Chrome openen, alles via Railway)
+
+`handelsplan-2027.html` (bouwen met `python page/build_remote.py`) is één bestand dat je in Chrome opent.
+- Er staat niets van je plan of je sleutels in: database, mail, Grok en koersen komen van je Railway-site.
+- De eerste keer vul je het adres van je site in en `APP_PASSWORD`. Chrome bewaart daarna alleen dat adres en een inlogsleutel. Die sleutel is 30 dagen geldig (`TOKEN_DAYS`) en vervalt meteen als je `APP_PASSWORD` wijzigt.
+- Bovenin zie je, net als op de site, of Railway verbonden is.
+
 ## Gegevens uit de losse Chrome-versie meenemen
 
 In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uitleg → Back-up terugzetten** en kies dat bestand.

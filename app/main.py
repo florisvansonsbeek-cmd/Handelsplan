@@ -8,6 +8,7 @@ Alle geheimen komen uit environment variables (Railway → Variables):
   FINNHUB_API_KEY (optioneel)   live koersen
 """
 import asyncio
+import hashlib
 import hmac
 import json
 import logging
@@ -22,6 +23,8 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
+from itsdangerous import BadSignature, URLSafeTimedSerializer
+from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -35,6 +38,7 @@ INBOX_TOKEN = os.environ.get("INBOX_TOKEN", "")
 FORCE_HTTPS = os.environ.get("FORCE_HTTPS", "1") == "1"
 SECURE_COOKIE = os.environ.get("SECURE_COOKIE", "1") == "1"
 SEED = BASE.parent / "seed"
+TOKEN_DAYS = int(os.environ.get("TOKEN_DAYS", "30") or 30)
 
 
 def _session_secret():
@@ -102,9 +106,14 @@ async def lifespan(_app):
     yield
 
 
+SECRET = _session_secret() if db.configured() else secrets.token_hex(32)
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
 app.add_middleware(GZipMiddleware, minimum_size=1024)
-app.add_middleware(SessionMiddleware, secret_key=_session_secret() if db.configured() else secrets.token_hex(32),
+# De losse html (in Chrome geopend) praat met deze server via een inlogsleutel in de Authorization-header.
+# Zonder cookies (allow_credentials=False), dus andere sites kunnen niets met je inlog.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=False, allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+                   allow_headers=["Authorization", "Content-Type"], expose_headers=["Content-Disposition"], max_age=600)
+app.add_middleware(SessionMiddleware, secret_key=SECRET,
                    https_only=SECURE_COOKIE, same_site="strict", max_age=60 * 60 * 24 * 14)
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
 
@@ -149,8 +158,28 @@ def _blocked(*keys, limit=8):
     return any(len(_fails[k]) >= limit for k in keys)
 
 
+def _signer():
+    return URLSafeTimedSerializer(SECRET, salt="handelsplan-token")
+
+
+def _pw_tag():
+    """Verandert als je APP_PASSWORD wijzigt; daarmee vervallen alle oude inlogsleutels."""
+    return hashlib.sha256(("handelsplan:" + APP_PASSWORD).encode()).hexdigest()[:16]
+
+
+def _token_ok(request: Request):
+    auth = request.headers.get("authorization", "")
+    if not APP_PASSWORD or not auth.lower().startswith("bearer "):
+        return False
+    try:
+        data = _signer().loads(auth[7:].strip(), max_age=TOKEN_DAYS * 86400)
+    except BadSignature:
+        return False
+    return isinstance(data, dict) and hmac.compare_digest(str(data.get("pw", "")), _pw_tag())
+
+
 def require_login(request: Request):
-    if not request.session.get("ok"):
+    if not request.session.get("ok") and not _token_ok(request):
         raise HTTPException(401, "Niet ingelogd")
 
 
@@ -169,8 +198,8 @@ def login_page():
     return (BASE / "static" / "login.html").read_text(encoding="utf-8")
 
 
-@app.post("/login")
-async def login(request: Request):
+async def _check_password(request: Request):
+    """Geeft een foutantwoord terug, of None als het wachtwoord klopt."""
     ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?")
     keys = ("ip:" + ip, "alle")
     if _blocked("ip:" + ip) or _blocked("alle", limit=30):
@@ -184,6 +213,24 @@ async def login(request: Request):
         await asyncio.sleep(0.5)
         return JSONResponse({"error": "Dat wachtwoord klopt niet."}, 401)
     _fails.pop("ip:" + ip, None)
+    return None
+
+
+@app.post("/api/token")
+async def token(request: Request):
+    """Inloggen vanuit de losse html: geeft een inlogsleutel die TOKEN_DAYS dagen geldig is."""
+    bad = await _check_password(request)
+    if bad:
+        return bad
+    db.event("info", "inlog", "ingelogd vanuit de losse html")
+    return {"token": _signer().dumps({"pw": _pw_tag(), "v": 1}), "days": TOKEN_DAYS}
+
+
+@app.post("/login")
+async def login(request: Request):
+    bad = await _check_password(request)
+    if bad:
+        return bad
     request.session.clear()
     request.session["ok"] = True
     request.session["at"] = int(time.time())
