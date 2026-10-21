@@ -25,7 +25,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import ai, db, jobs, mail, patch, quotes, scheduler
+from . import ai, db, health, jobs, mail, patch, quotes, scheduler
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("handelsplan")
@@ -205,8 +205,10 @@ def index(request: Request):
 
 
 @app.get("/health")
-def health():
-    return {"ok": True, "database": db.ping() if db.configured() else False}
+def health_check():
+    """Openbaar (ook zonder inlog): alleen of de server draait, de database bereikbaar is en inloggen is ingesteld."""
+    return {"ok": True, "database": db.ping() if db.configured() else False, "login": bool(APP_PASSWORD),
+            "version": health.server_info()["version"]}
 
 
 # ---------------- opslag van de pagina ----------------
@@ -441,6 +443,13 @@ def status(request: Request):
         "marketAt": market_at, "dailyAt": daily.get("at"), "dailyErrors": daily.get("errors", []),
         "jobs": jobs_st, "site": jobs.site_url(),
     }
+
+
+@app.get("/api/connections")
+def connections(request: Request, force: int = 0):
+    """Echte verbindingstest per koppeling (database, AI, e-mail, Finnhub)."""
+    require_login(request)
+    return health.connections(force=bool(force))
 
 
 @app.post("/api/run/{name}")

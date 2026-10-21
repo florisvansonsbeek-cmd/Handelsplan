@@ -3,14 +3,17 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Inloggen · Handelsplan</title>
 <style>
-:root{--bg:#EDF0F3;--card:#fff;--ink:#13202C;--muted:#56636F;--line:#D3DAE1;--accent:#8A580A;--bad:#AF2F29}
-@media (prefers-color-scheme:dark){:root{--bg:#0C1217;--card:#131B23;--ink:#E3E9EF;--muted:#95A3B0;--line:#25313C;--accent:#D9A347;--bad:#F06A5F;color-scheme:dark}}
+:root{--bg:#EDF0F3;--card:#fff;--ink:#13202C;--muted:#56636F;--line:#D3DAE1;--accent:#8A580A;--bad:#AF2F29;--good:#2D7A4B;--warn:#9A6A00}
+@media (prefers-color-scheme:dark){:root{--bg:#0C1217;--card:#131B23;--ink:#E3E9EF;--muted:#95A3B0;--line:#25313C;--accent:#D9A347;--bad:#F06A5F;--good:#5FBF84;--warn:#E0B04A;color-scheme:dark}}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
 form{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:28px;width:100%;max-width:340px;display:grid;gap:14px}
 h1{margin:0;font-size:1.4rem}h1 span{color:var(--accent)}label{font-size:.85rem;color:var(--muted);display:grid;gap:4px}
 input{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
 button{font:600 1rem system-ui;padding:11px;border:0;border-radius:8px;background:var(--accent);color:var(--card);cursor:pointer}
 button:disabled{opacity:.6}.err{color:var(--bad);font-size:.9rem;min-height:1.2em}
+.conn{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.conn span{display:inline-flex;align-items:center;gap:6px}.conn i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.conn .ok i{background:var(--good)}.conn .bad i{background:var(--bad)}.conn .bad{color:var(--bad)}
 </style></head><body>
 <form id="f" autocomplete="on">
   <h1>Handelsplan <span>2027</span></h1>
@@ -18,8 +21,19 @@ button:disabled{opacity:.6}.err{color:var(--bad);font-size:.9rem;min-height:1.2e
   <label>Wachtwoord<input id="p" name="password" type="password" autocomplete="current-password" required autofocus></label>
   <button type="submit" id="b">Inloggen</button>
   <div class="err" id="e" role="alert"></div>
+  <div class="conn" id="c" aria-live="polite"><span><i></i>Verbinding met Railway controleren…</span></div>
 </form>
 <script>
+(async () => {
+  const c = document.getElementById("c");
+  const dot = (ok, t) => `<span class="${ok ? "ok" : "bad"}"><i></i>${t}</span>`;
+  try {
+    const r = await fetch("/health", {cache: "no-store"});
+    const j = await r.json();
+    c.innerHTML = dot(true, "Server verbonden") + dot(j.database, j.database ? "Database verbonden" : "Database niet bereikbaar")
+      + (j.login ? "" : dot(false, "APP_PASSWORD ontbreekt in Railway"));
+  } catch (x) { c.innerHTML = dot(false, "Server niet bereikbaar"); }
+})();
 document.getElementById("f").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const e = document.getElementById("e"), b = document.getElementById("b"), p = document.getElementById("p");

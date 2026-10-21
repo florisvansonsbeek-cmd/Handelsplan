@@ -66,6 +66,29 @@ p{margin:0}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--band-muted)}
 .live.on i{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
 .live.old i{background:var(--warn)}
+.connbtn{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--band-line);background:var(--band-2);color:var(--band-ink);font:500 .76rem var(--font-body);border-radius:999px;padding:4px 11px 4px 9px;cursor:pointer;white-space:nowrap}
+.connbtn:hover{border-color:var(--band-muted)}
+.connbtn > i{width:9px;height:9px;border-radius:50%;background:var(--band-muted);flex:none}
+.connbtn.ok > i{background:#3FB871;box-shadow:0 0 0 3px rgba(63,184,113,.22)}
+.connbtn.deels > i,.connbtn.lokaal > i{background:#E0A93A;box-shadow:0 0 0 3px rgba(224,169,58,.22)}
+.connbtn.fout > i{background:#EE5D52;box-shadow:0 0 0 3px rgba(238,93,82,.25)}
+.connbtn.busy > i{animation:cpulse 1s ease-in-out infinite alternate}
+@keyframes cpulse{to{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.connbtn.busy > i{animation:none}}
+.cdots{display:inline-flex;gap:3px;margin-left:2px}
+.cdots b{width:6px;height:6px;border-radius:50%;background:var(--band-muted)}
+.cdots b.ok{background:#3FB871}.cdots b.let-op{background:#E0A93A}.cdots b.fout{background:#EE5D52}.cdots b.uit{background:transparent;box-shadow:inset 0 0 0 1px var(--band-muted)}
+@media (max-width:560px){.cdots{display:none}}
+.connpanel{margin-top:14px;display:flex;flex-direction:column;gap:12px}
+.cgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:1000px){.cgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cgrid{grid-template-columns:minmax(0,1fr)}}
+.csvc{background:var(--surface-2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:.86rem;border-left:4px solid var(--line)}
+.csvc.ok{border-left-color:var(--good)}.csvc.let-op{border-left-color:var(--warn)}.csvc.fout{border-left-color:var(--bad)}
+.csvc .sechead{gap:6px}.csvc h3{font-size:.98rem}
+.csvc .act{color:var(--muted);font-size:.8rem}
+.cfoot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:.8rem;color:var(--muted)}
+.cfoot .btnrow{margin-left:auto}
 .ticker{display:flex;gap:6px 16px;flex-wrap:wrap;font:400 .76rem var(--font-mono);color:var(--band-muted);margin-left:auto}
 .ticker b{color:var(--band-ink);font-weight:500}
 .iconbtn{appearance:none;border:1px solid var(--band-line);background:var(--band-2);color:var(--band-muted);font:500 .76rem var(--font-body);border-radius:7px;padding:4px 9px;cursor:pointer}
@@ -502,6 +525,7 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
     <div class="brandrow">
       <div class="brand">Handelsplan <span>2027</span></div>
       <span class="live" id="live"><i></i><span id="liveText">laden…</span></span>
+      <button class="connbtn" type="button" id="connBtn" hidden aria-expanded="false" aria-controls="connPanel"><i></i><span id="connText">Railway…</span><span class="cdots" id="connDots" aria-hidden="true"></span></button>
       <div class="ticker" id="ticker"></div>
       <button class="iconbtn" type="button" id="logoutBtn" hidden>Uitloggen</button>
     </div>
@@ -519,6 +543,7 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
 </header>
 
 <main class="wrap">
+  <section class="box connpanel" id="connPanel" hidden aria-label="Verbinding met Railway"></section>
   <div id="notice" hidden></div>
   <div id="pendingPanel" hidden></div>
 
@@ -1450,22 +1475,85 @@ function gauge(t, v){
 }
 
 /* ================= UITLEG ================= */
+/* ---------- verbinding met Railway ---------- */
+const CONN={data:null, err:null, busy:false, at:0, open:false, auto:false};
+const CONN_SVC=[["database","Database","PostgreSQL op Railway"],["ai","AI","Analyseert mail en bijlagen"],["mail","E-mail","Leest je mail via IMAP"],["finnhub","Koersen","Finnhub (optioneel)"]];
+const CONN_ST={ok:["t-good","Verbonden"],"let-op":["t-warn","Let op"],fout:["t-bad","Fout"],uit:["t-neutral","Niet ingesteld"]};
+async function loadConn(force=false){
+  if(!S.server) return;
+  CONN.busy=true; renderConn();
+  try{ CONN.data=await S.server.api("GET","/api/connections"+(force?"?force=1":"")); CONN.err=null; }
+  catch(e){ CONN.err = e?.code==="unavailable"? "De server antwoordt met een fout. Kijk in Railway bij Deployments → Logs." : "Geen verbinding met je Railway-site. Draait de dienst, en heb je internet?"; }
+  CONN.busy=false; CONN.at=Date.now();
+  const bad = CONN.err || CONN.data?.overall==="fout";
+  if(bad && !CONN.auto){ CONN.auto=true; CONN.open=true; }
+  renderConn(); renderUitleg();
+}
+function connSummary(){
+  if(S.local) return ["lokaal","Lokaal · niet op Railway"];
+  if(CONN.err) return ["fout","Geen verbinding met Railway"];
+  const d=CONN.data; if(!d) return ["", "Railway controleren…"];
+  if(d.overall==="ok") return ["ok","Railway verbonden"];
+  if(d.overall==="fout") return ["fout","Database niet bereikbaar"];
+  const n=d.missing.length; return ["deels", n===1? `${CONN_SVC.find(x=>x[0]===d.missing[0])?.[1]||d.missing[0]} niet verbonden` : `${n} koppelingen niet verbonden`];
+}
+function connAct(k,v){
+  const out=[];
+  if(k==="database" && v.ms!=null && v.state==="ok") out.push(`antwoord in ${v.ms} ms`);
+  if(k==="ai"){ if(v.lastUse) out.push("laatste analyse "+ago(v.lastUse)); const b=v.backlog||{}; const w=(b.nieuw||0)+(b.wacht||0); if(w) out.push(`${w} wachten op analyse`); if(b.fout) out.push(`${b.fout} mislukt (zie Post)`); }
+  if(k==="mail"){ const r=v.lastRun; if(r) if(r.ok || v.state==="ok") out.push(r.ok? "laatst opgehaald "+ago(r.at) : "laatste ronde mislukt: "+String(r.error||"zie logs").replace(/^\w+Error: /,"")); if(v.lastMail) out.push("laatste nieuwe mail "+ago(v.lastMail)); }
+  if(k==="finnhub"){ if(v.quotesAt) out.push("koersen "+ago(v.quotesAt)); arr(v.quoteErrors).slice(0,1).forEach(e=>out.push(e)); }
+  return out;
+}
+function renderConn(){
+  const b=$("connBtn"), p=$("connPanel"); if(!b) return;
+  if(!S.server && !S.local){ b.hidden=true; p.hidden=true; return; }
+  const [cls,txt]=connSummary();
+  b.hidden=false; b.className="connbtn "+cls+(CONN.busy&&!CONN.data&&!CONN.err?" busy":""); $("connText").textContent=txt;
+  const sv=CONN.data?.services;
+  $("connDots").innerHTML = sv && !CONN.err ? CONN_SVC.map(([k])=>`<b class="${esc(sv[k]?.state||"")}"></b>`).join("") : "";
+  b.setAttribute("aria-expanded", CONN.open? "true":"false");
+  b.title = sv && !CONN.err ? CONN_SVC.map(([k,n])=>`${n}: ${(CONN_ST[sv[k]?.state]||["","?"])[1]}`).join(" · ") : txt;
+  p.hidden=!CONN.open; if(!CONN.open) return;
+  if(S.local){ p.innerHTML=`<div class="sechead"><h2>Lokale versie</h2><button class="btn sm" type="button" data-conn="close">Sluiten</button></div>
+    <p>Dit bestand draait helemaal in Chrome en is <b>niet verbonden met Railway</b>: geen database, geen mail en geen Grok. Open je Railway-site om alles via de server te laten lopen.</p>`; bindConn(); return; }
+  const srv=CONN.data?.server;
+  const cards = CONN.err? `<div class="notice bad"><b>${esc(CONN.err)}</b> De site laat de laatst geladen gegevens zien; zodra de server weer antwoordt, wordt alles vanzelf bijgewerkt.</div>`
+    : !sv? `<p class="muted">Koppelingen testen…</p>`
+    : `<div class="cgrid">${CONN_SVC.map(([k,name,sub])=>{ const v=sv[k]||{}; const [tone,lab]=CONN_ST[v.state]||["t-neutral","Onbekend"]; const act=connAct(k,v);
+        return `<article class="csvc ${esc(v.state||"")}"><div class="sechead"><h3>${esc(name)}</h3><span class="pill ${tone}">${lab}</span></div>
+          <span class="muted small">${esc(sub)}</span><span>${esc(v.detail||"")}</span>${act.length? `<span class="act">${act.map(esc).join(" · ")}</span>`:""}</article>`; }).join("")}</div>`;
+  p.innerHTML = `<div class="sechead"><h2>Verbinding met Railway</h2><span class="btnrow"><button class="btn sm" type="button" data-conn="test" ${CONN.busy?"disabled":""}>${CONN.busy?"Testen…":"Opnieuw testen"}</button><button class="btn sm" type="button" data-conn="close">Sluiten</button></span></div>
+    ${cards}
+    <div class="cfoot"><span>${srv? `Server ${srv.railway? "op Railway"+(srv.environment? " ("+esc(srv.environment)+")":"") : "draait"}${srv.version? " · versie "+esc(srv.version):""} · gestart ${esc(fmtDT(srv.startedAt))}` : ""}</span>
+      <span>${CONN.at? "Getest om "+esc(new Intl.DateTimeFormat("nl-NL",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Amsterdam"}).format(new Date(CONN.at))) : ""}</span>
+      <span>Verbindingen worden elke minuut gecontroleerd; mail en API's elke 5 minuten echt getest.</span></div>`;
+  bindConn();
+}
+function bindConn(){
+  $("connPanel").querySelectorAll("[data-conn]").forEach(x=>x.addEventListener("click",()=>{
+    if(x.dataset.conn==="close"){ CONN.open=false; renderConn(); $("connBtn").focus(); }
+    if(x.dataset.conn==="test") loadConn(true);
+  }));
+}
 async function loadServerStatus(){ if(!S.server) return; try{ S.srvStatus = await S.server.status(); }catch(e){ S.srvStatus=null; } renderUitleg(); if(S.tab==="post" && PO.docs && !poBusyTyping()) renderPost(); }
 const JOB_NAME={post:"mail ophalen en analyseren", koersen:"koersen ophalen", markt:"koersen ophalen (Twelve Data)", dagelijks:"macrocijfers ophalen", melding:"testmelding sturen"};
 function renderUitleg(){
   if(document.activeElement?.closest?.("#kForm")) return;   // niet wissen wat je aan het typen bent
   const st=S.srvStatus;
-  const row=(ok,name,desc,extra="",off="Nog niet gekoppeld")=>`<div class="conn"><b>${name}</b>${ok? `<span class="pill t-good">Actief</span>` : `<span class="pill t-warn">${off}</span>`}<p>${desc}${extra}</p></div>`;
+  const row=(ok,name,desc,extra="",off="Nog niet gekoppeld",key="")=>{ const v=key && !CONN.err ? CONN.data?.services?.[key] : null;
+    const pill = v? `<span class="pill ${(CONN_ST[v.state]||["t-neutral"])[0]}">${(CONN_ST[v.state]||["","Onbekend"])[1]}</span>` : ok? `<span class="pill t-good">Ingesteld</span>` : `<span class="pill t-warn">${off}</span>`;
+    return `<div class="conn"><b>${name}</b>${pill}<p>${desc}${extra}${v && v.state!=="ok" && v.detail? ` <b style="font-weight:500">${esc(v.detail)}</b>`:""}</p></div>`; };
   const J=st?.jobs||{};
   const last=(k)=>{ const l=J.last?.[k]; return l? ` Laatste run: ${esc(fmtDT(l.at))}${l.ok? "" : " (mislukt: "+esc(l.error||"zie logs")+")"}.` : ""; };
   const nx=(k)=> J.next?.[k]? ` Volgende: ${esc(fmtDT(J.next[k]))}.` : "";
   const ch=st?.notify||{}, chName=[ch.ntfy&&"de ntfy-app", ch.resend&&"e-mail (Resend)", ch.smtp&&"e-mail (SMTP)"].filter(Boolean).join(" en ");
-  const conn = S.local ? localBox() : S.server ? (st? `<div class="box stack"><div class="sechead"><h2>Koppelingen</h2><span class="btnrow"><button class="btn sm" type="button" id="stRefresh">Vernieuwen</button><button class="btn sm" type="button" data-act="logout">Uitloggen</button></span></div>
+  const conn = S.local ? localBox() : S.server ? (st? `<div class="box stack"><div class="sechead"><h2>Koppelingen</h2><span class="btnrow"><button class="btn sm" type="button" id="stRefresh">Opnieuw testen</button><button class="btn sm" type="button" data-act="logout">Uitloggen</button></span></div>
       ${!st.database? `<div class="notice bad"><b>De database is niet bereikbaar.</b> Controleer in Railway of de PostgreSQL-dienst draait en DATABASE_URL gekoppeld is.</div>`:""}
-      <div>${row(st.database,"Database · PostgreSQL","Je plan, verwerkte mails, documenten, koersen en notities (DATABASE_URL).", "", "Niet bereikbaar")}
-      ${row(!!st.ai?.provider, st.ai?.provider==="claude"? "AI · Claude" : "AI · Grok", st.ai?.provider? `Analyseert e-mails, bijlagen en transcripts en beantwoordt vragen (model ${esc(st.ai.model||"")}).` : "Zet XAI_API_KEY in Railway om e-mails, bijlagen en transcripts te laten analyseren.")}
-      ${row(st.mail?.configured,"E-mail · IMAP", st.mail?.configured? `Leest map ${esc(st.mail.folder)} op ${esc(st.mail.host)}, alleen lezen; bijlagen worden omgezet naar tekst.` : "Zet EMAIL_HOST, EMAIL_PORT, EMAIL_USER en EMAIL_PASS in Railway.", last("post")+nx("post"))}
-      ${row(st.finnhub,"Koersen · Finnhub","Aandelen en ETF's van je volglijst elk kwartier; crypto via CoinGecko.", last("koersen")+nx("koersen"), "Optioneel")}
+      <div>${row(st.database,"Database · PostgreSQL","Je plan, verwerkte mails, documenten, koersen en notities (DATABASE_URL).", "", "Niet bereikbaar", "database")}
+      ${row(!!st.ai?.provider, st.ai?.provider==="claude"? "AI · Claude" : "AI · Grok", st.ai?.provider? `Analyseert e-mails, bijlagen en transcripts en beantwoordt vragen (model ${esc(st.ai.model||"")}).` : "Zet XAI_API_KEY in Railway om e-mails, bijlagen en transcripts te laten analyseren.", "", "Nog niet gekoppeld", "ai")}
+      ${row(st.mail?.configured,"E-mail · IMAP", st.mail?.configured? `Leest map ${esc(st.mail.folder)} op ${esc(st.mail.host)}, alleen lezen; bijlagen worden omgezet naar tekst.` : "Zet EMAIL_HOST, EMAIL_PORT, EMAIL_USER en EMAIL_PASS in Railway.", last("post")+nx("post"), "Nog niet gekoppeld", "mail")}
+      ${row(st.finnhub,"Koersen · Finnhub","Aandelen en ETF's van je volglijst elk kwartier; crypto via CoinGecko.", last("koersen")+nx("koersen"), "Optioneel", "finnhub")}
       ${row(st.fred||st.twelvedata,"Macrocijfers · FRED / Twelve Data","Rente, inflatie, banen en kredietspread voor de Markt-pagina (FRED_API_KEY, TWELVEDATA_API_KEY).", last("dagelijks"), "Optioneel")}
       ${row(ch.any,"Meldingen", ch.any? `Bericht via ${esc(chName)} zodra een signaal op rood springt.` : "Push naar je telefoon met de app ntfy: zet NTFY_TOPIC in Railway.", "", "Optioneel")}
       ${row(st.inboxToken,"Transcripts vanaf je laptop","Het script stuurt nieuwe video's automatisch naar je Inbox (INBOX_TOKEN).", "", "Optioneel")}</div>
@@ -1502,7 +1590,7 @@ function renderUitleg(){
         <li><span>Railway zet de nieuwe versie binnen een paar minuten live. Je plan, gegevens en sleutels blijven staan.</span></li></ul>`}</div>
   </div>
   <div class="box stack"><h3>Exporteren</h3><div class="btnrow"><button class="btn sm" type="button" data-act="export" ${S.downloads?"":"disabled"}>Plan exporteren als Markdown</button><span class="status" id="exStatus"></span></div></div>`;
-  $("stRefresh")?.addEventListener("click", loadServerStatus);
+  $("stRefresh")?.addEventListener("click", ()=>{ loadServerStatus(); loadConn(true); });
   $("ux-body").querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click", ()=>runJob(b.dataset.run)));
   $("restoreIn")?.addEventListener("change", (ev)=>{ const f=ev.target.files?.[0]; if(f){ S.restoreFile=f; renderUitleg(); } });
   $("restoreNo")?.addEventListener("click", ()=>{ S.restoreFile=null; renderUitleg(); });
@@ -2090,9 +2178,13 @@ renderAll(); renderInbox(); renderHistory();
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); }, onErr);
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
-  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("tb-post").hidden=false; loadServerStatus(); if(S.tab==="post") loadPost();
+  $("connBtn").addEventListener("click",()=>{ CONN.open=!CONN.open; renderConn(); if(CONN.open){ window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); if(S.server && Date.now()-CONN.at>20000) loadConn(); } });
+  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("tb-post").hidden=false; loadServerStatus(); loadConn(); if(S.tab==="post") loadPost();
+    setInterval(()=>{ if(!document.hidden) loadConn(); }, 60000);
+    document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-CONN.at>30000) loadConn(); });
+    window.addEventListener("online",()=>loadConn()); window.addEventListener("offline",()=>{ CONN.err="Je bent offline."; renderConn(); });
     setInterval(()=>{ if(S.tab==="post" && !document.hidden) loadPost(true); }, 60000); } }).catch(()=>{});
-  window.claude.use("local").then(l=>{ if(l){ S.local=l; loadLocalStatus(); window.addEventListener("hp-local", loadLocalStatus); } }).catch(()=>{});
+  window.claude.use("local").then(l=>{ if(l){ S.local=l; renderConn(); loadLocalStatus(); window.addEventListener("hp-local", loadLocalStatus); } }).catch(()=>{});
   window.claude.use("user").then(async u=>{ if(!u) return; const c=await u.can("data.write"); if(c===false){ S.canWrite=false; renderAll(); } }).catch(()=>{});
 })();
 })();

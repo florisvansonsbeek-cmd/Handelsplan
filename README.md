@@ -8,6 +8,7 @@ Je handelsplan (Markt, Cyclus, Plan, Signalen, Inbox, **Post**, Historie) op Rai
 - **Grok** (`XAI_API_KEY`) haalt per mail en bijlage de handelsinformatie eruit: soort document, samenvatting, bedrijven, tickers, bedragen, datums, belang en acties. Grok doet ook de transcriptanalyse en "Vraag het plan".
 - **Dashboard (tab Post)**: alle verwerkte mails en documenten met filters, koersen van je volglijst, notities en een logboek. Met één klik zet je een document in de Inbox van je plan.
 - **Live koersen** (optioneel `FINNHUB_API_KEY`); crypto komt van CoinGecko.
+- **Verbindingsstatus**: bovenin de site zie je of Railway verbonden is (groen, oranje of rood). Klik erop voor de echte test per koppeling: database, Grok, e-mail en Finnhub. Ook het inlogscherm laat al zien of de server en de database bereikbaar zijn.
 - **Foutafhandeling**: mailserver weg, verkeerd wachtwoord, API-limiet of database even niet bereikbaar? Dan komt er een melding in het logboek en draait de rest gewoon door.
 
 > **Zet deze repository op privé** (GitHub → Settings → Danger Zone → Change visibility). Er staat je plan in. Sleutels en wachtwoorden horen alleen in Railway → Variables, nooit in GitHub.
@@ -33,6 +34,17 @@ Je handelsplan (Markt, Cyclus, Plan, Signalen, Inbox, **Post**, Historie) op Rai
 
 Gebruik één exemplaar (geen replicas) en laat Serverless uit: de planner voor mail en koersen draait in de site zelf.
 
+## Zie je of alles verbonden is?
+
+- **Inlogscherm:** onderaan staat *Server verbonden* en *Database verbonden*. Staat er *APP_PASSWORD ontbreekt*, zet die dan in Railway → Variables.
+- **Na inloggen:** de knop naast *Cijfers …* bovenin.
+  - Groen: *Railway verbonden*.
+  - Oranje: een koppeling werkt niet, bijvoorbeeld *E-mail niet verbonden*.
+  - Rood: geen verbinding met de server of de database.
+  - De stipjes erachter zijn database, AI, e-mail en koersen.
+- **Klik erop** voor de details per koppeling, met wat je moet aanpassen, bijvoorbeeld een verkeerd app-wachtwoord of een modelnaam die niet in je xAI-account staat. *Opnieuw testen* test meteen opnieuw.
+- **Hoe vaak:** de database wordt elke minuut gecontroleerd. Mail, Grok en Finnhub worden hoogstens elke 5 minuten echt getest (inloggen bij IMAP, de modellijst van xAI, één koers bij Finnhub). Dat kost geen AI-tokens. Gaat een koppeling stuk of werkt hij weer, dan staat dat in het logboek (tab Post).
+
 ## Gegevens uit de losse Chrome-versie meenemen
 
 In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uitleg → Back-up terugzetten** en kies dat bestand.
@@ -47,6 +59,7 @@ In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uit
 | `app/analyze.py` | Grok-analyse van mails en bijlagen |
 | `app/ai.py` | Koppeling met Grok (xAI), of Claude als je `ANTHROPIC_API_KEY` gebruikt |
 | `app/quotes.py` | Koersen (Finnhub, CoinGecko) |
+| `app/health.py` | Verbindingstest per koppeling (`/api/connections`) |
 | `app/scheduler.py`, `app/jobs.py` | Planner: mail elk kwartier, koersen elk kwartier, macrocijfers 's avonds |
 | `page/handelsplan.html` | De pagina; bij het bouwen wordt hier `app/pages/index.html` van gemaakt |
 | `seed/` | Je startplan en de cyclus-analyse; alleen ontbrekende onderdelen worden toegevoegd |
