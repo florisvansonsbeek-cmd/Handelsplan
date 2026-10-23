@@ -66,6 +66,25 @@ p{margin:0}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--band-muted)}
 .live.on i{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
 .live.old i{background:var(--warn)}
+.ch-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+@media (max-width:900px){.ch-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ch-kpis .box{display:flex;flex-direction:column;gap:4px}
+.ch-kpis b{font:600 clamp(1.3rem,2.6vw,1.75rem)/1.1 var(--font-display);font-variant-numeric:tabular-nums}
+.ch-kpis .pos{color:var(--good)} .ch-kpis .neg{color:var(--bad)}
+.ch-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px}
+@media (max-width:900px){.ch-form{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.ch-form{grid-template-columns:minmax(0,1fr)}}
+.ch-form label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);font-weight:500}
+.ch-form .wide{grid-column:1/-1} .ch-form .w2{grid-column:span 2}
+@media (max-width:520px){.ch-form .w2{grid-column:auto}}
+.ch-form label > *{min-width:0}
+.ch-form textarea,.ch-notes textarea{min-height:70px;font-family:var(--font-body);font-size:.9rem}
+.ch-notes textarea{min-height:140px}
+.ch-tbl td,.ch-tbl th{white-space:nowrap}
+.ch-tbl td.note{white-space:normal;min-width:180px;color:var(--muted);font-size:.82rem}
+.ch-tbl .num{font-variant-numeric:tabular-nums}
+.ch-tbl .pos{color:var(--good)} .ch-tbl .neg{color:var(--bad)}
+.ch-tbl tfoot td{font-weight:600;border-top:2px solid var(--line)}
 .connbtn{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--band-line);background:var(--band-2);color:var(--band-ink);font:500 .76rem var(--font-body);border-radius:999px;padding:4px 11px 4px 9px;cursor:pointer;white-space:nowrap}
 .connbtn:hover{border-color:var(--band-muted)}
 .connbtn > i{width:9px;height:9px;border-radius:50%;background:var(--band-muted);flex:none}
@@ -536,6 +555,7 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
       <button class="tab" role="tab" id="tb-signalen" data-tab="signalen">Signalen</button>
       <button class="tab" role="tab" id="tb-inbox" data-tab="inbox">Inbox<span class="count" id="inboxCount" hidden></span></button>
       <button class="tab" role="tab" id="tb-post" data-tab="post" hidden>Post</button>
+      <button class="tab" role="tab" id="tb-challenges" data-tab="challenges">Challenges</button>
       <button class="tab" role="tab" id="tb-historie" data-tab="historie">Historie</button>
       <button class="tab" role="tab" id="tb-uitleg" data-tab="uitleg">Uitleg</button>
     </nav>
@@ -634,6 +654,11 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
     <div id="po-body"><div class="empty"><b>Post laden…</b></div></div>
   </section>
 
+  <!-- CHALLENGES: Eightcap, zelf bijgehouden -->
+  <section class="panel" id="p-challenges" role="tabpanel" aria-labelledby="tb-challenges" hidden>
+    <div id="ch-body"><div class="empty"><b>Challenges laden…</b></div></div>
+  </section>
+
   <section class="panel" id="p-historie" role="tabpanel" aria-labelledby="tb-historie" hidden>
     <div class="sechead"><h2>Historie</h2><span class="muted small">Elke planwijziging, met reden. Terugzetten kan per stap.</span></div>
     <div class="box" id="hist-body"></div>
@@ -661,7 +686,7 @@ const PILLAR_NAME = {inflatie:"Inflatie & energie", groei:"Groei & werk", rente:
 const STAGES = [{n:1,title:"Oorzaken",sub:"Wat zet de toon?"},{n:2,title:"Prijs van geld",sub:"Rente en liquiditeit"},{n:3,title:"Doorgifte",sub:"Dollar, krediet en sentiment"},{n:4,title:"Jouw posities",sub:"Wat het voor jou betekent"}];
 const SC_COLORS = {s1:"var(--sc1)", s2:"var(--sc2)", s3:"var(--sc3)", s4:"var(--sc4)"};
 const IMPACT = {"-2":["im2","↓↓"],"-1":["im1","↓"],"0":["i0","→"],"1":["i1","↑"],"2":["i2","↑↑"]};
-const TABS = ["markt","cyclus","plan","signalen","inbox","post","historie","uitleg"];
+const TABS = ["markt","cyclus","plan","signalen","inbox","post","challenges","historie","uitleg"];
 const SIGNED = new Set(["nfp3m","netLiqChg","kospiDay","curve"]);
 const LENS_SOURCE = {tr:"TradersReality", rebel:"Rebel Capitalist"};
 const SOURCE_LENS = {"TradersReality":"tr", "Rebel Capitalist":"rebel"};
@@ -2112,6 +2137,109 @@ function renderInbox(){
       ${i.text? `<details><summary>Tekst bekijken (${nf((i.text.match(/\S+/g)||[]).length)} woorden${i.truncated?", ingekort":""})</summary><div class="pre muted small" style="max-height:320px;overflow:auto;margin-top:6px">${esc(i.text.slice(0,20000))}${i.text.length>20000?"\n…":""}</div></details>`:""}
     </div>`; }).join("");
 }
+/* ---------- challenges (Eightcap), zelf bijgehouden ---------- */
+const CH_PATH="challenges/eightcap";
+const CH_STATUS={fase1:["t-neutral","Bezig · fase 1"], fase2:["t-neutral","Bezig · fase 2"], funded:["t-good","Funded"], gehaald:["t-good","Gehaald"], mislukt:["t-bad","Niet gehaald"], gestopt:["t-warn","Gestopt"]};
+const CH_TYPES=["1-fase","2-fase","3-fase","Instant funding","Anders"];
+const CH={data:null, loaded:false, edit:null, del:null, msg:"", noteTimer:null};
+const chNum=(v)=>{ const n=parseFloat(String(v??"").replace(/\s/g,"").replace(",",".")); return isFinite(n)? n : 0; };
+function chMoney(v, sign=false){ const c=CH.data?.currency||"USD"; const a=Math.abs(v), t=new Intl.NumberFormat("nl-NL",{style:"currency",currency:c,currencyDisplay:"narrowSymbol",maximumFractionDigits:2,minimumFractionDigits:Math.round(a*100)%100? 2 : 0}).format(a); return (v<0? "−" : sign&&v>0? "+" : "")+t; }
+const chNet=(c)=> chNum(c.payout)+chNum(c.refund)-chNum(c.fee);
+function chTotals(items){
+  const t={fee:0,payout:0,refund:0,open:0,passed:0,done:0,n:items.length};
+  items.forEach(c=>{ t.fee+=chNum(c.fee); t.payout+=chNum(c.payout); t.refund+=chNum(c.refund);
+    if(["fase1","fase2","funded"].includes(c.status)) t.open+=chNum(c.pnl);
+    if(["funded","gehaald"].includes(c.status)) t.passed++; if(["funded","gehaald","mislukt","gestopt"].includes(c.status)) t.done++; });
+  t.net=t.payout+t.refund-t.fee; return t;
+}
+function chBusy(){ return !!document.activeElement?.closest?.("#chForm,#chNotes"); }
+async function chSave(mut, okMsg){
+  if(!S.db){ CH.msg="Opslaan kan pas als de verbinding met de opslag er is."; renderChallenges(); return false; }
+  const d=JSON.parse(JSON.stringify(CH.data||{currency:"USD",items:[],notes:""}));
+  mut(d); d.updatedAt=new Date().toISOString();
+  try{ await S.db.doc(CH_PATH).set(d); CH.data=d; CH.msg=okMsg||""; renderChallenges(); return true; }
+  catch(e){ CH.msg="Opslaan lukte niet: "+(e?.message||dbErrText(e)); renderChallenges(); return false; }
+}
+function renderChallenges(){
+  const el=$("ch-body"); if(!el || chBusy()) return;
+  if(!S.db && !S.offline){ el.innerHTML=`<div class="empty"><b>Challenges laden…</b></div>`; return; }
+  const d=CH.data||{currency:"USD",items:[],notes:""}, items=arr(d.items);
+  const t=chTotals(items), ed=CH.edit? items.find(c=>c.id===CH.edit)||{} : {};
+  const tone=(v)=> v>0? "pos" : v<0? "neg" : "";
+  const sorted=[...items].sort((a,b)=>String(b.start||"").localeCompare(String(a.start||"")));
+  const opt=(list,cur)=>list.map(([v,l])=>`<option value="${esc(v)}"${v===cur?" selected":""}>${esc(l)}</option>`).join("");
+  el.innerHTML=`<div class="stack">
+    <div class="sechead"><h2>Challenges · Eightcap</h2><span class="muted small">Eightcap heeft geen openbare koppeling voor challenge-resultaten, dus je houdt ze hier zelf bij. Alles wordt bewaard${S.server? " in je database op Railway" : S.local? " in Chrome op deze computer" : ""}.</span></div>
+    <div class="ch-kpis">
+      <div class="box"><span class="eyebrow">Netto verdiend</span><b class="${tone(t.net)}">${esc(chMoney(t.net,true))}</b><span class="muted small">uitbetaald + terugbetaalde fees − kosten</span></div>
+      <div class="box"><span class="eyebrow">Uitbetaald</span><b>${esc(chMoney(t.payout))}</b><span class="muted small">${t.refund? esc(chMoney(t.refund))+" fees terug" : "alle payouts samen"}</span></div>
+      <div class="box"><span class="eyebrow">Kosten</span><b>${esc(chMoney(t.fee))}</b><span class="muted small">${t.n} challenge${t.n===1?"":"s"} gekocht</span></div>
+      <div class="box"><span class="eyebrow">Lopend resultaat</span><b class="${tone(t.open)}">${esc(chMoney(t.open,true))}</b><span class="muted small">op accounts die nog lopen${t.done? ` · ${t.passed} van ${t.done} gehaald` : ""}</span></div>
+    </div>
+    <div class="box stack">
+      <div class="sechead"><h3>${CH.edit? "Challenge bewerken" : "Challenge toevoegen"}</h3>
+        <label class="small muted" style="display:flex;gap:8px;align-items:center">Valuta <select id="chCur" style="width:auto">${opt([["USD","$ USD"],["EUR","€ EUR"],["GBP","£ GBP"]], d.currency||"USD")}</select></label></div>
+      <form id="chForm" class="ch-form" autocomplete="off">
+        <label class="w2">Naam<input name="name" required maxlength="80" placeholder="bijv. 2-fase 50K #1" value="${esc(ed.name||"")}"></label>
+        <label>Soort<select name="type">${opt(CH_TYPES.map(x=>[x,x]), ed.type||"2-fase")}</select></label>
+        <label>Accountgrootte<input name="size" inputmode="decimal" placeholder="50000" value="${esc(ed.size??"")}"></label>
+        <label>Startdatum<input name="start" type="date" value="${esc(ed.start||new Date().toISOString().slice(0,10))}"></label>
+        <label>Status<select name="status">${opt(Object.entries(CH_STATUS).map(([k,v])=>[k,v[1]]), ed.status||"fase1")}</select></label>
+        <label>Kosten (fee)<input name="fee" inputmode="decimal" placeholder="0" value="${esc(ed.fee??"")}"></label>
+        <label>Resultaat op het account<input name="pnl" inputmode="decimal" placeholder="winst of verlies, bijv. -250" value="${esc(ed.pnl??"")}"></label>
+        <label>Uitbetaald (totaal)<input name="payout" inputmode="decimal" placeholder="0" value="${esc(ed.payout??"")}"></label>
+        <label>Fee terugbetaald<input name="refund" inputmode="decimal" placeholder="0" value="${esc(ed.refund??"")}"></label>
+        <label class="wide">Notitie<textarea name="note" maxlength="1000" placeholder="bijv. fase 1 gehaald op 12 okt, eerste payout aangevraagd">${esc(ed.note||"")}</textarea></label>
+        <div class="btnrow wide"><button class="btn primary" type="submit">${CH.edit? "Wijzigingen opslaan" : "Toevoegen"}</button>${CH.edit? `<button class="btn" type="button" data-ch="cancel">Annuleren</button>`:""}<span class="status" id="chStatus" role="status">${esc(CH.msg)}</span></div>
+      </form>
+    </div>
+    <div class="box stack">
+      <div class="sechead"><h3>Per challenge</h3><span class="muted small">Netto = uitbetaald + fee terug − kosten. Het resultaat op het account telt pas als het is uitbetaald.</span></div>
+      ${items.length? `<div class="tbl"><table class="ch-tbl"><thead><tr><th>Challenge</th><th>Start</th><th>Status</th><th class="r">Kosten</th><th class="r">Resultaat</th><th class="r">Uitbetaald</th><th class="r">Netto</th><th>Notitie</th><th></th></tr></thead><tbody>
+        ${sorted.map(c=>{ const st=CH_STATUS[c.status]||["t-neutral",c.status||"?"], n=chNet(c);
+          return `<tr><td><b style="font-weight:600">${esc(c.name||"")}</b><div class="faint small">${esc(c.type||"")}${chNum(c.size)? " · "+esc(chMoney(chNum(c.size))) : ""}</div></td>
+            <td class="small">${esc(c.start? new Intl.DateTimeFormat("nl-NL",{day:"numeric",month:"short",year:"numeric"}).format(new Date(c.start)) : "")}</td>
+            <td><span class="pill ${st[0]}">${esc(st[1])}</span></td>
+            <td class="r num">${esc(chMoney(chNum(c.fee)))}</td>
+            <td class="r num ${tone(chNum(c.pnl))}">${esc(chMoney(chNum(c.pnl),true))}</td>
+            <td class="r num">${esc(chMoney(chNum(c.payout)))}</td>
+            <td class="r num ${tone(n)}"><b style="font-weight:600">${esc(chMoney(n,true))}</b></td>
+            <td class="note">${esc(c.note||"")}</td>
+            <td><span class="btnrow" style="flex-wrap:nowrap"><button class="btn sm" type="button" data-ch="edit" data-id="${esc(c.id)}">Bewerken</button><button class="btn sm" type="button" data-ch="del" data-id="${esc(c.id)}">${CH.del===c.id? "Zeker weten?" : "Verwijderen"}</button></span></td></tr>`; }).join("")}
+        </tbody><tfoot><tr><td colspan="3">Totaal</td><td class="r num">${esc(chMoney(t.fee))}</td><td></td><td class="r num">${esc(chMoney(t.payout))}</td><td class="r num ${tone(t.net)}">${esc(chMoney(t.net,true))}</td><td colspan="2"></td></tr></tfoot></table></div>`
+      : `<div class="empty"><b>Nog geen challenges</b><span>Voeg je eerste challenge hierboven toe; de totalen rekenen zichzelf uit.</span></div>`}
+    </div>
+    <div class="box stack ch-notes">
+      <div class="sechead"><h3>Notities</h3><span class="muted small" id="chNoteSt">Wordt vanzelf opgeslagen terwijl je typt</span></div>
+      <textarea id="chNotes" maxlength="20000" placeholder="Vrije notities: regels van de challenge, wat werkte, wat niet…">${esc(d.notes||"")}</textarea>
+    </div>
+  </div>`;
+  bindChallenges();
+}
+function bindChallenges(){
+  const el=$("ch-body");
+  $("chForm")?.addEventListener("submit", async ev=>{
+    ev.preventDefault(); const f=new FormData(ev.target); const v=Object.fromEntries(f.entries());
+    const rec={name:String(v.name||"").trim(), type:v.type, size:v.size? chNum(v.size) : "", start:v.start||"", status:v.status,
+      fee:chNum(v.fee), pnl:chNum(v.pnl), payout:chNum(v.payout), refund:chNum(v.refund), note:String(v.note||"").trim()};
+    if(!rec.name){ CH.msg="Geef de challenge een naam."; renderChallenges(); return; }
+    const id=CH.edit; document.activeElement?.blur?.();
+    const ok=await chSave(d=>{ d.items=arr(d.items); if(id){ const i=d.items.findIndex(c=>c.id===id); if(i>=0) d.items[i]={...d.items[i],...rec,updatedAt:new Date().toISOString()}; }
+      else d.items.push({id:"c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), ...rec, createdAt:new Date().toISOString()}); }, id? "Opgeslagen." : "Toegevoegd.");
+    if(ok){ CH.edit=null; renderChallenges(); }
+  });
+  $("chCur")?.addEventListener("change", e=>chSave(d=>{ d.currency=e.target.value; }, "Valuta aangepast."));
+  $("chNotes")?.addEventListener("input", e=>{ clearTimeout(CH.noteTimer); const v=e.target.value; $("chNoteSt").textContent="Opslaan…";
+    CH.noteTimer=setTimeout(async()=>{ const d=JSON.parse(JSON.stringify(CH.data||{currency:"USD",items:[]})); d.notes=v; d.updatedAt=new Date().toISOString();
+      try{ await S.db.doc(CH_PATH).set(d); CH.data=d; const st=$("chNoteSt"); if(st) st.textContent="Opgeslagen"; }catch(err){ const st=$("chNoteSt"); if(st) st.textContent="Opslaan lukte niet; probeer het zo opnieuw"; } }, 800); });
+  $("chNotes")?.addEventListener("blur", ()=>setTimeout(renderChallenges, 900));
+  el.querySelectorAll("[data-ch]").forEach(b=>b.addEventListener("click", async ()=>{
+    const a=b.dataset.ch, id=b.dataset.id;
+    if(a==="cancel"){ CH.edit=null; CH.msg=""; renderChallenges(); }
+    if(a==="edit"){ CH.edit=id; CH.del=null; CH.msg=""; renderChallenges(); $("chForm")?.scrollIntoView({behavior:"smooth",block:"center"}); $("chForm")?.querySelector("input")?.focus({preventScroll:true}); }
+    if(a==="del"){ if(CH.del!==id){ CH.del=id; renderChallenges(); return; } CH.del=null; await chSave(d=>{ d.items=arr(d.items).filter(c=>c.id!==id); }, "Verwijderd."); if(CH.edit===id) CH.edit=null; }
+  }));
+}
 function renderHistory(){
   const el=$("hist-body"), list=S.history;
   if(!list.length){ el.innerHTML=`<div class="empty"><b>Nog geen wijzigingen</b><span>Elke keer dat je een voorstel toepast of iets terugzet, verschijnt het hier.</span></div>`; return; }
@@ -2163,12 +2291,12 @@ function renderAll(){
   if(!document.activeElement?.closest?.("#mEditBody")) renderMarkt();
   renderCyclus(); renderPlan(); renderSignals(); renderUitleg(); renderFooter();
 }
-renderAll(); renderInbox(); renderHistory();
+renderAll(); renderInbox(); renderHistory(); renderChallenges();
 
 (async function boot(){
-  if(!window.claude || typeof window.claude.use!=="function"){ S.offline=true; renderAll(); return; }
+  if(!window.claude || typeof window.claude.use!=="function"){ S.offline=true; renderAll(); renderChallenges(); return; }
   const db=await window.claude.use("db");
-  if(!db){ S.offline=true; renderAll(); renderInbox(); return; }
+  if(!db){ S.offline=true; renderAll(); renderInbox(); renderChallenges(); return; }
   S.db=db;
   const onErr=(e)=>{ if(e?.code==="revoked"){ S.offline=true; renderAll(); } else notice(dbErrText(e), true); };
   const seen={}; const changed=(k,d)=>{ const j=JSON.stringify(d??null); if(seen[k]===j) return false; seen[k]=j; return true; };
@@ -2177,6 +2305,7 @@ renderAll(); renderInbox(); renderHistory();
   db.doc("market/series").onSnapshot(s=>{ const d=s.exists? (s.data().series||{}) : {}; if(!changed("series",d)) return; S.series=d; renderAll(); }, onErr);
   db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);
   db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); }, onErr);
+  db.doc(CH_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("challenges",d)) return; CH.data=d; CH.loaded=true; renderChallenges(); }, onErr);
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); }, onErr);
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
