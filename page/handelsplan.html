@@ -66,6 +66,32 @@ p{margin:0}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--band-muted)}
 .live.on i{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
 .live.old i{background:var(--warn)}
+.todo-v{border-radius:12px;padding:14px 16px;font-size:1.02rem;line-height:1.45;background:var(--good-soft);border-left:5px solid var(--good)}
+.todo-v.warn{background:var(--warn-soft);border-left-color:var(--warn)} .todo-v.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.todo-v b{font-weight:700}
+.todo{display:grid;grid-template-columns:minmax(120px,1.1fr) auto minmax(0,2.4fr) minmax(0,2fr);gap:0;border-top:1px solid var(--line)}
+.todo > div{padding:11px 10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:3px;justify-content:center;font-size:.9rem}
+.todo .h{font:500 .68rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-block:8px}
+.todo .nm b{font-weight:600}
+.todo .nx{color:var(--muted);font-size:.84rem}
+.todo .nx b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.todo{grid-template-columns:1fr auto}.todo .h{display:none}.todo .wd,.todo .nxc{grid-column:1/-1;padding-top:0}.todo .nm,.todo .st,.todo .wd{border-bottom:0}.todo .st{align-items:flex-end}}
+.soon{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.soon{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.soon div{background:var(--surface-2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;font-size:.84rem}
+.soon b{font-weight:600;font-size:.9rem}
+.km{display:grid;gap:10px}
+.km-row{display:grid;grid-template-columns:minmax(150px,1.3fr) minmax(0,2fr) auto;gap:6px 14px;align-items:center;font-size:.88rem}
+.km-row .lbl b{font-weight:600}
+.km-bar{height:10px;border-radius:6px;background:var(--surface-3);position:relative;overflow:hidden}
+.km-bar i{position:absolute;inset:0 auto 0 0;border-radius:6px;background:var(--good)}
+.km-bar i.warn{background:var(--warn)} .km-bar i.bad{background:var(--bad)}
+.km-row .rest{font:500 .82rem var(--font-mono);color:var(--muted);white-space:nowrap;text-align:right}
+@media (max-width:640px){.km-row{grid-template-columns:1fr auto}.km-bar{grid-column:1/-1;order:3}}
+.news{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.news{grid-template-columns:minmax(0,1fr)}}
+.news div{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.86rem;display:flex;flex-direction:column;gap:3px}
+.news b{font-weight:600}
 .ch-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
 @media (max-width:900px){.ch-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .ch-kpis .box{display:flex;flex-direction:column;gap:4px}
@@ -1130,12 +1156,12 @@ const FOUR=[
   {id:"krediet", name:"Kredietcyclus", lv:"oranje", tag:"Stress aan de randen",
    what:"Hoe makkelijk bedrijven en beleggers geld lenen.",
    rows:[["Junk-spread (HY OAS)","hySpread"],["Margin debt","marginDebt"],["Wanbetaling private credit","pcDefault"]],
-   vs:["2008: een pure krediet- en bankencrisis (subprime). Junk-spread piekte rond 20%; in 2020 rond 11%.","Nu: spread laag (3,2%), geen huizen- of bankenbubbel. Wel stress bij de zwakste leners (CCC) en in private credit."],
+   vs:["2008: een pure krediet- en bankencrisis (subprime). Junk-spread piekte rond 20%; in 2020 rond 11%.","Nu: spread nog laag maar langzaam oplopend, geen huizen- of bankenbubbel. Wel stress bij de zwakste leners (CCC) en in private credit."],
    note:"Kantelpunt: een junk-spread boven 5% en fondsen die uitstappen stoppen."},
   {id:"liquiditeit", name:"Liquiditeitscyclus", lv:"oranje", tag:"Gemengd",
    what:"Hoeveel geld er door het systeem stroomt en wat geld kost.",
    rows:[["Fed-balans","fedAssets"],["Netto liquiditeit","netLiq"],["Reële rente 10 jaar","realYield10"]],
-   vs:["De Fed-balans groeit weer langzaam (+$159 mld in een jaar): de krimp (QT) is grotendeels voorbij.","Maar de reële rente is hoog (bijna 3%): geld is duur. Dat drukt groeiaandelen, goud en bitcoin."],
+   vs:["De Fed-balans is vlak (rond $6,75 bln): de krimp (QT) is voorbij, maar er komt ook geen nieuw geld bij.","Maar de reële rente is hoog (bijna 3%): geld is duur. Dat drukt groeiaandelen, goud en bitcoin."],
    note:"Lagere rente helpt bitcoin en goud, maar kost Circle direct inkomsten."},
   {id:"bedrijf", name:"Bedrijfscyclus", lv:"groen", tag:"Nog geen recessie",
    what:"Banen, groei en de signalen die een recessie aankondigen.",
@@ -1150,15 +1176,15 @@ const LONG=[
    caveat:"Een theorie van praktijkbeleggers, geen wetmatigheid. Het blijft een gemiddelde."},
   {name:"Bitcoin 4-jaarscyclus", segs:["Halvering apr '24","Stijging","Top okt '25","Daling","Bodem?"], on:3, src:"halvering elke 4 jaar; volgende in 2028",
    t:"Na elke halvering kwam een top na 12 tot 18 maanden en daarna een daling van 75–85% over ongeveer een jaar. Deze keer: top boven $126.000 in oktober 2025.",
-   now:"Bitcoin staat rond $82.000 (−35%), het dieptepunt dit jaar lag ca. 54% onder de top. Als het patroon klopt, ligt de bodem rond het najaar van 2026; daarna ruim een jaar opbouw tot de halvering van 2028.",
+   now:"Bitcoin staat rond $80.500 (−36%), het dieptepunt dit jaar lag ca. 54% onder de top. Als het patroon klopt, ligt de bodem rond nu (najaar 2026); daarna ruim een jaar opbouw tot de halvering van 2028.",
    caveat:"Met ETF's en grote fondsen kan het patroon zwakker worden."},
   {name:"Aandelencyclus: verkiezingsjaren (VS)", segs:["Jaar 1","Midterm '26","Jaar 3 '27","Verkiezing '28"], on:1, src:"S&P 500 sinds 1950",
    t:"In een midterm-jaar daalde de S&P 500 gemiddeld 19% van top tot dal; in 11 van de 16 midterm-jaren 15% of meer. Na het dal volgde gemiddeld +31% in 12 maanden, en het derde jaar is meestal het sterkste.",
-   now:"2026 is een midterm-jaar (verkiezingen 3 november). Historisch valt het dal in de zomer of het najaar en komt daarna herstel in 2027.",
+   now:"2026 is een midterm-jaar; de verkiezingen zijn op 3 november. Historisch valt het dal in de zomer of het najaar en komt daarna herstel in 2027. Dit jaar was er nog geen echt dal: de S&P 500 staat vlak bij het record.",
    caveat:"Een seizoenspatroon: het weegt minder zwaar dan waardering of krediet."},
   {name:"Grondstoffencyclus", segs:["Bodem","Opbouw","Piek","Correctie","Nieuwe golf?"], on:3, src:"Kitco, Discovery Alert, S&P Global",
    t:"Metalen piekten in januari 2026: goud $5.590, zilver $121. Koper zette in september nog een record (LME $14.875 per ton).",
-   now:"Goud ca. $4.200 (−25%), zilver ca. $57 (−53%). De hoge reële rente is de rem; centrale banken kopen wel recordhoeveelheden goud. Koper valt in een beurscorrectie vaak twee keer zo hard als aandelen.",
+   now:"Goud ca. $4.050 (−27%), zilver ca. $53 (−56%), terwijl olie juist weer oploopt (Brent ~$115). De hoge reële rente is de rem; centrale banken kopen wel recordhoeveelheden goud. Koper valt in een beurscorrectie vaak twee keer zo hard als aandelen.",
    caveat:"Sommigen zien een nieuwe supercyclus; dat is een verwachting, geen feit."},
 ];
 const HOLD=[
@@ -1174,7 +1200,7 @@ const HOLD=[
   {pos:"Bitcoin", risk:"Gemengd", tone:"t-warn", cycles:"Liquiditeit, risk-on/off, 4-jaarscyclus",
    vs:"Valt mee met risico in paniek, maar kan profiteren als de Fed weer geld bijdrukt. Nu laat in de dalende fase van de eigen cyclus.",
    watch:"Fed-balans, netto liquiditeit, reële rente", rule:"Een bodem na de 4-jaarscyclus valt vaak samen met de eerste renteverlagingen."},
-  {pos:"Goud (en goudmijnen)", risk:"Beschermend", tone:"t-good", cycles:"Reële rente, dollar, vlucht uit risico",
+  {pos:"Goud", risk:"Beschermend", tone:"t-good", cycles:"Reële rente, dollar, vlucht uit risico",
    vs:"In 2000–02 en na 2008 relatief sterk. In een acute paniek (zoals okt 2008) daalt het eerst mee; mijnen ongeveer twee keer zo hard.",
    watch:"Reële rente 10 jaar, dollar", rule:"Daalt de reële rente onder 2%, dan krijgt goud weer wind mee."},
 ];
@@ -1348,15 +1374,43 @@ function renderCyclus(){
 
   const lvPillC=(lv,tag)=>`<span class="pill ${lv==="rood"?"t-bad":lv==="oranje"?"t-warn":"t-good"}">${esc(tag)}</span>`;
   const valOf=(k)=>{ const it=item(k); return it&&(typeof it.value==="number"||it.display)? itemText(it) : "–"; };
+  const bandOf=(k)=>{ const w=WATCH.find(x=>x.key===k), it=item(k); return w && typeof it?.value==="number"? w.band(it.value) : null; };
+  const CYC_KEYS={waardering:["cape","buffett"], krediet:["hySpread","marginDebt"], liquiditeit:["realYield10","fedAssets"], bedrijf:["sahm","claims","curve"]};
+  const RANKB={groen:0, oranje:1, rood:2};
+  const lvOf=(f)=>{ const bs=arr(CYC_KEYS[f.id]).map(bandOf).filter(Boolean); if(!bs.length) return f.lv; return bs.sort((a,b)=>RANKB[b]-RANKB[a])[0]; };
+  const tagOf=(f,lv)=> lv===f.lv? f.tag : lv==="rood"? "Stress" : lv==="oranje"? "Gespannen" : "Rustig";
+  const KM=[
+    {l:"Krediet breekt", s:"Junk-spread naar 5%", k:"hySpread", base:3.0, thr:5},
+    {l:"Ontslagen nemen toe", s:"Sahm-regel naar 0,5", k:"sahm", base:0, thr:0.5},
+    {l:"Correctie", s:"S&P 500 −10% van record", k:"spxDD", base:0, thr:-10},
+    {l:"Paniek", s:"VIX naar 30", k:"vix", base:12, thr:30},
+    {l:"Nieuwe renteschok", s:"10-jaars boven 5,36%", k:"us10y", base:4.5, thr:5.36},
+    {l:"Olieschok-scenario", s:"Brent boven $120", k:"brent", base:80, thr:120},
+    {l:"Goud krijgt wind mee", s:"Reële rente onder 2,0%", k:"realYield10", base:3.0, thr:2.0, good:true},
+  ];
+  const kmRows=KM.map(m=>{ const it=item(m.k), v=typeof it?.value==="number"? it.value : null; if(v==null) return "";
+    const pct=Math.max(0, Math.min(1, (v-m.base)/(m.thr-m.base))), hit=pct>=1;
+    const cls= m.good? (hit? "" : "warn") : hit? "bad" : pct>=0.7? "warn" : "";
+    const rest= hit? (m.good? "bereikt" : "bereikt") : `nog ${fmtLvl(m.k, Math.abs(m.thr-v)).replace(/^−/,"")}`;
+    return `<div class="km-row"><span class="lbl"><b>${esc(m.l)}</b><br><span class="muted small">${esc(m.s)} · nu ${esc(itemText(it))}</span></span>
+      <span class="km-bar" role="img" aria-label="${esc(m.l)}: ${Math.round(pct*100)}% van de weg"><i class="${cls}" style="width:${Math.round(pct*100)}%"></i></span><span class="rest">${esc(rest)}</span></div>`; }).join("");
+  const news=arr(cy.news);
+  const now=`<div class="box stack">
+    <div class="sechead"><h2>Waar zitten we nu precies?</h2><span class="muted small">${esc(cy.nowAsOf||"")}</span></div>
+    ${cy.nowText? `<p>${esc(cy.nowText)}</p>`:""}
+    ${news.length? `<div class="news">${news.map(n=>`<div><b>${esc(n.t)}</b><span class="muted">${esc(n.why)}</span></div>`).join("")}</div>`:""}
+    <div><span class="eyebrow">Kantelmeter · hoe ver is de volgende fase?</span><p class="small muted" style="margin:4px 0 10px">Hoe voller de balk, hoe dichter bij het punt waarop het plan een andere fase verwacht. Rood = bereikt.</p><div class="km">${kmRows}</div></div>
+    ${cy.nextPhase? `<p class="small"><b>Wat de volgende fase inluidt:</b> ${esc(cy.nextPhase)}</p>`:""}
+  </div>`;
   const four=`<div class="stack">
     <div class="sechead"><h2>De vier cycli die nu tellen</h2><span class="muted small">Samen geven ze het beste beeld van het crashrisico</span></div>
     <div class="kort"><b>Kort gezegd:</b> de waardering staat op rood en lijkt het meest op 2000. De klassieke signalen van 2008 (krediet en recessie) zijn er nog niet. Het risico is vooral een dure beurs die hard kan corrigeren, geen bankencrisis.</div>
-    <div class="c4">${FOUR.map(f=>`<article class="box lv-${f.lv}">
-      <div class="sechead"><h3>${esc(f.name)}</h3>${lvPillC(f.lv,f.tag)}</div>
+    <div class="c4">${FOUR.map(f=>{ const lv=lvOf(f); return `<article class="box lv-${lv}">
+      <div class="sechead"><h3>${esc(f.name)}</h3>${lvPillC(lv,tagOf(f,lv))}</div>
       <p class="small muted">${esc(f.what)}</p>
       <div class="c4-kv">${f.rows.map(([l,k])=>`<span>${esc(l)}</span><b>${esc(valOf(k))}</b>`).join("")}</div>
       <div class="vs">${f.vs.map(v=>`<span>${esc(v)}</span>`).join("")}</div>
-      <p class="small">${esc(f.note)}</p></article>`).join("")}</div>
+      <p class="small">${esc(f.note)}</p></article>`; }).join("")}</div>
   </div>`;
   const longc=`<div class="stack">
     <div class="sechead"><h2>Lange cycli</h2><span class="muted small">Ritmes van jaren; ze zeggen iets over de richting, niet over de dag</span></div>
@@ -1385,7 +1439,7 @@ function renderCyclus(){
     <ul class="small" style="margin:10px 0 0;padding-left:18px;columns:2 300px;column-gap:28px">${CRASH_SOURCES.map(([l,u])=>`<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a></li>`).join("")}</ul>
     <p class="faint small" style="margin-top:10px">Geschiedenis herhaalt zich niet precies. Dit overzicht laat zien hoe kwetsbaar de markt is, niet wanneer het misgaat. Geen beleggingsadvies.</p></details>`;
 
-  el.innerHTML = hero + four + you + watch + cycles + longc + tl + tipping + crashes + charts + table + src;
+  el.innerHTML = hero + now + four + you + watch + cycles + longc + tl + tipping + crashes + charts + table + src;
   if(tipFor && !document.body.contains(tipFor)) hideTip();
 }
 
@@ -1413,15 +1467,16 @@ function renderPlan(){
   const p=S.plan;
   if(!p){ ["pl-top","pl-pos","pl-sc","pl-check"].forEach(id=>$(id).innerHTML=""); return; }
   const sc=arr(p.scenarios);
-  $("pl-top").innerHTML = `<div class="grid g-2">
+  $("pl-top").innerHTML = todoHTML(p) + `<details class="box" ${S.openNow?"open":""} id="nowDet"><summary style="cursor:pointer"><b>Toelichting en scenario's</b> <span class="muted small">· waarom het plan zo staat</span></summary><div class="grid g-2" style="margin-top:12px">
     <div class="box stack"><div class="sechead"><h2>Nu doen</h2><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))}</span></div>
       <ul class="actions">${arr(p.actionsNow).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
     <div class="box stack"><div class="sechead"><h2>Scenario's</h2><span class="muted small">kans</span></div>
       <div class="sbar" role="img" aria-label="${esc(sc.map(s=>s.name+" "+s.prob+"%").join(", "))}">${sc.map(s=>`<div style="flex-grow:${Math.max(0,+s.prob||0)};background:${SC_COLORS[s.id]||"var(--faint)"}">${s.prob>=10? esc(s.prob)+"%":""}</div>`).join("")}</div>
       <div class="slegend">${sc.map(s=>`<div class="it"><span class="sw" style="background:${SC_COLORS[s.id]||"var(--faint)"}"></span><span>${esc(s.name)}</span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div></div>
-  </div>`;
+  </div></details>`;
+  $("nowDet")?.addEventListener("toggle", e=>{ S.openNow=e.target.open; });
   if(!document.activeElement?.closest?.("#pl-pos")) renderPositions();
-  $("pl-sc").innerHTML = `<div class="stack"><div class="sechead"><h2>Scenario's in detail</h2><span class="muted small">Kansen zijn inschattingen; een bron kan ze per keer met maximaal 10 punt verschuiven</span></div>
+  $("pl-sc").innerHTML = `<details class="stack" ${S.openSc?"open":""} id="scDet"><summary style="cursor:pointer;list-style:none"><div class="sechead"><h2>Scenario's in detail ▾</h2><span class="muted small">Klik om open te klappen · kansen zijn inschattingen</span></div></summary>
     <div class="grid g-2e">${sc.map(s=>`<article class="box sc stack" style="--c:${SC_COLORS[s.id]||"var(--faint)"}">
       <div class="hd"><div><span class="eyebrow">${esc(s.horizon||"")}</span><h3 style="margin-top:3px">${esc(s.name)}</h3></div><div class="prob">${esc(s.prob)}%</div></div>
       <p class="small">${esc(s.desc)}</p>
@@ -1433,17 +1488,65 @@ function renderPlan(){
       <div class="tbl" style="margin-top:10px"><table><thead><tr><th>Scenario</th><th class="c">Kans</th>${POS_IDS.map(id=>`<th class="c">${esc(POS_SHORT[id])}</th>`).join("")}</tr></thead>
       <tbody>${sc.map(s=>`<tr><td>${esc(s.name)}</td><td class="c num">${esc(s.prob)}%</td>${POS_IDS.map(id=>`<td class="c">${impactCell(s.impact?.[id])}</td>`).join("")}</tr>`).join("")}
       <tr><td><b>Gewogen</b></td><td class="c num">100%</td>${POS_IDS.map(id=>{ const w=sc.reduce((a,s)=>a+(s.prob||0)*(s.impact?.[id]||0),0)/100; return `<td class="c"><span class="num">${w>0?"+":""}${nf(w,2)}</span></td>`; }).join("")}</tr></tbody></table></div>
-    </details></div>`;
+    </details></details>`;
+  $("scDet")?.addEventListener("toggle", e=>{ S.openSc=e.target.open; });
   const pc=p.portfolioCheck, r=p.regime||{};
   $("pl-check").innerHTML = pc? `<div class="grid g-2e">
     <div class="box stack check"><span class="eyebrow">Portefeuille-check</span><h2>${esc(pc.headline)}</h2><ul>${arr(pc.points).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
     <div class="box stack"><span class="eyebrow">Veranderd sinds het juli-plan</span><ul class="actions">${arr(r.changesSinceJuly).map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div></div>` : "";
 }
+/* ---------- eenvoudig: wat moet ik doen? ---------- */
+const TODO_TONE={bad:["t-bad","bad"], warn:["t-warn","warn"], good:["t-good","good"], base:["t-neutral",""]};
+function fmtLvl(key, v){ const it=item(key)||{}; return (v<0?"−":"")+(it.prefix||"")+nf(Math.abs(v), Math.abs(v)>=1000? 0 : (it.decimals??2))+(it.suffix||""); }
+function posStatus(x){
+  const out={label:x.doLabel||(STANCES[x.stance]?.label)||"Houden", tone:"base", why:x.doNow||x.stanceNote||"", next:null};
+  let best=null, rank={bad:3, warn:2, good:1};
+  for(const c of arr(x.checks)){
+    const it=item(c.key), v=typeof it?.value==="number"? it.value : null; if(v==null) continue;
+    const hit = c.op==="lt"? v<c.level : v>c.level;
+    const near = c.near!=null && !hit && (c.op==="lt"? v<c.near : v>c.near);
+    const dist = c.level!==0? Math.abs((v-c.level)/c.level)*100 : null;
+    const cand={c, v, hit, near, dist};
+    if(hit){ if(!best?.hit || rank[c.tone]>rank[best.c.tone]) best=cand; }
+    else if(!best?.hit){ if(near && (!best || !best.near)) best=cand; else if(!best || (!best.near && dist!=null && best.dist!=null && dist<best.dist)) best=cand; }
+  }
+  if(best?.hit){ out.label=best.c.action; out.tone=best.c.tone||"warn"; out.why=best.c.then||out.why; }
+  else if(best?.near){ out.tone="warn"; out.label="Let op"; }
+  out.next=best;
+  return out;
+}
+function todoHTML(p){
+  const ps=arr(p.positions); if(!ps.length) return "";
+  const st=ps.map(x=>({x, s:posStatus(x)}));
+  const acts=st.filter(r=>r.s.next?.hit), nears=st.filter(r=>!r.s.next?.hit && r.s.next?.near);
+  const tone= acts.some(r=>r.s.tone==="bad")? "bad" : (acts.length||nears.length)? "warn" : "";
+  const verdict = acts.length? `<b>Actie:</b> ${acts.map(r=>`${esc(r.x.short||r.x.name)}: ${esc(r.s.label.toLowerCase())}`).join(" · ")}.`
+    : nears.length? `<b>Geen actie, wel opletten:</b> ${nears.map(r=>`${esc(r.x.short||r.x.name)} nadert ${esc(fmtLvl(r.s.next.c.key, r.s.next.c.level))}`).join(" · ")}.`
+    : `<b>Geen actie nodig.</b> Houd je aan je vaste inleg en kijk pas weer bij de momenten hieronder.`;
+  const today=todayISO(), soon=arr(p.calendar).filter(c=>String(c.date)>=today).slice(0,4);
+  const nextTxt=(r)=>{ const n=r.s.next; if(!n) return `<span class="nx">Geen niveau om op te letten.</span>`;
+    const c=n.c, lv=fmtLvl(c.key,c.level), now=itemText(item(c.key));
+    return n.hit? `<span class="nx"><b>${esc(c.label)}</b> · nu ${esc(now)}${c.note? " · "+esc(c.note):""}</span>`
+      : `<span class="nx">Volgende stap bij <b>${esc(lv)}</b>: ${esc(c.action.toLowerCase())}</span><span class="nx">nu ${esc(now)} · nog ${esc(fmtLvl(c.key, Math.abs(c.level-n.v)).replace(/^−/,""))} ${c.op==="lt"? "omlaag" : "omhoog"}</span>`; };
+  return `<div class="box stack" id="todo">
+    <div class="sechead"><h2>Wat moet ik doen?</h2><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))} · rekent mee met de koersen</span></div>
+    <div class="todo-v ${tone}">${verdict}${p.simple?.headline? `<br><span class="small">${esc(p.simple.headline)}</span>`:""}</div>
+    <div class="todo" role="table" aria-label="Per positie wat je doet">
+      <div class="h" role="columnheader">Positie</div><div class="h" role="columnheader">Nu</div><div class="h" role="columnheader">Wat je doet</div><div class="h" role="columnheader">Wanneer je iets doet</div>
+      ${st.map(r=>`<div class="nm" role="cell"><b>${esc(r.x.short||r.x.name)}</b><span class="faint small">${esc(itemText(item(r.x.priceKey||r.x.id)))}</span></div>
+        <div class="st" role="cell"><span class="pill ${TODO_TONE[r.s.tone][0]}">${esc(r.s.label)}</span></div>
+        <div class="wd" role="cell">${esc(r.s.why)}</div>
+        <div class="nxc" role="cell">${nextTxt(r)}</div>`).join("")}
+    </div>
+    ${soon.length? `<div><span class="eyebrow">Komende momenten</span><div class="soon" style="margin-top:6px">${soon.map(c=>`<div><span class="faint small">${esc(fmtDate(c.date,{weekday:"short",day:"numeric",month:"short"}))}${c.time? " · "+esc(c.time):""}</span><b>${esc(c.event)}</b><span class="muted">${esc(c.why||"")}</span></div>`).join("")}</div></div>`:""}
+    ${arr(p.simple?.rules).length? `<div><span class="eyebrow">Drie vaste regels</span><ol class="rules" style="margin-top:6px">${p.simple.rules.map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
+  </div>`;
+}
 function renderPositions(){
   const p=S.plan, m=p.macro;
   const sc=arr(p.scenarios);
   const ws=arr(p.positions).map(x=>x.myWeight).filter(v=>typeof v==="number"), sum=ws.reduce((a,b)=>a+b,0);
-  $("pl-pos").innerHTML = `<div class="stack"><div class="sechead"><h2>Posities</h2><span class="muted small">Klik open voor regels, niveaus en scenario's. Je weging wordt bewaard.</span></div>
+  $("pl-pos").innerHTML = `<div class="stack"><div class="sechead"><h2>Posities in detail</h2><span class="muted small">Klik open voor regels, niveaus en scenario's. Je weging wordt bewaard.</span></div>
   ${arr(p.positions).map((x,ix)=>{ const pi=m?.positionImpact?.[x.id]||{}; return `<details class="pos" ${S.openPos===x.id?"open":""} data-pos="${esc(x.id)}">
     <summary><div><span class="eyebrow">${esc(x.role||"")}</span><h3 style="margin-top:2px">${esc(x.name)}</h3></div><span style="display:flex;gap:8px;align-items:center">${dirMark(pi.dir)}${stancePill(x.stance)}</span><span class="chev" aria-hidden="true"></span>
       <span class="sumwhy"><b style="color:var(--ink);font-weight:600">${esc(x.stanceNote||"")}</b></span></summary>
