@@ -1,0 +1,1415 @@
+{
+ "id": "2026-10-28",
+ "at": "2026-10-28T19:30:00+01:00",
+ "asOf": "2026-10-28",
+ "source": "Update door Claude",
+ "title": "Update 28 okt: marktcijfers en plan naar VWCE, SMH, Circle, goud en bitcoin",
+ "summary": "Marktcijfers bijgewerkt tot 28 oktober (olie fors hoger, rente rond 5%, chips herstellen). Het plan is omgezet van mijnen, Mag 7 en insider-aandelen naar je huidige posities: VWCE, SMH, Circle, goud en bitcoin, elk met niveaus, planregels en catalysatoren.",
+ "changelog": [
+  "Posities: mijnen, Mag 7 en insider-aandelen vervangen door VWCE, SMH, Circle, goud en bitcoin",
+  "Scenario's: olieschok 20% → 25%, groeischok 20% → 15%; effecten per nieuwe positie",
+  "Triggers: SMH, Circle en goud/bitcoin per positie; goud/olie- en zilvertrigger vervallen",
+  "Marktbeeld en kalender bijgewerkt tot en met 28 okt (Fed, techcijfers, verkiezingen, Circle 4 nov)",
+  "Cijfers: Brent $115,7, 10j 5,00%, reële rente 2,66%, S&P 500 −1,2% onder record, HY 3,38%, CAPE 40,7"
+ ],
+ "market": {
+  "set": {
+   "gold": {
+    "value": 4055,
+    "change": "−5,6% in een maand · record $5.590 (28 jan)",
+    "asOf": "28 okt",
+    "src": "Yahoo Finance"
+   },
+   "silver": {
+    "value": 53.4,
+    "change": "−15% in een maand · goud/zilver 75",
+    "asOf": "27 okt",
+    "src": "Yahoo Finance"
+   },
+   "wti": {
+    "value": 99.9,
+    "change": "−1,8% (27 okt) · ~$103 op 28 okt",
+    "asOf": "27 okt, slot",
+    "src": "Zacks via Yahoo Finance"
+   },
+   "brent": {
+    "value": 115.7,
+    "change": "+20% in een maand · aanval op Saudische raffinaderij",
+    "asOf": "28 okt",
+    "src": "Trading Economics"
+   },
+   "us10y": {
+    "value": 5.0,
+    "change": "piek 5,36% · 28 okt ~5,02%",
+    "asOf": "26 okt",
+    "src": "Federal Reserve H.15"
+   },
+   "us2y": {
+    "value": 4.68,
+    "change": "21 okt 4,81%",
+    "asOf": "26 okt",
+    "src": "Federal Reserve H.15"
+   },
+   "us30y": {
+    "value": 5.31,
+    "change": "piek 5,73%",
+    "asOf": "26 okt",
+    "src": "Federal Reserve H.15"
+   },
+   "realYield10": {
+    "value": 2.66,
+    "change": "16 okt 2,78% · 1 jr: 1,76%",
+    "asOf": "26 okt",
+    "src": "Federal Reserve H.15"
+   },
+   "curve": {
+    "value": 0.32,
+    "change": "positief",
+    "asOf": "26 okt",
+    "src": "berekend (H.15)"
+   },
+   "spx": {
+    "value": 7722.6,
+    "change": "+0,6% · 28 okt intraday ~7.734",
+    "asOf": "27 okt, slot",
+    "src": "Zacks via Yahoo Finance"
+   },
+   "spxDD": {
+    "value": -1.23,
+    "change": "record 7.819 op 6 okt",
+    "asOf": "27 okt",
+    "src": "berekend",
+    "ath": 7818.93,
+    "athDate": "2026-10-06"
+   },
+   "ndx": {
+    "value": 26477.81,
+    "change": "+1,2% · chips (SOX) +3,6%",
+    "asOf": "27 okt, slot",
+    "src": "Zacks via Yahoo Finance"
+   },
+   "vix": {
+    "value": 17.52,
+    "change": "−4,7%",
+    "asOf": "27 okt, slot",
+    "src": "Zacks via Yahoo Finance"
+   },
+   "crcl": {
+    "value": 81.58,
+    "change": "+2,2% · 52 wk $49,90–147,44",
+    "asOf": "27 okt, slot",
+    "src": "Gotrade"
+   },
+   "btc": {
+    "value": 80490,
+    "change": "−36% onder de top van okt 2025 (>$126k)",
+    "asOf": "28 okt",
+    "src": "Yahoo Finance"
+   },
+   "smh": {
+    "label": "Chips-ETF (SMH)",
+    "group": "Jouw posities",
+    "pillar": "sentiment",
+    "prefix": "$",
+    "suffix": "",
+    "decimals": 2,
+    "value": 557.98,
+    "change": "+3,0% · top $671,83 (−17%)",
+    "asOf": "27 okt, slot",
+    "src": "Gotrade"
+   },
+   "vwce": {
+    "label": "VWCE (wereldaandelen)",
+    "group": "Jouw posities",
+    "pillar": "sentiment",
+    "prefix": "€",
+    "suffix": "",
+    "decimals": 2,
+    "value": 170.0,
+    "change": "+0,4% · 52 wk €139,20–173,96",
+    "asOf": "26 okt",
+    "src": "StockAnalysis (Xetra)"
+   },
+   "hySpread": {
+    "value": 3.38,
+    "change": "16 okt 3,16% · loopt op",
+    "asOf": "23 okt",
+    "src": "ICE BofA via MacroRadar"
+   },
+   "cape": {
+    "value": 40.7,
+    "change": "record 44,2 (dec 1999) · normaal 16,6",
+    "asOf": "okt",
+    "src": "thetrading.tools"
+   },
+   "fedAssets": {
+    "value": 6.75,
+    "change": "vorige week $6,76 bln",
+    "asOf": "21 okt",
+    "src": "Fed H.4.1 via thetrading.tools"
+   },
+   "marginDebt": {
+    "value": 1.5,
+    "change": "record · +140% sinds eind 2022",
+    "asOf": "aug",
+    "src": "FINRA via First Trust"
+   },
+   "cpiYoY": {
+    "value": 3.7,
+    "change": "feb 2,4%",
+    "asOf": "sep",
+    "src": "BLS"
+   }
+  },
+  "updatedAt": "2026-10-28T19:30:00+01:00",
+  "updatedBy": "Claude (webzoekopdracht)",
+  "note": "Momentopnames uit nieuwsbronnen, geen live feed. Elke regel toont zijn eigen tijdstip."
+ },
+ "plan": {
+  "replace": {
+   "regime": {
+    "name": "Stagflatie met renteschok",
+    "phase": "Late cyclus",
+    "riskLevel": "verhoogd",
+    "thesis": "De inflatie staat op 3,7% en de olie is weer opgelopen: Brent ~$115, 20% hoger dan een maand geleden, na aanvallen op een Saudische raffinaderij en vastgelopen vredesgesprekken. De Fed verhoogde in september naar 3,75–4,00%; voor vandaag rekende de markt op een pauze, en een verhoging in december wordt breed verwacht. De 10-jaarsrente staat rond 5,0% (piek 5,36%). Aandelen houden stand (S&P 500 1,2% onder het record) dankzij herstel in de chips, maar de waardering is extreem hoog. De rente blijft de spil van je hele portefeuille.",
+    "masterVariable": {
+     "name": "US 10-jaarsrente (en de reële rente erin)",
+     "why": "Vier van je vijf posities (VWCE, SMH, goud, bitcoin) hebben last van een hoge rente. Alleen Circle verdient er juist aan. Kijk hier eerst naar, elke dag."
+    },
+    "changesSinceJuly": [
+     "Fed: van 'mogelijk een verhoging' naar daadwerkelijk +25 bp (16 sep), range 3,75–4,00%.",
+     "10-jaarsrente: van ~4,5% naar ~5,0% (top 5,36%).",
+     "Olie: het risicoscenario uit juli ($100+) is ruim uitgekomen: Brent ~$115.",
+     "Goud: niet de verwachte veilige haven; 27% onder het record van $5.590.",
+     "Je portefeuille is omgezet naar VWCE, SMH, Circle, goud en bitcoin (28 okt)."
+    ]
+   },
+   "portfolioCheck": {
+    "headline": "Je portefeuille leunt zwaar op dure aandelen en de AI-belofte",
+    "points": [
+     "VWCE en SMH samen: het grootste deel van je geld zit in aandelen, met een flink deel in dezelfde Amerikaanse techreuzen. SMH verdubbelt je inzet op chips.",
+     "Circle en bitcoin hangen allebei aan crypto en liquiditeit. Tel ze samen als één risico.",
+     "Goud is je enige echte tegenwicht: het doet het goed in een groeischok of oorlog, maar lijdt nu onder de hoge reële rente.",
+     "Natuurlijke hedge: Circle profiteert van hoge rente, terwijl SMH, bitcoin en goud juist van lagere rente profiteren. Bij een omslag schuif je tussen die twee in plaats van alles tegelijk te verkopen.",
+     "Er zit geen cash-buffer in. Zonder droog kruit kun je de bijkoopregels bij −10% en −20% niet uitvoeren. Zet daarvoor geld apart."
+    ]
+   },
+   "actionsNow": [
+    "Vanavond: het Fed-besluit (19:00) en de cijfers van Microsoft en Alphabet. Geen grote aankopen vóór de verkiezingen (3 nov) en de banencijfers (6 nov), tenzij een planregel afgaat.",
+    "VWCE: vaste inleg door, geen extra aankopen. Eerste extra tranche pas bij −10% vanaf de top (~€156).",
+    "SMH: niet bijkopen tot de AI-investeringen van deze week en Nvidia in november bevestigd zijn. Stop: weekslot onder $500.",
+    "Circle: aanhouden tot de kwartaalcijfers van 4 november.",
+    "Goud: aanhouden. Steun $4.000; bijkopen pas bij een reële rente onder 2%.",
+    "Bitcoin: aanhouden; hooguit een kleine tranche onder $75.000.",
+    "Bepaal per positie een maximum en zet geld apart voor de bijkoopregels."
+   ],
+   "scenarios": [
+    {
+     "id": "s1",
+     "name": "Stagflatie-grind",
+     "prob": 45,
+     "horizon": "3–6 maanden",
+     "desc": "Olie blijft $95–120, CPI 3,5–4%, de Fed pauzeert nu en verhoogt in december nog één keer. 10-jaarsrente tussen 4,9 en 5,4%. Banengroei zwak maar positief. Aandelen bewegen zijwaarts met dalingen van 5–10%.",
+     "signals": [
+      "CPI blijft boven 3,5%",
+      "Brent tussen $95 en $120",
+      "NFP tussen 0 en +100k",
+      "10j tussen 4,9% en 5,4%"
+     ],
+     "impact": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 1,
+      "gold": 0,
+      "btc": -1
+     },
+     "actions": [
+      "VWCE: vaste inleg door, geen extra aankopen.",
+      "SMH klein houden; alleen bijkopen na sterke capex-cijfers.",
+      "Circle is hier je sterkste positie: hoge rente = meer inkomsten.",
+      "Goud houden; de hoge reële rente remt.",
+      "Bitcoin houden, niet bijkopen."
+     ]
+    },
+    {
+     "id": "s2",
+     "name": "Olieschok en escalatie",
+     "prob": 25,
+     "horizon": "0–3 maanden",
+     "desc": "De oorlog escaleert (raffinaderijen, tankers, een hervatting van de strijd VS–Iran na de verkiezingen van 3 nov), Brent boven $125, CPI boven 4%. De Fed verhoogt in december en de 10-jaarsrente breekt door 5,4%. Risk-off.",
+     "signals": [
+      "Brent > $120",
+      "CPI > 4%",
+      "10j > 5,36% (nieuwe top)",
+      "VIX > 30"
+     ],
+     "impact": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": 0,
+      "gold": 1,
+      "btc": -2
+     },
+     "actions": [
+      "VWCE: niet verkopen in paniek; bijkopen volgens de tranches bij −10% en −20%.",
+      "SMH verkleinen volgens de stopregel ($500).",
+      "Goud is hier de bescherming: houden, eventueel bijkopen.",
+      "Bitcoin en Circle vallen mee met de risk-off; niet bijkopen."
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "Groeischok en kredietbreuk",
+     "prob": 15,
+     "horizon": "1–6 maanden",
+     "desc": "De banenmarkt kantelt naar krimp, private credit-fondsen beperken uitstappen verder, de AI-investeringen worden teruggeschroefd. De rente daalt snel en de Fed draait naar verlagingen.",
+     "signals": [
+      "NFP negatief",
+      "Sahm-regel ≥ 0,5",
+      "Junk-spread > 5%",
+      "Techreuzen verlagen hun capex"
+     ],
+     "impact": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": -2,
+      "gold": 2,
+      "btc": 0
+     },
+     "actions": [
+      "Goud is het beste scenario: bijkopen in tranches als de reële rente daalt.",
+      "SMH afbouwen: capex-verlaging raakt chips het hardst.",
+      "Circle verkleinen: renteverlagingen raken het verdienmodel.",
+      "VWCE: in stappen bijkopen na de val, niet ervoor.",
+      "Bitcoin: eerst omlaag, daarna mogelijk winnaar van nieuwe liquiditeit."
+     ]
+    },
+    {
+     "id": "s4",
+     "name": "De-escalatie en zachte landing",
+     "prob": 15,
+     "horizon": "3–9 maanden",
+     "desc": "Een akkoord in het Midden-Oosten, olie zakt onder $90, de inflatie koelt af, de 10-jaarsrente daalt richting 4,5% en de Fed is klaar met verhogen. Aandelen en crypto herstellen.",
+     "signals": [
+      "Brent < $90",
+      "CPI richting 3%",
+      "10j < 4,7%",
+      "Akkoord VS–Iran"
+     ],
+     "impact": {
+      "vwce": 2,
+      "smh": 2,
+      "crcl": 0,
+      "gold": 0,
+      "btc": 2
+     },
+     "actions": [
+      "VWCE en SMH: dit is hun scenario; vaste inleg door, SMH mag terug naar je normale weging.",
+      "Bitcoin profiteert van lagere rente.",
+      "Circle: iets minder rente-inkomsten, maar beter crypto-sentiment.",
+      "Goud houden als bescherming; minder vraag naar een veilige haven."
+     ]
+    }
+   ],
+   "positions": [
+    {
+     "id": "vwce",
+     "short": "VWCE",
+     "name": "VWCE (wereldaandelen)",
+     "tickers": "Vanguard FTSE All-World (VWCE, Xetra/Euronext)",
+     "role": "Kern van je vermogen · brede aandelenmarkt",
+     "stance": "aanhouden",
+     "stanceNote": "Vaste inleg mag doorlopen; geen grote extra aankopen zolang de waardering op recordhoogte staat.",
+     "myWeight": null,
+     "now": "VWCE staat rond €170, vlak onder de top van €173,96. Ongeveer 60–65% zit in Amerikaanse aandelen en een flink deel in dezelfde techreuzen als in SMH. De S&P 500 staat 1,2% onder zijn record (7.819 op 6 okt) en de waardering is uitzonderlijk hoog (CAPE 40,7, de Buffett-indicator 288%). Dat zegt weinig over de komende weken, maar wel dat de rendementen over 10 jaar laag kunnen uitvallen en dat een correctie hard kan zijn.",
+     "bull": [
+      "Sterke kwartaalcijfers van de techreuzen",
+      "De-escalatie in het Midden-Oosten: olie omlaag, rente omlaag",
+      "De Fed is klaar met verhogen",
+      "Lage werkloosheid houdt de winsten op peil"
+     ],
+     "bear": [
+      "Waardering op het niveau van 2000",
+      "10-jaarsrente boven 5% drukt de koers-winstverhoudingen",
+      "Olie boven $115 houdt de inflatie hoog",
+      "Een correctie van 20% of meer bij een AI-tegenvaller"
+     ],
+     "levels": [
+      {
+       "label": "VWCE €174",
+       "meaning": "Top van het afgelopen jaar; erboven staat de trend weer vol omhoog."
+      },
+      {
+       "label": "VWCE ~€156 (−10% van de top)",
+       "meaning": "Correctie: hier mag een extra tranche, als de Sahm-regel onder 0,3 blijft."
+      },
+      {
+       "label": "VWCE ~€139 (−20%)",
+       "meaning": "Bearmarkt, ongeveer het dieptepunt van het afgelopen jaar. Alleen bijkopen met een plan, in stappen."
+      },
+      {
+       "label": "S&P 500 7.040",
+       "meaning": "10% onder het record; dan is het geen dipje meer."
+      }
+     ],
+     "rules": [
+      "Vaste maandelijkse inleg gaat door; je koopt dan vanzelf meer als het goedkoper is.",
+      "Extra bijkopen alleen in tranches: bij −10% en −20% vanaf de top, en alleen zolang de Sahm-regel onder 0,5 blijft.",
+      "Niet verkopen op een gevoel. Verklein alleen als je maximumweging wordt overschreden.",
+      "Stel zelf een maximum voor aandelen vast (VWCE + SMH samen) en houd je eraan."
+     ],
+     "catalysts": [
+      "Fed-besluit 28 okt",
+      "Techcijfers 28–30 okt",
+      "Verkiezingen VS 3 nov",
+      "Banencijfers 6 nov",
+      "CPI 10 nov"
+     ]
+    },
+    {
+     "id": "smh",
+     "short": "SMH",
+     "name": "SMH (chips en AI)",
+     "tickers": "VanEck Semiconductor ETF (SMH)",
+     "role": "Groeimotor · geconcentreerde AI-gok",
+     "stance": "voorzichtig",
+     "stanceNote": "Niet bijkopen tot de AI-investeringsplannen van de techreuzen bevestigd zijn.",
+     "myWeight": null,
+     "now": "SMH sloot op 27 okt op $557,98 (+3,0%), 17% onder de top van $671,83. Chips herstelden deze week (SOX +3,6% op 27 okt, SK Hynix winst +632%), na de uitverkoop van half oktober. De grote toets komt nu: Microsoft en Alphabet melden vanavond hun cijfers en hun investeringen in AI, Meta, Amazon en Apple later deze week. Blijven die investeringen groeien, dan houdt het chipverhaal stand; worden ze afgeremd, dan raakt dat SMH als eerste en het hardst.",
+     "bull": [
+      "Hogere AI-investeringen (capex) bij Microsoft, Alphabet, Meta en Amazon",
+      "Sterke cijfers van Nvidia (half/eind november)",
+      "Dalende rente",
+      "Geheugen- en chipprijzen stijgen (SK Hynix)"
+     ],
+     "bear": [
+      "Capex-plannen worden afgeremd of uitgesteld",
+      "Waardering op het niveau van 2000 (de Nasdaq viel toen 78%)",
+      "Reële rente blijft rond 2,7%",
+      "Spanningen rond Taiwan of exportregels"
+     ],
+     "levels": [
+      {
+       "label": "SMH $600",
+       "meaning": "Herovering op weekslot = herstel bevestigd."
+      },
+      {
+       "label": "SMH $500",
+       "meaning": "Ronde steun, ongeveer −25% van de top. Weekslot eronder = verkleinen."
+      },
+      {
+       "label": "SMH $672",
+       "meaning": "Top van het jaar."
+      }
+     ],
+     "rules": [
+      "Niet bijkopen vóór de techcijfers van deze week en Nvidia in november.",
+      "Weekslot onder $500: verklein met een derde.",
+      "Snijden de grote techbedrijven in hun AI-uitgaven, dan verklein je, ook als de koers nog goed staat.",
+      "Houd SMH klein naast VWCE: in VWCE zitten dezelfde chipbedrijven al."
+     ],
+     "catalysts": [
+      "Microsoft en Alphabet 28 okt",
+      "Meta, Amazon, Apple later deze week",
+      "Nvidia half/eind november",
+      "Fed-besluit 28 okt"
+     ]
+    },
+    {
+     "id": "crcl",
+     "short": "Circle",
+     "name": "Circle (CRCL)",
+     "tickers": "Circle Internet Group (CRCL)",
+     "role": "Rente- en stablecoinverhaal · verdient aan hoge rente",
+     "stance": "aanhouden",
+     "stanceNote": "Houden tot de kwartaalcijfers van 4 november; beslis dan op de groei van USDC.",
+     "myWeight": null,
+     "now": "CRCL sloot op 27 okt op $81,58, ver onder de top van $147,44 maar ook ver boven de bodem van $49,90. Goed nieuws: op 21 okt stelde de toezichthouder OCC de regels onder de GENIUS-wet vast (+6% die dag). Minder goed: Mizuho verlaagde zijn koersdoel en waarschuwt dat AI-agenten de vraag naar USDC kunnen raken. Circle verdient het meest aan de rente over de reserves achter USDC, dus een Fed die hoog blijft helpt; renteverlagingen kosten direct inkomsten.",
+     "bull": [
+      "Fed blijft hoog of verhoogt in december",
+      "Groei van USDC in omloop",
+      "Duidelijke regels (GENIUS-wet, OCC)",
+      "Herstel van crypto"
+     ],
+     "bear": [
+      "Renteverlagingen: minder rente-inkomsten",
+      "Lagere marge door afdrachten aan distributiepartners",
+      "Concurrentie van andere stablecoins",
+      "Crypto-sentiment slaat om"
+     ],
+     "levels": [
+      {
+       "label": "CRCL $70",
+       "meaning": "Steun; eronder verder richting de bodem van $49,90."
+      },
+      {
+       "label": "CRCL $100",
+       "meaning": "Herovering = het herstel krijgt vaart."
+      }
+     ],
+     "rules": [
+      "Beslis na de cijfers van 4 november: groeit USDC in omloop, dan houden; krimpt het, dan verkleinen.",
+      "Draait de Fed naar renteverlagingen, verklein dan, want dat raakt de kern van het verdienmodel.",
+      "Circle en bitcoin hangen samen aan crypto: tel ze samen voor je maximum."
+     ],
+     "catalysts": [
+      "Fed-besluit 28 okt",
+      "Kwartaalcijfers 4 nov",
+      "Fed december"
+     ]
+    },
+    {
+     "id": "gold",
+     "short": "Goud",
+     "name": "Goud",
+     "tickers": "Fysiek goud of een goud-ETF/ETC",
+     "role": "Bescherming · tegenwicht voor aandelen",
+     "stance": "aanhouden",
+     "stanceNote": "Houden als bescherming; bijkopen pas als de reële rente duidelijk daalt.",
+     "myWeight": null,
+     "now": "Goud staat rond $4.055, al vier dagen onder $4.100 en 5,6% lager dan een maand geleden. Het record van $5.590 (28 jan) is 27% hoger. Zilver zakte naar ~$53 (goud/zilver-ratio 75). De rem is de hoge reële rente (2,66%), al zakte die iets (half oktober 2,78%). Olie boven $115 en het oorlogsrisico houden de vraag naar bescherming wel op peil, en centrale banken blijven kopen.",
+     "bull": [
+      "Reële rente daalt (Fed stopt met verhogen of draait)",
+      "Escalatie in het Midden-Oosten",
+      "Zwakkere dollar",
+      "Aankopen door centrale banken"
+     ],
+     "bear": [
+      "Fed verhoogt in december",
+      "Reële rente blijft boven 2,5%",
+      "Sterke dollar",
+      "Gedwongen verkopen bij een paniek op de beurs (goud daalt dan eerst mee)"
+     ],
+     "levels": [
+      {
+       "label": "Goud $4.000",
+       "meaning": "Cruciale steun. Weekslot eronder: niet bijkopen, eerst wachten."
+      },
+      {
+       "label": "Goud $4.200–4.450",
+       "meaning": "Herovering op weekslot = de trend draait weer omhoog."
+      },
+      {
+       "label": "Reële rente 2,0%",
+       "meaning": "Daalt die eronder, dan krijgt goud weer wind mee."
+      }
+     ],
+     "rules": [
+      "Goud is je bescherming: niet verkopen om verliezen elders te dekken.",
+      "Bijkopen in tranches als de reële rente onder 2% zakt of goud weer boven $4.450 sluit.",
+      "Weekslot onder $4.000: niet bijkopen tot het niveau op weekbasis is heroverd."
+     ],
+     "catalysts": [
+      "Fed-besluit 28 okt",
+      "Banencijfers 6 nov",
+      "CPI 10 nov",
+      "Olie en het Midden-Oosten"
+     ]
+    },
+    {
+     "id": "btc",
+     "short": "Bitcoin",
+     "name": "Bitcoin",
+     "tickers": "BTC",
+     "role": "Liquiditeitsgok · laat in de dalende fase van de 4-jaarscyclus",
+     "stance": "aanhouden",
+     "stanceNote": "Houden; hooguit kleine tranches bij zwakte, de bodem is nog niet bevestigd.",
+     "myWeight": null,
+     "now": "Bitcoin staat rond $80.500, 36% onder de top van oktober 2025 (boven $126.000). Volgens het patroon van de 4-jaarscyclus valt de bodem ongeveer nu (najaar 2026), maar dat is een gemiddelde, geen belofte. Wat bitcoin nu tegenhoudt: hoge reële rente en een Fed die eerder verhoogt dan verlaagt.",
+     "bull": [
+      "Fed draait naar verlagingen of meer liquiditeit",
+      "Instroom in bitcoin-ETF's",
+      "Bodem van de 4-jaarscyclus",
+      "Zwakkere dollar"
+     ],
+     "bear": [
+      "Fed verhoogt in december",
+      "Risk-off op de beurs (bitcoin valt dan mee)",
+      "Een val onder $75.000 opent de weg naar $65.000"
+     ],
+     "levels": [
+      {
+       "label": "BTC $75.000",
+       "meaning": "Steun; eronder verder richting $65.000."
+      },
+      {
+       "label": "BTC $90.000",
+       "meaning": "Weekslot erboven = bodem waarschijnlijk achter de rug."
+      },
+      {
+       "label": "BTC $65.000",
+       "meaning": "Zware steun; ongeveer −50% van de top, gebruikelijk diep voor een bearmarkt."
+      }
+     ],
+     "rules": [
+      "Bijkopen alleen in kleine tranches: onder $75.000, of na een weekslot boven $90.000.",
+      "Niet bijlenen of hefboom gebruiken.",
+      "Tel bitcoin en Circle samen voor je maximum aan crypto."
+     ],
+     "catalysts": [
+      "Fed-besluit 28 okt",
+      "Fed december",
+      "Verkiezingen VS 3 nov"
+     ]
+    }
+   ],
+   "triggers": [
+    {
+     "id": "t_10y",
+     "label": "US 10-jaarsrente",
+     "marketKey": "us10y",
+     "unit": "%",
+     "dir": "up",
+     "warn": 5.0,
+     "danger": 5.36,
+     "pillar": "rente",
+     "meaning": "Hoofdvariabele. Boven 5% staan VWCE, SMH, goud en bitcoin onder druk; alleen Circle profiteert.",
+     "affects": [
+      "vwce",
+      "smh",
+      "gold",
+      "btc",
+      "crcl"
+     ]
+    },
+    {
+     "id": "t_real",
+     "label": "Reële rente 10j (TIPS)",
+     "marketKey": "realYield10",
+     "unit": "%",
+     "dir": "up",
+     "warn": 2.0,
+     "danger": 2.5,
+     "pillar": "rente",
+     "meaning": "Grootste rem op goud en groeiaandelen. Onder 2% krijgt goud weer wind mee.",
+     "affects": [
+      "gold",
+      "smh",
+      "btc"
+     ]
+    },
+    {
+     "id": "t_30y",
+     "label": "US 30-jaarsrente",
+     "marketKey": "us30y",
+     "unit": "%",
+     "dir": "up",
+     "warn": 5.4,
+     "danger": 5.7,
+     "pillar": "rente",
+     "meaning": "Boven 5,7% (de piek sinds 2002) breekt er iets in de obligatiemarkt.",
+     "affects": [
+      "vwce",
+      "smh"
+     ]
+    },
+    {
+     "id": "t_brent",
+     "label": "Brent-olie",
+     "marketKey": "brent",
+     "unit": "$",
+     "dir": "up",
+     "warn": 100,
+     "danger": 120,
+     "pillar": "inflatie",
+     "meaning": "Boven $120 wordt een Fed-verhoging in december vrijwel zeker: slecht voor aandelen en bitcoin.",
+     "affects": [
+      "vwce",
+      "smh",
+      "btc"
+     ]
+    },
+    {
+     "id": "t_be",
+     "label": "Inflatieverwachting 10j",
+     "marketKey": "breakeven10",
+     "unit": "%",
+     "dir": "up",
+     "warn": 2.6,
+     "danger": 3.0,
+     "pillar": "inflatie",
+     "meaning": "Stijgt deze, dan gelooft de markt de inflatie wél: goed voor goud, slecht voor obligaties.",
+     "affects": [
+      "gold",
+      "vwce"
+     ]
+    },
+    {
+     "id": "t_cpi",
+     "label": "CPI-inflatie (j/j)",
+     "marketKey": "cpiYoY",
+     "current": 3.7,
+     "asOf": "sep, gepubliceerd 14 okt",
+     "unit": "%",
+     "dir": "up",
+     "warn": 3.5,
+     "danger": 4.0,
+     "pillar": "inflatie",
+     "meaning": "Boven 4% wordt een extra Fed-verhoging waarschijnlijk.",
+     "affects": [
+      "vwce",
+      "smh",
+      "btc",
+      "crcl"
+     ]
+    },
+    {
+     "id": "t_jobs",
+     "label": "Banengroei, gem. 3 mnd",
+     "marketKey": "nfp3m",
+     "current": 51,
+     "asOf": "jul −10k, aug +133k, sep +29k",
+     "unit": "Δk",
+     "dir": "down",
+     "warn": 75,
+     "danger": 0,
+     "pillar": "groei",
+     "meaning": "Onder nul = groeischok: goed voor goud, slecht voor Circle, SMH en VWCE.",
+     "affects": [
+      "gold",
+      "crcl",
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "id": "t_claims",
+     "label": "WW-aanvragen (wekelijks)",
+     "marketKey": "claims",
+     "unit": "k",
+     "dir": "up",
+     "warn": 260,
+     "danger": 300,
+     "pillar": "groei",
+     "meaning": "Loopt dit op, dan beginnen de ontslagen en wordt het groeischok-scenario actueel.",
+     "affects": [
+      "vwce",
+      "crcl",
+      "gold"
+     ]
+    },
+    {
+     "id": "t_sahm",
+     "label": "Sahm-regel (recessiesignaal)",
+     "marketKey": "sahm",
+     "unit": "",
+     "dir": "up",
+     "warn": 0.3,
+     "danger": 0.5,
+     "pillar": "groei",
+     "meaning": "Vanaf 0,5 nemen de ontslagen echt toe. Dan stop je met extra bijkopen van VWCE.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold"
+     ]
+    },
+    {
+     "id": "t_dxy",
+     "label": "Dollarindex",
+     "marketKey": "dxy",
+     "unit": "",
+     "dir": "up",
+     "warn": 103,
+     "danger": 105,
+     "pillar": "dollar",
+     "meaning": "Sterke dollar drukt goud en bitcoin.",
+     "affects": [
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "id": "t_jpy",
+     "label": "USD/JPY",
+     "marketKey": "usdjpy",
+     "unit": "",
+     "dir": "up",
+     "warn": 158,
+     "danger": 160,
+     "pillar": "dollar",
+     "meaning": "Boven 160 dreigt ingrijpen door Japan: carry-trades worden snel afgebouwd.",
+     "affects": [
+      "smh",
+      "btc",
+      "vwce"
+     ]
+    },
+    {
+     "id": "t_hy",
+     "label": "Junk-spread (HY OAS)",
+     "marketKey": "hySpread",
+     "unit": "%",
+     "dir": "up",
+     "warn": 4.0,
+     "danger": 5.0,
+     "pillar": "krediet",
+     "meaning": "Boven 5% is er kredietstress: risk-off.",
+     "affects": [
+      "vwce",
+      "smh",
+      "btc"
+     ]
+    },
+    {
+     "id": "t_credit",
+     "label": "Private credit: uitstapverzoeken",
+     "current": 16.8,
+     "asOf": "Blue Owl OCIC Q3 (Q2: 18,8%), plafond 5%",
+     "unit": "%",
+     "dir": "up",
+     "warn": 10,
+     "danger": 25,
+     "pillar": "krediet",
+     "meaning": "Hoe ver de vraag naar uitstap boven het plafond ligt: maat voor kredietstress.",
+     "affects": [
+      "vwce",
+      "smh"
+     ]
+    },
+    {
+     "id": "t_netliq",
+     "label": "Netto liquiditeit, 4 weken",
+     "marketKey": "netLiqChg",
+     "unit": "Δ$mld",
+     "dir": "down",
+     "warn": -50,
+     "danger": -150,
+     "pillar": "liquiditeit",
+     "meaning": "Daalt de liquiditeit hard, dan verliezen bitcoin en groeiaandelen hun steun.",
+     "affects": [
+      "btc",
+      "smh",
+      "crcl"
+     ]
+    },
+    {
+     "id": "t_vix",
+     "label": "VIX (angstindex)",
+     "marketKey": "vix",
+     "unit": "",
+     "dir": "up",
+     "warn": 22,
+     "danger": 30,
+     "pillar": "sentiment",
+     "meaning": "Boven 30 = paniekmodus; dan geen nieuwe posities openen, wel de tranches voor VWCE klaarzetten.",
+     "affects": [
+      "vwce",
+      "smh",
+      "btc"
+     ]
+    },
+    {
+     "id": "t_dd",
+     "label": "S&P 500 onder het record",
+     "marketKey": "spxDD",
+     "unit": "%",
+     "dir": "down",
+     "warn": -10,
+     "danger": -20,
+     "pillar": "sentiment",
+     "meaning": "−10% is een correctie (eerste tranche VWCE), −20% een bearmarkt (tweede tranche).",
+     "affects": [
+      "vwce",
+      "smh"
+     ]
+    },
+    {
+     "id": "t_smh",
+     "label": "SMH (chips)",
+     "marketKey": "smh",
+     "unit": "$",
+     "dir": "down",
+     "warn": 530,
+     "danger": 500,
+     "pillar": "posities",
+     "meaning": "Weekslot onder $500: verklein SMH met een derde.",
+     "affects": [
+      "smh"
+     ]
+    },
+    {
+     "id": "t_gold",
+     "label": "Goud",
+     "marketKey": "gold",
+     "unit": "$",
+     "dir": "down",
+     "warn": 4100,
+     "danger": 4000,
+     "pillar": "posities",
+     "meaning": "Weekslot onder $4.000: niet bijkopen tot het is heroverd.",
+     "affects": [
+      "gold"
+     ]
+    },
+    {
+     "id": "t_btc",
+     "label": "Bitcoin",
+     "marketKey": "btc",
+     "unit": "$",
+     "dir": "down",
+     "warn": 75000,
+     "danger": 65000,
+     "pillar": "posities",
+     "meaning": "Onder $75.000 opent de weg naar $65.000; crypto-sentiment stuurt ook Circle.",
+     "affects": [
+      "btc",
+      "crcl"
+     ]
+    },
+    {
+     "id": "t_crcl",
+     "label": "Circle",
+     "marketKey": "crcl",
+     "unit": "$",
+     "dir": "down",
+     "warn": 75,
+     "danger": 70,
+     "pillar": "posities",
+     "meaning": "Onder $70 verder richting de bodem van $49,90.",
+     "affects": [
+      "crcl"
+     ]
+    },
+    {
+     "id": "t_chips",
+     "label": "Chip-stress: Kospi dagbeweging",
+     "marketKey": "kospiDay",
+     "current": -7.6,
+     "asOf": "15 okt",
+     "unit": "%",
+     "dir": "down",
+     "warn": -3,
+     "danger": -6,
+     "pillar": "sentiment",
+     "meaning": "Een grote daling in Korea ging eerder vooraf aan druk op Nvidia en SMH.",
+     "affects": [
+      "smh"
+     ]
+    }
+   ],
+   "exposure": {
+    "factors": [
+     "Rente ↑",
+     "Olie ↑",
+     "Dollar ↑",
+     "Goud ↑",
+     "AI-capex ↑",
+     "Crypto ↑",
+     "Kredietstress ↑"
+    ],
+    "rows": [
+     {
+      "id": "vwce",
+      "values": [
+       -1,
+       -1,
+       1,
+       0,
+       1,
+       0,
+       -2
+      ]
+     },
+     {
+      "id": "smh",
+      "values": [
+       -2,
+       -1,
+       0,
+       0,
+       2,
+       0,
+       -2
+      ]
+     },
+     {
+      "id": "crcl",
+      "values": [
+       2,
+       0,
+       0,
+       0,
+       0,
+       2,
+       -1
+      ]
+     },
+     {
+      "id": "gold",
+      "values": [
+       -2,
+       1,
+       -1,
+       2,
+       0,
+       0,
+       1
+      ]
+     },
+     {
+      "id": "btc",
+      "values": [
+       -2,
+       0,
+       -1,
+       0,
+       0,
+       2,
+       -2
+      ]
+     }
+    ],
+    "note": "+2 = profiteert sterk, −2 = lijdt sterk als die factor stijgt. Bij VWCE: een sterkere dollar maakt je Amerikaanse aandelen in euro's meer waard. Eigen inschatting."
+   },
+   "calendar": [
+    {
+     "date": "2026-10-28",
+     "time": "19:00",
+     "event": "Fed-rentebesluit en persconferentie Warsh (19:30)",
+     "why": "Markt rekende op een pauze op 3,75–4,00% (FedWatch ~91%). Let op de toon over december.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2026-10-28",
+     "time": "nabeurs",
+     "event": "Cijfers Microsoft en Alphabet",
+     "why": "Hoeveel ze in AI blijven investeren: de kern onder SMH.",
+     "affects": [
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-10-29",
+     "time": "",
+     "event": "Cijfers Meta, Amazon en Apple (later deze week, controleer de datum)",
+     "why": "Bevestigen of temperen de AI-investeringen.",
+     "affects": [
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-11-03",
+     "time": "",
+     "event": "Verkiezingen VS (midterms)",
+     "why": "Volgens Trading Economics groeit de vrees dat de strijd VS–Iran daarna wordt hervat: olierisico.",
+     "affects": [
+      "vwce",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2026-11-04",
+     "time": "nabeurs",
+     "event": "Kwartaalcijfers Circle (Q3)",
+     "why": "Groei van USDC in omloop en de marge: beslismoment voor CRCL.",
+     "affects": [
+      "crcl"
+     ]
+    },
+    {
+     "date": "2026-11-06",
+     "time": "14:30",
+     "event": "Banencijfers VS (oktober)",
+     "why": "Negatief = groeischok: goed voor goud, slecht voor Circle en aandelen.",
+     "affects": [
+      "gold",
+      "crcl",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-11-10",
+     "time": "14:30",
+     "event": "CPI-inflatie VS (oktober)",
+     "why": "Boven 4% maakt een verhoging in december vrijwel zeker.",
+     "affects": [
+      "vwce",
+      "smh",
+      "btc",
+      "gold"
+     ]
+    },
+    {
+     "date": "2026-11-18",
+     "time": "nabeurs",
+     "event": "Cijfers Nvidia (verwacht half/eind november, nog niet bevestigd)",
+     "why": "Grootste toets voor SMH.",
+     "affects": [
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-12-09",
+     "time": "20:00",
+     "event": "Fed-rentebesluit december",
+     "why": "Op Wall Street wordt een verhoging breed verwacht.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    }
+   ]
+  },
+  "macro": {
+   "updatedAt": "2026-10-28T19:30:00+01:00",
+   "source": "Update door Claude, cijfers t/m 28 okt 2026",
+   "riskMode": "defensief",
+   "regime": "Stagflatie-light",
+   "headline": "Olie trekt weer aan, de rente blijft de spil",
+   "summary": "Brent staat weer rond $115 na aanvallen op een Saudische raffinaderij, en de inflatie (3,7%) gaat daardoor niet snel omlaag. De Fed besluit vandaag om 19:00; de markt rekende op een pauze, en een verhoging in december wordt breed verwacht. De 10-jaarsrente staat rond 5,0%. Aandelen houden stand dankzij herstel in de chips; goud, zilver en bitcoin hebben last van de hoge reële rente.",
+   "compass": {
+    "growth": -0.25,
+    "inflation": 0.6,
+    "heading": {
+     "growth": -0.1,
+     "inflation": 0.1
+    },
+    "why": "Groei koelt licht af, maar het consumentenvertrouwen verraste (91,7). Inflatie stijgt verder door de dure olie. Met een reële rente van 2,7% krijgt goud nog geen wind mee."
+   },
+   "keyPoints": [
+    {
+     "tone": "bad",
+     "title": "Olie weer boven $110",
+     "text": "Brent ~$115, +20% in een maand: aanval op een Saudische raffinaderij, vredesvoorstel afgewezen. Na de verkiezingen van 3 nov dreigt hervatting van de strijd VS–Iran."
+    },
+    {
+     "tone": "warn",
+     "title": "Fed: pauze nu, december open",
+     "text": "Range 3,75–4,00%. Markt rekende op een pauze (FedWatch ~91%), een verhoging in december wordt breed verwacht."
+    },
+    {
+     "tone": "warn",
+     "title": "Rente blijft hoog",
+     "text": "10-jaars ~5,0%, 30-jaars 5,31%, reële rente 2,66%. Lastig voor VWCE, SMH, goud en bitcoin; goed voor Circle."
+    },
+    {
+     "tone": "good",
+     "title": "Chips herstellen",
+     "text": "SOX +3,6% op 27 okt, SMH $558 (17% onder de top). Microsoft en Alphabet melden vanavond hun AI-investeringen."
+    },
+    {
+     "tone": "warn",
+     "title": "Krediet loopt langzaam op",
+     "text": "Junk-spread 3,38% (half oktober 3,16%). Nog rustig, maar de richting is omhoog."
+    },
+    {
+     "tone": "bad",
+     "title": "Waardering blijft extreem",
+     "text": "CAPE 40,7 en de Buffett-indicator 288%: vergelijkbaar met 2000. Weinig ruimte voor tegenvallers."
+    }
+   ],
+   "pillars": [
+    {
+     "id": "inflatie",
+     "stage": 1,
+     "name": "Inflatie & energie",
+     "q": "Wordt geld minder waard?",
+     "status": "stress",
+     "keys": [
+      "cpiYoY",
+      "breakeven10",
+      "brent"
+     ],
+     "reading": "CPI 3,7% en olie fors hoger: Brent ~$115, +20% in een maand. De kans op een Fed-verhoging in december stijgt mee.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 1,
+      "gold": 1,
+      "btc": -1
+     }
+    },
+    {
+     "id": "groei",
+     "stage": 1,
+     "name": "Groei & werk",
+     "q": "Draait de economie?",
+     "status": "gespannen",
+     "keys": [
+      "nfp3m",
+      "unrate",
+      "claims"
+     ],
+     "reading": "Banengroei bijna nul en werkloosheid 4,2%, maar weinig ontslagen. Afkoeling, geen krimp.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": -1,
+      "gold": 1,
+      "btc": 0
+     }
+    },
+    {
+     "id": "rente",
+     "stage": 2,
+     "name": "Rente & obligaties",
+     "q": "Wat kost geld?",
+     "status": "stress",
+     "keys": [
+      "us10y",
+      "us30y",
+      "realYield10"
+     ],
+     "reading": "Fed-rente 3,75–4,00%. 10-jaars ~5,0%, 30-jaars 5,31% (piek 5,73%). De reële rente zakte iets naar 2,66% maar blijft de grootste rem op goud, chips en bitcoin.",
+     "effects": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": 2,
+      "gold": -2,
+      "btc": -2
+     }
+    },
+    {
+     "id": "liquiditeit",
+     "stage": 2,
+     "name": "Liquiditeit",
+     "q": "Is er geld in het systeem?",
+     "status": "gespannen",
+     "keys": [
+      "netLiq",
+      "netLiqChg"
+     ],
+     "reading": "Fed-balans $6,75 bln (21 okt), vlak. Geen nieuwe steun voor bitcoin en groeiaandelen.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 0,
+      "gold": 0,
+      "btc": -2
+     }
+    },
+    {
+     "id": "dollar",
+     "stage": 3,
+     "name": "Dollar & yen",
+     "q": "Is de dollar schaars?",
+     "status": "rustig",
+     "keys": [
+      "dxy",
+      "usdjpy"
+     ],
+     "reading": "Dollar neutraal rond 102. De yen staat bij 158: boven 160 grijpt Japan in. De BOJ beslist op 30 oktober.",
+     "effects": {
+      "vwce": 0,
+      "smh": 0,
+      "crcl": 0,
+      "gold": -1,
+      "btc": -1
+     }
+    },
+    {
+     "id": "krediet",
+     "stage": 3,
+     "name": "Krediet",
+     "q": "Breekt er iets?",
+     "status": "gespannen",
+     "keys": [
+      "hySpread"
+     ],
+     "reading": "Junk-spread loopt op naar 3,38% (half oktober 3,16%), nog rustig. Private credit blijft onder druk.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 0,
+      "gold": 0,
+      "btc": -1
+     }
+    },
+    {
+     "id": "sentiment",
+     "stage": 3,
+     "name": "Sentiment & AI",
+     "q": "Hoe zit de markt erin?",
+     "status": "gespannen",
+     "keys": [
+      "vix",
+      "kospi",
+      "btc"
+     ],
+     "reading": "Chips herstellen (SOX +3,6% op 27 okt), VIX 17,5. De techcijfers van deze week en Nvidia in november beslissen of het AI-verhaal standhoudt.",
+     "effects": {
+      "vwce": -1,
+      "smh": -2,
+      "crcl": -1,
+      "gold": 0,
+      "btc": -1
+     }
+    }
+   ],
+   "positionImpact": {
+    "vwce": {
+     "dir": 0,
+     "why": "Beurs houdt stand, maar de hoge rente en waardering beperken de ruimte."
+    },
+    "smh": {
+     "dir": 0,
+     "why": "Chips herstellen; de capex-cijfers van deze week beslissen de richting."
+    },
+    "crcl": {
+     "dir": 1,
+     "why": "Een Fed die hoog blijft betekent meer rente-inkomsten; duidelijke regels sinds 21 okt."
+    },
+    "gold": {
+     "dir": -1,
+     "why": "Hoge reële rente drukt, al houdt het oorlogsrisico de vraag op peil."
+    },
+    "btc": {
+     "dir": -1,
+     "why": "Geen nieuwe liquiditeit en een Fed die eerder verhoogt dan verlaagt."
+    }
+   },
+   "cycle": {
+    "updatedAt": "2026-10-28T19:30:00+01:00",
+    "cycles": [
+     {
+      "id": "sentiment",
+      "pos": 0.56,
+      "why": "De S&P 500 staat 1,2% onder zijn record van 6 oktober, de waardering (CAPE 40,7) zit dicht bij het record van 2000 en er is ~$1,5 bln geleend om aandelen te kopen (record). De angst is laag (VIX 17,5) en chips herstellen: het patroon van net over de top.",
+      "extra": [
+       {
+        "label": "Goud & zilver",
+        "pos": 0.78,
+        "why": "Hun euforie was in januari (goud $5.590, zilver boven $121). Sindsdien goud −27% en zilver −56%: ze zitten in de dalende helft van hun eigen cyclus."
+       }
+      ]
+     },
+     {
+      "id": "credit",
+      "pos": 0.58,
+      "why": "De junk-spread loopt langzaam op (3,38%, half oktober 3,16%) maar is nog laag. Private credit kraakt: wanbetalingen op een record (Fitch: 6,0%) en fondsen laten maar 5% per kwartaal uitstappen."
+     },
+     {
+      "id": "economy",
+      "pos": 0.55,
+      "why": "De inflatie loopt op (3,7%) door olie rond $115, de Fed verhoogde in september en december ligt open. De banengroei is zwak (+29k in september) maar ontslagen blijven laag (Sahm-regel 0,0) en het consumentenvertrouwen verraste (91,7)."
+     }
+    ]
+   }
+  },
+  "claimsAdd": [
+   {
+    "text": "De Fed pauzeert op 28 oktober en verhoogt in december.",
+    "source": "Marktverwachting (FedWatch, Quartz, Reuters)",
+    "date": "2026-10-28",
+    "status": "open",
+    "note": "FedWatch ~91% pauze op 28 okt. Controleer het besluit en de toon van Warsh."
+   },
+   {
+    "text": "AI-agenten kunnen de vraag naar USDC raken.",
+    "source": "Mizuho (koersdoel Circle verlaagd)",
+    "date": "2026-10-26",
+    "status": "open",
+    "note": "Mening van een analist; toets aan de USDC-groei in de cijfers van 4 nov."
+   }
+  ],
+  "claimsUpdate": [
+   {
+    "text": "Olie naar $100+ bij escalatie rond Hormuz.",
+    "status": "bevestigd",
+    "note": "Brent ~$115 op 28 okt (+20% in een maand)."
+   },
+   {
+    "text": "Record margin debt ($1,42 bln) maakt de markt kwetsbaar.",
+    "note": "FINRA augustus: ~$1,5 bln, nog een record."
+   },
+   {
+    "text": "AI-euforie houdt de aandelenmarkt overeind.",
+    "note": "Chips herstelden eind oktober (SOX +3,6% op 27 okt). De cijfers van 28–30 okt en Nvidia in november beslissen."
+   }
+  ],
+  "sourcesAdd": [
+   {
+    "label": "Yahoo Finance, live 28 okt (indexen, 10j, olie, goud, BTC, VIX)",
+    "url": "https://finance.yahoo.com/markets/live/stock-market-today-wednesday-october-28-dow-sp-500-nasdaq-fed-meeting-decision-big-tech-earnings-130508769.html"
+   },
+   {
+    "label": "Zacks via Yahoo Finance, slot 27 okt",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-oct-28-081900420.html"
+   },
+   {
+    "label": "Federal Reserve H.15, rentes t/m 26 okt",
+    "url": "https://www.federalreserve.gov/releases/h15/"
+   },
+   {
+    "label": "Yahoo Finance: goud 28 okt (FedWatch 90,6% pauze)",
+    "url": "https://finance.yahoo.com/personal-finance/investing/article/gold-price-today-wednesday-october-28-2026-gold-prices-remain-below-4100-ahead-of-the-fed-rate-decision-110708338.html"
+   },
+   {
+    "label": "Yahoo Finance: zilver 27 okt",
+    "url": "https://finance.yahoo.com/personal-finance/investing/article/silver-price-today-tuesday-october-27-2026-silver-prices-still-losing-ground-one-day-1-of-fed-meetings-112332508.html"
+   },
+   {
+    "label": "Trading Economics: Brent",
+    "url": "https://tradingeconomics.com/commodity/brent-crude-oil"
+   },
+   {
+    "label": "Gotrade: CRCL",
+    "url": "https://www.heygotrade.com/en/us-stock/crcl/"
+   },
+   {
+    "label": "Gotrade: SMH",
+    "url": "https://www.heygotrade.com/en/us-stock/smh/"
+   },
+   {
+    "label": "StockAnalysis: VWCE (Xetra)",
+    "url": "https://stockanalysis.com/quote/etr/VWCE/"
+   },
+   {
+    "label": "MacroRadar: junk-spread",
+    "url": "https://www.macroradar.io/high-yield-spread"
+   },
+   {
+    "label": "thetrading.tools: Shiller-CAPE",
+    "url": "https://www.thetrading.tools/shiller-cape"
+   },
+   {
+    "label": "thetrading.tools: Fed-balans",
+    "url": "https://www.thetrading.tools/fed-balance-sheet"
+   },
+   {
+    "label": "Circle: Q3-cijfers op 4 november",
+    "url": "https://www.circle.com/pressroom/circle-to-announce-q3-2026-financial-results-on-november-4-2026"
+   },
+   {
+    "label": "Crypto Times: OCC stelt stablecoinregels vast (21 okt)",
+    "url": "https://www.cryptotimes.io/2026/10/21/circle-stock-crcl-gains-6-as-occ-finalizes-stablecoin-rules/"
+   },
+   {
+    "label": "First Trust: margin debt",
+    "url": "https://www.ftportfolios.com/Commentary/EconomicResearch/2026/10/15/margin-debt-continues-to-climb"
+   }
+  ]
+ },
+ "watchlistAdd": [
+  {
+   "symbol": "SMH",
+   "name": "Chips-ETF (VanEck)",
+   "kind": "etf"
+  },
+  {
+   "symbol": "GLD",
+   "name": "Goud (ETF, als graadmeter)",
+   "kind": "etf"
+  },
+  {
+   "symbol": "VT",
+   "name": "Wereldaandelen (VT, graadmeter voor VWCE)",
+   "kind": "etf"
+  }
+ ]
+}

@@ -28,7 +28,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import ai, db, health, jobs, mail, patch, quotes, scheduler
+from . import ai, db, health, jobs, mail, patch, quotes, scheduler, updates
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("handelsplan")
@@ -74,6 +74,7 @@ def _seed():
         db.set_doc("plan/current", plan)
         db.set_doc("market/latest", market)
     quotes.ensure_watchlist()
+    notes = list(notes) + updates.apply_all()
     return placed, notes
 
 
