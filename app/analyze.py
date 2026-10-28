@@ -12,7 +12,7 @@ DOC_TYPES = ["transactiebevestiging", "factuur", "rekeningoverzicht", "jaaropgav
              "insider-melding", "nieuwsbrief", "analyse", "overig"]
 MAX_PROMPT_TEXT = 60_000
 
-PROMPT = """Je bent de analist achter het persoonlijke handelsplan van Floris (educatief gebruik). Zijn posities: goud- en zilvermijnen, het aandeel Circle (CRCL), de Magnificent 7 en kleine aandelen op basis van politieke transactiemeldingen (Wolf of Washington).
+PROMPT = """Je bent de analist achter het persoonlijke handelsplan van Floris (educatief gebruik). Zijn posities: {posities}.
 Lees het {wat} hieronder en haal de handelsinformatie eruit. Gebruik alleen wat er echt staat; laat lijsten leeg als iets ontbreekt. Verzin geen bedragen of datums.
 
 Antwoord met ALLEEN dit JSON-object:
@@ -57,6 +57,16 @@ def _clean_dates(v):
     return out[:20]
 
 
+def _positions():
+    """De posities uit het actuele plan, zodat Grok weet waar Floris nu in zit."""
+    try:
+        ps = (db.get_doc("plan/current") or {}).get("positions") or []
+        names = [p.get("name") for p in ps if isinstance(p, dict) and p.get("name")]
+    except db.DBError:
+        names = []
+    return ", ".join(names) or "VWCE, SMH, Circle (CRCL), goud en bitcoin"
+
+
 def analyze_one(doc):
     """doc: rij uit documents met mail-gegevens erbij. Geeft het opgeschoonde resultaat terug."""
     wat = "e-mailbericht" if doc["kind"] == "email" else f"bijlage '{doc['filename']}'"
@@ -67,7 +77,7 @@ def analyze_one(doc):
         ctype = (doc.get("content_type") or "image/jpeg").replace("image/jpg", "image/jpeg")
         images = [(ctype if ctype in ("image/jpeg", "image/png") else "image/jpeg", bytes(doc["blob"]))]
         text = text or "(afbeelding: lees de tekst en cijfers in de afbeelding)"
-    prompt = PROMPT.format(wat=wat, types=", ".join(DOC_TYPES), vandaag=date.today().isoformat(), meta=meta, tekst=text)
+    prompt = PROMPT.format(posities=_positions(), wat=wat, types=", ".join(DOC_TYPES), vandaag=date.today().isoformat(), meta=meta, tekst=text)
     raw, _ = ai.complete(prompt, images=images, max_tokens=1500)
     res = ai.parse_json(raw)
     if not isinstance(res, dict):

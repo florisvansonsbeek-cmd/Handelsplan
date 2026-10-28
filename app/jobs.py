@@ -28,23 +28,24 @@ MONTHS = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", 
 # Cijfers die de taken zelf mogen aanmaken als ze nog niet bestaan
 META = {
     "mags": dict(label="Mag 7-mand (ETF MAGS)", group="Jouw posities", pillar="sentiment", prefix="$", suffix="", decimals=2),
+    "smh": dict(label="Chips-ETF (SMH)", group="Jouw posities", pillar="sentiment", prefix="$", suffix="", decimals=2),
     "netLiqChg": dict(label="Netto liquiditeit, 4 weken", group="Macro", pillar="liquiditeit", prefix="$", suffix=" mld", decimals=0),
     "spxDD": dict(label="S&P 500 t.o.v. record", group="Aandelen", pillar="sentiment", prefix="", suffix="%", decimals=1),
     "sahm": dict(label="Sahm-regel (recessiesignaal)", group="Macro", pillar="groei", prefix="", suffix="", decimals=2),
 }
 
 # Elk halfuur (Twelve Data /price, max 8 symbolen per minuut op het gratis niveau)
-PRICE_TD = {"gold": "XAU/USD", "silver": "XAG/USD", "usdjpy": "USD/JPY", "crcl": "CRCL", "mags": "MAGS"}
+PRICE_TD = {"gold": "XAU/USD", "silver": "XAG/USD", "usdjpy": "USD/JPY", "crcl": "CRCL", "smh": "SMH"}
 
 # Dagelijks: daggrafieken voor niveaus en sparklines
-LEVEL_TD = {"gold": "XAU/USD", "silver": "XAG/USD", "spy": "SPY", "qqq": "QQQ", "mags": "MAGS", "crcl": "CRCL", "usdjpy": "USD/JPY"}
+LEVEL_TD = {"gold": "XAU/USD", "silver": "XAG/USD", "spy": "SPY", "qqq": "QQQ", "smh": "SMH", "crcl": "CRCL", "usdjpy": "USD/JPY"}
 LEVEL_META = {
     "gold": ("Goud", "$", "", 0), "silver": ("Zilver", "$", "", 2), "spy": ("S&P 500 (SPY)", "$", "", 2),
-    "qqq": ("Nasdaq 100 (QQQ)", "$", "", 2), "mags": ("Mag 7 (MAGS)", "$", "", 2), "crcl": ("Circle (CRCL)", "$", "", 2),
+    "qqq": ("Nasdaq 100 (QQQ)", "$", "", 2), "mags": ("Mag 7 (MAGS)", "$", "", 2), "smh": ("Chips (SMH)", "$", "", 2), "crcl": ("Circle (CRCL)", "$", "", 2),
     "usdjpy": ("USD/JPY", "", "", 2), "btc": ("Bitcoin", "$", "", 0), "us10y": ("US 10-jaars", "", "%", 2),
     "wti": ("WTI-olie", "$", "", 2),
 }
-LEVEL_ORDER = ["gold", "silver", "crcl", "mags", "qqq", "spy", "btc", "us10y", "wti", "usdjpy"]
+LEVEL_ORDER = ["spy", "smh", "crcl", "gold", "btc", "silver", "qqq", "us10y", "wti", "usdjpy"]
 
 # FRED-reeksen (gratis). Dagreeksen: laatste waarde + sparkline.
 FRED_DAILY = {

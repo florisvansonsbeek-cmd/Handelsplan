@@ -11,15 +11,14 @@ import httpx
 from . import db
 
 DEFAULT_WATCHLIST = [
-    ("CRCL", "Circle", "aandeel"), ("MAGS", "Mag 7-mand (ETF)", "etf"),
-    ("NVDA", "Nvidia", "aandeel"), ("MSFT", "Microsoft", "aandeel"), ("AAPL", "Apple", "aandeel"),
-    ("GOOGL", "Alphabet", "aandeel"), ("AMZN", "Amazon", "aandeel"), ("META", "Meta", "aandeel"), ("TSLA", "Tesla", "aandeel"),
-    ("GDX", "Goudmijnen (ETF)", "etf"), ("SIL", "Zilvermijnen (ETF)", "etf"), ("BTC", "Bitcoin", "crypto"),
+    ("SMH", "Chips-ETF (VanEck)", "etf"), ("CRCL", "Circle", "aandeel"), ("GLD", "Goud (ETF, als graadmeter)", "etf"),
+    ("BTC", "Bitcoin", "crypto"), ("VT", "Wereldaandelen (VT, graadmeter voor VWCE)", "etf"),
+    ("NVDA", "Nvidia", "aandeel"), ("MSFT", "Microsoft", "aandeel"), ("GDX", "Goudmijnen (ETF)", "etf"),
 ]
 COINGECKO_IDS = {"BTC": "bitcoin", "ETH": "ethereum", "SOL": "solana", "XRP": "ripple", "USDC": "usd-coin",
                  "ADA": "cardano", "DOGE": "dogecoin", "LINK": "chainlink", "AVAX": "avalanche-2", "DOT": "polkadot"}
 # koppeling met de cijfers op de Markt-pagina
-MARKET_KEYS = {"CRCL": "crcl", "MAGS": "mags", "BTC": "btc"}
+MARKET_KEYS = {"CRCL": "crcl", "MAGS": "mags", "BTC": "btc", "SMH": "smh"}
 
 
 def finnhub_key():

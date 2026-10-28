@@ -680,8 +680,11 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
 (() => {
 "use strict";
 /* ================= constants ================= */
-const POS_IDS = ["miners","crcl","mag7","insider"];
-const POS_SHORT = {miners:"Mijnen", crcl:"Circle", mag7:"Mag 7", insider:"Insider"};
+// Posities volgen het plan (plan.positions); dit is alleen de startwaarde.
+const POS_IDS = ["vwce","smh","crcl","gold","btc"];
+const POS_SHORT = {vwce:"VWCE", smh:"SMH", crcl:"Circle", gold:"Goud", btc:"Bitcoin", miners:"Mijnen", mag7:"Mag 7", insider:"Insider"};
+function syncPositions(p){ const ps=arr(p?.positions).filter(x=>x&&x.id); if(!ps.length) return; POS_IDS.splice(0, POS_IDS.length, ...ps.map(x=>x.id)); ps.forEach(x=>{ POS_SHORT[x.id]=x.short||POS_SHORT[x.id]||x.name; }); }
+function posDesc(){ const ps=arr(S.plan?.positions); return ps.length? ps.map(x=>`${x.name} (id ${x.id})`).join(", ") : "VWCE, SMH, Circle (CRCL), goud en bitcoin"; }
 const STANCES = {opbouwen:{label:"Opbouwen",tone:"t-good"}, aanhouden:{label:"Aanhouden",tone:"t-neutral"}, voorzichtig:{label:"Voorzichtig",tone:"t-warn"}, afbouwen:{label:"Afbouwen",tone:"t-bad"}};
 const LV = {rustig:{tone:"t-good",label:"Rustig",rank:0}, gespannen:{tone:"t-warn",label:"Gespannen",rank:1}, stress:{tone:"t-bad",label:"Stress",rank:2}, info:{tone:"t-neutral",label:"Info",rank:-1}};
 const RISK = {"risk-on":{tone:"t-good",label:"Risk-on"}, neutraal:{tone:"t-neutral",label:"Neutraal"}, defensief:{tone:"t-warn",label:"Defensief"}, "risk-off":{tone:"t-bad",label:"Risk-off"}};
@@ -1875,13 +1878,13 @@ const MACRO_RULES = `MARKTBEELD (changes.macro)
 - headline/summary/regime/keyPoints alleen bij een echt ander beeld. keyPoints = precies 6 objecten {"tone":"bad|warn|good","title":"…","text":"…"}.
 - riskMode: risk-on | neutraal | defensief | risk-off. compass: {"growth":-1..1,"inflation":-1..1,"why":"…"} (groei <0 = zwakker, inflatie >0 = stijgend).
 - pillars: bestaande ids (inflatie, groei, rente, liquiditeit, dollar, krediet, sentiment); status rustig|gespannen|stress; reading 1–2 zinnen met cijfers.
-- positionImpact: {"miners":{"dir":-1|0|1,"why":"…"},"crcl":…,"mag7":…,"insider":…}.
+- positionImpact: {"<positie-id>":{"dir":-1|0|1,"why":"…"}} voor elke positie-id uit het plan.
 - cycle (optioneel): {"verdict":"…","summary":"…","cycles":[{"id":"sentiment|credit|economy","pos":0.57,"why":"…"}],"tipping":[{"id":"tp_fund|tp_fed","status":"rustig|gespannen|stress","now":"…"}]}. pos = plek op de golf: 0 = bodem, 0,5 = top, 1 = volgende bodem. Verschuif pos hooguit 0,08 per keer en alleen met een concrete reden uit de cijfers of de bron. Wees eerlijk over onzekerheid: een late fase kan jaren duren.`;
 function analysisPrompt(meta, text){
   const lensId = SOURCE_LENS[meta.source]||null;
   const ids = {scenarios:arr(S.plan.scenarios).map(s=>s.id), macroTriggers:arr(S.plan.triggers).filter(t=>!t.computed && !(t.marketKey && item(t.marketKey))).map(t=>t.id)};
   const lens = lensId? arr(S.plan.macro?.lenses).find(l=>l.id===lensId) : null;
-  return `Je bent de macro-analist achter het persoonlijke handelsplan van Floris (Nederlandse belegger, educatief gebruik). Posities: goud- en zilvermijnen (grootste), het aandeel Circle (CRCL), de Magnificent 7, en kleine aandelen op basis van politieke transactiemeldingen (Wolf of Washington).
+  return `Je bent de macro-analist achter het persoonlijke handelsplan van Floris (Nederlandse belegger, educatief gebruik). Posities: ${posDesc()}.
 
 TAAK: lees het nieuwe transcript of de notitie, haal eruit wat relevant is, en stel kleine, onderbouwde wijzigingen voor.
 
@@ -1891,13 +1894,13 @@ REGELS
 - Scenariokansen alleen bij nieuwe, concrete informatie; max ±10 procentpunt per scenario; totaal 100. Anders null.
 - Houding per positie alleen wijzigen met een reden die naar een signaal of planregel verwijst (opbouwen, aanhouden, voorzichtig, afbouwen).
 - Triggers met handmatige waarde bijwerken mag alleen voor: ${ids.macroTriggers.join(", ")}, met een recenter cijfer uit het transcript.
-- Bij een Wolf of Washington-melding: toets aan de insider-planregels (leeftijd melding, positiegrootte, liquiditeit) en noem dat in keyPoints.
+- Bij een Wolf of Washington-melding: toets aan de planregels (leeftijd melding, positiegrootte, liquiditeit) en noem in keyPoints of het past bij zijn posities.
 ${lens? `- BRIL: de bron is ${meta.source}. Vul changes.macro.lens in met HUN visie uit dit transcript (niet de jouwe): {"id":"${lensId}","take":"hun conclusie in 2-3 zinnen","checks":[{"id":"bestaande-id","answer":"…","status":"rustig|gespannen|stress|info"}],"newChecks":[{"q":"…","answer":"…","status":"…"}]}. Bestaande check-ids: ${arr(lens.checks).map(c=>c.id).join(", ")}. Zegt het transcript niets over een check, laat die dan weg.` : `- changes.macro.lens = null (deze bron heeft geen eigen bril).`}
 ${MACRO_RULES}
 - Schrijf in het Nederlands, kort en concreet. Lege lijsten zijn prima.
 
 Antwoord met ALLEEN dit JSON-object:
-{"summary":"3-5 zinnen: kernboodschap en wat het betekent voor Floris","keyPoints":["max 8 korte punten"],"claims":[{"text":"…","type":"feit|mening|voorspelling","note":"…"}],"signals":[{"indicator":"…","reading":"…","direction":"positief|negatief|neutraal","affects":["miners"]}],"changes":{"scenarioProbabilities":null,"positionStances":[{"id":"miners","stance":"aanhouden","note":"…","reason":"…"}],"triggers":[{"id":"t_fed","current":20,"asOf":"…","reason":"…"}],"calendarAdd":[{"date":"YYYY-MM-DD","time":"","event":"…","why":"…","affects":["mag7"]}],"actionsNow":null,${MACRO_SCHEMA}},"confidence":"laag|middel|hoog","caveats":["…"]}
+{"summary":"3-5 zinnen: kernboodschap en wat het betekent voor Floris","keyPoints":["max 8 korte punten"],"claims":[{"text":"…","type":"feit|mening|voorspelling","note":"…"}],"signals":[{"indicator":"…","reading":"…","direction":"positief|negatief|neutraal","affects":["${POS_IDS[0]}"]}],"changes":{"scenarioProbabilities":null,"positionStances":[{"id":"${POS_IDS[0]}","stance":"aanhouden","note":"…","reason":"…"}],"triggers":[{"id":"t_fed","current":20,"asOf":"…","reason":"…"}],"calendarAdd":[{"date":"YYYY-MM-DD","time":"","event":"…","why":"…","affects":["mag7"]}],"actionsNow":null,${MACRO_SCHEMA}},"confidence":"laag|middel|hoog","caveats":["…"]}
 
 VANDAAG: ${todayISO()}
 HUIDIG PLAN (JSON):
@@ -1913,7 +1916,7 @@ ${text}
 ---`;
 }
 function macroPrompt(){
-  return `Je bent de macro-analist achter het handelsplan van Floris (posities: goud- en zilvermijnen, Circle/CRCL, Magnificent 7, kleine insider-aandelen). Werk het MARKTOVERZICHT bij op basis van de ACTUELE CIJFERS en SIGNALEN hieronder. Verander de brillen (lenses) niet. Wees precies met cijfers en noem ze.
+  return `Je bent de macro-analist achter het handelsplan van Floris (posities: ${posDesc()}). Werk het MARKTOVERZICHT bij op basis van de ACTUELE CIJFERS en SIGNALEN hieronder. Verander de brillen (lenses) niet. Wees precies met cijfers en noem ze.
 
 ${MACRO_RULES}
 - Vul alleen in wat echt verandert; de rest null.
@@ -2304,7 +2307,7 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   S.db=db;
   const onErr=(e)=>{ if(e?.code==="revoked"){ S.offline=true; renderAll(); } else notice(dbErrText(e), true); };
   const seen={}; const changed=(k,d)=>{ const j=JSON.stringify(d??null); if(seen[k]===j) return false; seen[k]=j; return true; };
-  db.doc("plan/current").onSnapshot(s=>{ const d=s.exists? s.data() : null; S.planLoaded=true; if(!changed("plan",d) && S.plan) return; S.plan=d; renderAll(); }, onErr);
+  db.doc("plan/current").onSnapshot(s=>{ const d=s.exists? s.data() : null; S.planLoaded=true; if(!changed("plan",d) && S.plan) return; S.plan=d; syncPositions(d); renderAll(); }, onErr);
   db.doc("market/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("market",d)) return; S.market=d; renderAll(); }, onErr);
   db.doc("market/series").onSnapshot(s=>{ const d=s.exists? (s.data().series||{}) : {}; if(!changed("series",d)) return; S.series=d; renderAll(); }, onErr);
   db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);

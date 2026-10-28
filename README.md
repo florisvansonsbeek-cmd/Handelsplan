@@ -66,6 +66,7 @@ In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uit
 | `app/analyze.py` | Grok-analyse van mails en bijlagen |
 | `app/ai.py` | Koppeling met Grok (xAI), of Claude als je `ANTHROPIC_API_KEY` gebruikt |
 | `app/quotes.py` | Koersen (Finnhub, CoinGecko) |
+| `app/updates.py`, `seed/updates/` | Inhoudelijke updates van plan en cijfers; elke update wordt één keer toegepast bij het starten, met een stap in Historie om terug te zetten |
 | `app/health.py` | Verbindingstest per koppeling (`/api/connections`) |
 | `app/scheduler.py`, `app/jobs.py` | Planner: mail elk kwartier, koersen elk kwartier, macrocijfers 's avonds |
 | `page/handelsplan.html` | De pagina; bij het bouwen wordt hier `app/pages/index.html` van gemaakt |
