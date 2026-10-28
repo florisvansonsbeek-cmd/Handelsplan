@@ -1,0 +1,374 @@
+{
+ "id": "2026-10-28b",
+ "at": "2026-10-28T21:00:00+01:00",
+ "asOf": "2026-10-28",
+ "source": "Update door Claude",
+ "title": "Eenvoudiger plan: wat moet ik doen, Fed-besluit en scherpere cyclusanalyse",
+ "summary": "Bovenaan het plan staat nu per positie wat je doet en bij welk niveau je iets doet; de pagina rekent dat mee met de koersen. Het Fed-besluit van 28 oktober is verwerkt en de cyclusanalyse is aangescherpt met een kantelmeter.",
+ "changelog": [
+  "Per positie: één zin wat je doet, plus de niveaus waarop je wél iets doet (rekent mee met de koersen)",
+  "Drie vaste regels en de komende momenten bovenaan het plan",
+  "Fed 28 okt verwerkt: pauze 3,75–4,00%, 10–2, december ~84% kans op een verhoging",
+  "Cyclus: nieuw oordeel, 1990 als olie-analogie, nieuws van de week en een kantelmeter"
+ ],
+ "market": {
+  "set": {
+   "dxy": {
+    "value": 102.0,
+    "change": "rond 102",
+    "asOf": "28 okt",
+    "src": "Yahoo Finance"
+   },
+   "fedFunds": {
+    "value": 3.88,
+    "change": "range 3,75–4,00% · 28 okt ongewijzigd (10–2)",
+    "asOf": "28 okt",
+    "src": "Federal Reserve"
+   }
+  },
+  "updatedAt": "2026-10-28T21:00:00+01:00",
+  "updatedBy": "Claude (webzoekopdracht)"
+ },
+ "plan": {
+  "replace": {
+   "actionsNow": [
+    "Fed (28 okt): rente blijft 3,75–4,00%, met 2 stemmen voor een verhoging. De markt rekent nu op een verhoging in december (FedWatch ~84%).",
+    "VWCE: vaste inleg door, geen extra aankopen. Eerste extra tranche pas bij −10% vanaf het record.",
+    "SMH: niet bijkopen tot de AI-investeringen (techcijfers deze week, Nvidia in november) bevestigd zijn. Stop: weekslot onder $500.",
+    "Circle: houden tot de kwartaalcijfers van 4 november. Een Fed die hoog blijft, helpt.",
+    "Goud: houden. De verwachte verhoging in december remt; bijkopen pas bij een reële rente onder 2%.",
+    "Bitcoin: houden; hooguit een kleine tranche onder $75.000.",
+    "Zet geld apart voor de tranches en bepaal per positie een maximum."
+   ],
+   "simple": {
+    "headline": "Rustig blijven: houden, niet extra bijkopen. Kijk weer na de verkiezingen (3 nov), Circle (4 nov) en de banencijfers (6 nov).",
+    "rules": [
+     "Doe alleen iets als een niveau hierboven wordt geraakt. Nieuws alleen is geen reden.",
+     "Koop bij in kleine stappen (tranches), nooit alles tegelijk en nooit met geleend geld.",
+     "Houd geld apart voor de tranches. Zonder cash kun je de dip niet kopen."
+    ]
+   }
+  },
+  "positionsPatch": {
+   "vwce": {
+    "priceKey": "vwce",
+    "doLabel": "Houden",
+    "doNow": "Vaste inleg door. Geen extra aankopen zolang de beurs vlak bij het record staat.",
+    "checks": [
+     {
+      "key": "spxDD",
+      "op": "lt",
+      "level": -20,
+      "action": "2e extra tranche",
+      "tone": "good",
+      "label": "S&P 500 20% onder het record",
+      "near": -17,
+      "then": "Bearmarkt: koop je tweede extra tranche VWCE (alleen als de Sahm-regel onder 0,5 blijft)."
+     },
+     {
+      "key": "spxDD",
+      "op": "lt",
+      "level": -10,
+      "action": "1e extra tranche",
+      "tone": "good",
+      "label": "S&P 500 10% onder het record",
+      "near": -8,
+      "then": "Correctie: koop je eerste extra tranche VWCE (alleen als de Sahm-regel onder 0,5 blijft)."
+     },
+     {
+      "key": "sahm",
+      "op": "gt",
+      "level": 0.5,
+      "action": "Stop extra bijkopen",
+      "tone": "warn",
+      "label": "Sahm-regel boven 0,5",
+      "near": 0.3,
+      "then": "Recessiesignaal: alleen nog vaste inleg, geen extra tranches."
+     }
+    ]
+   },
+   "smh": {
+    "priceKey": "smh",
+    "doLabel": "Houden, niet bijkopen",
+    "doNow": "Niet bijkopen tot de techbedrijven en Nvidia hun AI-investeringen bevestigen.",
+    "checks": [
+     {
+      "key": "smh",
+      "op": "lt",
+      "level": 500,
+      "action": "Verklein met een derde",
+      "tone": "bad",
+      "label": "SMH onder $500",
+      "near": 520,
+      "then": "Weekslot onder $500: verklein SMH met een derde.",
+      "note": "telt op het weekslot (vrijdag)"
+     },
+     {
+      "key": "smh",
+      "op": "gt",
+      "level": 600,
+      "action": "Mag terug naar normale weging",
+      "tone": "good",
+      "label": "SMH boven $600",
+      "near": 585,
+      "then": "Herstel bevestigd: SMH mag terug naar je normale weging."
+     }
+    ]
+   },
+   "crcl": {
+    "priceKey": "crcl",
+    "doLabel": "Houden",
+    "doNow": "Houden tot de kwartaalcijfers van 4 november. Groeit USDC: houden. Krimpt het: verkleinen.",
+    "checks": [
+     {
+      "key": "crcl",
+      "op": "lt",
+      "level": 70,
+      "action": "Niet bijkopen",
+      "tone": "warn",
+      "label": "Circle onder $70",
+      "near": 75,
+      "then": "Onder $70: niet bijkopen, wacht op de cijfers van 4 november."
+     }
+    ]
+   },
+   "gold": {
+    "priceKey": "gold",
+    "doLabel": "Houden",
+    "doNow": "Houden als bescherming. Bijkopen pas als de reële rente onder 2% zakt.",
+    "checks": [
+     {
+      "key": "gold",
+      "op": "lt",
+      "level": 4000,
+      "action": "Niet bijkopen",
+      "tone": "warn",
+      "label": "Goud onder $4.000",
+      "near": 4050,
+      "then": "Weekslot onder $4.000: niet bijkopen tot het is heroverd.",
+      "note": "telt op het weekslot"
+     },
+     {
+      "key": "realYield10",
+      "op": "lt",
+      "level": 2.0,
+      "action": "Bijkopen in tranches",
+      "tone": "good",
+      "label": "Reële rente onder 2%",
+      "near": 2.2,
+      "then": "Reële rente onder 2%: koop goud bij in drie tranches."
+     },
+     {
+      "key": "gold",
+      "op": "gt",
+      "level": 4450,
+      "action": "Bijkopen in tranches",
+      "tone": "good",
+      "label": "Goud boven $4.450",
+      "near": 4350,
+      "then": "Goud boven $4.450: de trend draait omhoog, koop bij in tranches."
+     }
+    ]
+   },
+   "btc": {
+    "priceKey": "btc",
+    "doLabel": "Houden",
+    "doNow": "Houden. Kleine tranche alleen onder $75.000 of na een weekslot boven $90.000.",
+    "checks": [
+     {
+      "key": "btc",
+      "op": "lt",
+      "level": 65000,
+      "action": "Niet verder bijkopen",
+      "tone": "warn",
+      "label": "Bitcoin onder $65.000",
+      "near": 68000,
+      "then": "Onder $65.000: zware steun, niet verder bijkopen tot het stabiliseert."
+     },
+     {
+      "key": "btc",
+      "op": "lt",
+      "level": 75000,
+      "action": "Kleine tranche mag",
+      "tone": "good",
+      "label": "Bitcoin onder $75.000",
+      "near": 77000,
+      "then": "Onder $75.000: een kleine tranche mag, zonder hefboom."
+     },
+     {
+      "key": "btc",
+      "op": "gt",
+      "level": 90000,
+      "action": "Kleine tranche mag",
+      "tone": "good",
+      "label": "Bitcoin boven $90.000",
+      "near": 87000,
+      "then": "Weekslot boven $90.000: de bodem ligt waarschijnlijk achter je, een kleine tranche mag.",
+      "note": "telt op het weekslot"
+     }
+    ]
+   }
+  },
+  "scenarioPatch": {
+   "s1": {
+    "desc": "Olie blijft $95–120, CPI 3,5–4%, de Fed pauzeerde op 28 okt (10–2) en verhoogt in december nog één keer. 10-jaarsrente tussen 4,9 en 5,4%. Banengroei zwak maar positief. Aandelen bewegen zijwaarts met dalingen van 5–10%."
+   }
+  },
+  "calendarSet": [
+   {
+    "match": "Fed-rentebesluit",
+    "date": "2026-10-28",
+    "time": "19:00",
+    "event": "Fed-rentebesluit: rente blijft 3,75–4,00%",
+    "why": "Besluit 10–2: Cook en Hammack wilden verhogen. De groei heet nu 'sterk'. Markt rekent op een verhoging in december.",
+    "affects": [
+     "vwce",
+     "smh",
+     "crcl",
+     "gold",
+     "btc"
+    ]
+   },
+   {
+    "match": "Fed-rentebesluit",
+    "date": "2026-12-09",
+    "time": "20:00",
+    "event": "Fed-rentebesluit december",
+    "why": "FedWatch ~84% kans op een verhoging. Slecht voor goud, SMH en bitcoin; goed voor Circle.",
+    "affects": [
+     "vwce",
+     "smh",
+     "crcl",
+     "gold",
+     "btc"
+    ]
+   }
+  ],
+  "macro": {
+   "updatedAt": "2026-10-28T21:00:00+01:00",
+   "source": "Update door Claude, cijfers t/m 28 okt 2026 (na het Fed-besluit)",
+   "summary": "Brent staat weer rond $115 na aanvallen op een Saudische raffinaderij, en de inflatie (3,7%) gaat daardoor niet snel omlaag. De Fed hield de rente op 28 oktober op 3,75–4,00%, maar twee leden wilden verhogen en de markt rekent op een verhoging in december (~84%). De 10-jaarsrente staat rond 5,0%. Aandelen houden stand dankzij herstel in de chips; goud, zilver en bitcoin hebben last van de hoge reële rente.",
+   "keyPoints": [
+    {
+     "tone": "bad",
+     "title": "Olie weer boven $110",
+     "text": "Brent ~$115, +20% in een maand: aanval op een Saudische raffinaderij, vredesvoorstel afgewezen. Na de verkiezingen van 3 nov dreigt hervatting van de strijd VS–Iran."
+    },
+    {
+     "tone": "warn",
+     "title": "Fed: pauze, maar verdeeld",
+     "text": "Rente blijft 3,75–4,00%, besluit 10–2 (Cook en Hammack wilden verhogen). De groei heet nu 'sterk'. Kans op een verhoging in december ~84%."
+    },
+    {
+     "tone": "warn",
+     "title": "Rente blijft hoog",
+     "text": "10-jaars ~5,0%, 30-jaars 5,31%, reële rente 2,66%. Lastig voor VWCE, SMH, goud en bitcoin; goed voor Circle."
+    },
+    {
+     "tone": "good",
+     "title": "Chips herstellen",
+     "text": "SOX +3,6% op 27 okt, SMH $558 (17% onder de top). De AI-investeringen van Microsoft, Alphabet, Meta en Amazon beslissen deze week."
+    },
+    {
+     "tone": "warn",
+     "title": "Krediet loopt langzaam op",
+     "text": "Junk-spread 3,38% (half oktober 3,16%). Nog rustig, maar de richting is omhoog."
+    },
+    {
+     "tone": "bad",
+     "title": "Waardering blijft extreem",
+     "text": "CAPE 40,7 en de Buffett-indicator 288%: vergelijkbaar met 2000. Weinig ruimte voor tegenvallers."
+    }
+   ],
+   "cycle": {
+    "updatedAt": "2026-10-28T21:00:00+01:00",
+    "verdict": "Laat in de cyclus, met een tweede olieschok: geen crash, wel weinig rek",
+    "summary": "De beurs staat nog vlak bij het record, maar alles wat een late fase kenmerkt is er: een extreem dure markt (CAPE 40,7), een Fed die verhoogt in plaats van verlaagt, een olieprijs die door een oorlog oploopt (Brent ~$115) en krediet dat langzaam duurder wordt. Wat er nog níet is: oplopende ontslagen, paniek of een kredietmarkt die breekt. Dat lijkt het meest op 2007 met de olie van 1990: de klap komt meestal pas als de groei omslaat, en dat zie je eerst aan de banen.",
+    "analogs": [
+     {
+      "label": "zomer 2007",
+      "what": "krediet",
+      "why": "Stress in een schaduwhoek (nu private credit) terwijl de beurs op de top staat."
+     },
+     {
+      "label": "1999–2000",
+      "what": "waardering",
+      "why": "Bijna-record waardering en een markt die leunt op AI-chips, zoals toen op internet."
+     },
+     {
+      "label": "1990",
+      "what": "olieoorlog",
+      "why": "Een oorlog in het Midden-Oosten maakt olie duur aan het eind van de cyclus; toen volgde een korte recessie en S&P −20%."
+     },
+     {
+      "label": "2022",
+      "what": "rente",
+      "why": "De reële rente is hoog: lastig voor goud, chips en crypto tegelijk."
+     }
+    ],
+    "nowAsOf": "28 okt 2026, na het Fed-besluit",
+    "nowText": "Deze week draait om drie dingen: de Fed (gedaan: pauze, december open), de AI-investeringen van de techreuzen (SMH en VWCE) en olie (Brent ~$115). Daarna komen de verkiezingen (3 nov), Circle (4 nov), de banen (6 nov) en de inflatie (10 nov).",
+    "news": [
+     {
+      "t": "Fed pauzeert, maar verdeeld (10–2)",
+      "why": "Rente 3,75–4,00%. Twee stemmen voor een verhoging en 'sterke' groei: december ~84% kans op een verhoging."
+     },
+     {
+      "t": "Olie terug in de gevarenzone",
+      "why": "Brent ~$115 (+20% in een maand). Boven $120 schuift het plan richting het olieschok-scenario."
+     },
+     {
+      "t": "Chips veren op",
+      "why": "SOX +3,6% op 27 okt. De capex-cijfers deze week bepalen of dit herstel houdt."
+     },
+     {
+      "t": "Krediet wordt duurder",
+      "why": "Junk-spread 3,38%, langzaam stijgend. Nog ver van de 5% waarbij het breekt."
+     }
+    ],
+    "nextPhase": "De overgang van 'laat' naar 'correctie' kondigt zich meestal aan via de banen (Sahm-regel naar 0,5, WW-aanvragen boven 300k) en het krediet (junk-spread boven 5%). Een olieprijs boven $120 of een 10-jaarsrente boven 5,36% kan het versnellen. Zolang die balken niet vol lopen, blijf je bij het plan: houden en niet in paniek verkopen.",
+    "cycles": [
+     {
+      "id": "sentiment",
+      "pos": 0.57,
+      "why": "De S&P 500 staat 1,2% onder het record van 6 oktober, de waardering (CAPE 40,7) zit dicht bij 2000 en er is ~$1,5 bln geleend om aandelen te kopen. De angst is laag (VIX 17,5) en chips herstellen: net over de top, de markt gelooft nog in AI.",
+      "extra": [
+       {
+        "label": "Goud & zilver",
+        "pos": 0.78,
+        "why": "Hun euforie was in januari (goud $5.590, zilver boven $121). Sindsdien goud −27% en zilver −56%: ze zitten in de dalende helft van hun eigen cyclus."
+       }
+      ]
+     },
+     {
+      "id": "credit",
+      "pos": 0.58,
+      "why": "De junk-spread loopt langzaam op (3,38%, half oktober 3,16%) maar is nog laag. Private credit kraakt: wanbetalingen op een record (Fitch: 6,0%) en fondsen laten maar 5% per kwartaal uitstappen."
+     },
+     {
+      "id": "economy",
+      "pos": 0.56,
+      "why": "De Fed noemt de groei 'sterk' en het consumentenvertrouwen verraste (91,7), maar de inflatie loopt op (3,7%) door olie rond $115 en de Fed wil in december verhogen. Ontslagen blijven laag (Sahm-regel 0,0): laat in de cyclus, nog geen afkoeling."
+     }
+    ]
+   }
+  },
+  "claimsUpdate": [
+   {
+    "text": "De Fed pauzeert op 28 oktober en verhoogt in december.",
+    "status": "open",
+    "note": "Pauze bevestigd (10–2, twee stemmen voor een verhoging). December: FedWatch ~84% kans op een verhoging."
+   }
+  ],
+  "sourcesAdd": [
+   {
+    "label": "Yahoo Finance: Fed-besluit 28 okt (10–2, statement)",
+    "url": "https://finance.yahoo.com/economy/policy/live/fed-meeting-live-updates-federal-reserve-october-meeting-kevin-warsh-161129201.html"
+   },
+   {
+    "label": "CNBC: Fed houdt de rente gelijk (28 okt)",
+    "url": "https://www.cnbc.com/2026/10/28/fed-interest-rate-decision-october-2026.html"
+   }
+  ]
+ }
+}

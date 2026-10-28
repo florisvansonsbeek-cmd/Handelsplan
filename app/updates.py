@@ -55,6 +55,22 @@ def _apply_plan(u):
     before = copy.deepcopy(plan)
     for k, v in (p.get("replace") or {}).items():
         plan[k] = copy.deepcopy(v)
+    for pid, fields in (p.get("positionsPatch") or {}).items():
+        for pos in plan.get("positions", []):
+            if pos.get("id") == pid:
+                pos.update(copy.deepcopy(fields))
+    for pid, fields in (p.get("scenarioPatch") or {}).items():
+        for sc in plan.get("scenarios", []):
+            if sc.get("id") == pid:
+                sc.update(copy.deepcopy(fields))
+    for i, c in enumerate(p.get("calendarSet") or []):
+        cal = plan.setdefault("calendar", [])
+        hit = next((x for x in cal if x.get("date") == c.get("date") and x.get("event", "")[:12] == c.get("match", c.get("event", ""))[:12]), None)
+        if hit:
+            hit.update({k: v for k, v in c.items() if k != "match"})
+        else:
+            cal.append({k: v for k, v in c.items() if k != "match"})
+            cal.sort(key=lambda x: str(x.get("date", "")))
     if p.get("macro"):
         macro = plan.setdefault("macro", {})
         for k, v in p["macro"].items():
