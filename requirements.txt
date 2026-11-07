@@ -5,3 +5,4 @@ httpx==0.28.1
 psycopg[binary]==3.2.3
 pypdf==5.1.0
 tzdata==2026.4
+curl_cffi==0.13.0

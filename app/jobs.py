@@ -124,13 +124,25 @@ def signed(v, dec=1, unit=""):
 
 
 def fred_obs(series, limit=260, freq="d"):
-    """Laatste `limit` waarnemingen van een FRED-reeks, oplopend. Zonder FRED_API_KEY via de CSV-download."""
+    """Laatste `limit` waarnemingen van een FRED-reeks, oplopend.
+    Met FRED_API_KEY via de officiële API, anders via de CSV-download. Bij time-outs pauzeert FRED even."""
     if not FRED_KEY:
         return sources.fred_csv(series, sources.fred_start(limit, freq))[-limit:]
-    r = httpx.get("https://api.stlouisfed.org/fred/series/observations",
-                  params={"series_id": series, "api_key": FRED_KEY, "file_type": "json",
-                          "sort_order": "desc", "limit": limit}, timeout=30)
-    r.raise_for_status()
+    left = sources.paused("fred")
+    if left:
+        raise sources.SourceError(f"FRED {series}: niet bereikbaar, nieuwe poging over {max(1, left // 60)} min")
+    try:
+        r = httpx.get("https://api.stlouisfed.org/fred/series/observations",
+                      params={"series_id": series, "api_key": FRED_KEY, "file_type": "json",
+                              "sort_order": "desc", "limit": limit}, timeout=20)
+    except httpx.HTTPError as e:
+        sources._fail("fred")
+        raise sources.SourceError(f"FRED {series}: {e.__class__.__name__}") from e
+    if r.status_code >= 400:
+        if r.status_code in (403, 429) or r.status_code >= 500:
+            sources._fail("fred")
+        raise sources.SourceError(f"FRED {series}: HTTP {r.status_code}")
+    sources._ok("fred")
     out = []
     for o in r.json().get("observations", []):
         try:
@@ -420,9 +432,13 @@ def markt():
         except Exception as e:
             status["errors"].append(f"Twelve Data: {e.__class__.__name__}")
 
-    # 2. Yahoo Finance (zonder sleutel)
+    # 2. Yahoo Finance (zonder sleutel); bij een blokkade de rest overslaan en op de reserves leunen
+    skipped = []
     with sources.client() as h:
         for key, sym in syms.items():
+            if sources.yahoo_status()["pausedFor"]:
+                skipped.append(key)
+                continue
             try:
                 y = sources.yahoo_chart(sym, "5d", "1d", http=h)
             except sources.SourceError as e:
@@ -470,6 +486,9 @@ def markt():
         except sources.SourceError as e:
             status["errors"].append(str(e))
 
+    if skipped:
+        status["errors"].append(f"Yahoo blokkeert even (429): {len(skipped)} koersen overgeslagen; "
+                                "reserves via CoinGecko, Finnhub en FRED")
     update_drawdown(items)
     doc["items"] = list(items.values())
     doc["updatedAt"] = now_iso()
@@ -494,9 +513,15 @@ def dagelijks():
     bars_by_key = {}
     errors = []
 
+    def fred_down():  # FRED is even niet bereikbaar: de rest van de reeksen meteen overslaan
+        return bool(sources.paused("fred"))
+
     # 1. FRED dagreeksen (een nieuwere koers van Yahoo of Twelve Data blijft staan)
     ok = []
     for key, sid in FRED_DAILY.items():
+        if fred_down():
+            errors.append("FRED niet bereikbaar: overige reeksen overgeslagen (nieuwe poging bij de volgende ronde)")
+            break
         try:
             obs = fred_obs(sid, LONG_HISTORY.get(key, 260), "d")
         except Exception as e:
@@ -526,15 +551,30 @@ def dagelijks():
     update_drawdown(items)
     # Wisselkoers EUR/USD (dollars per euro) als reserve voor Yahoo
     try:
+        if fred_down():
+            raise sources.SourceError("overgeslagen")
         eu = fred_obs("DEXUSEU", 30, "d")
         if eu:
             chg = f"dag: {signed((eu[-1][1] / eu[-2][1] - 1) * 100, 1, '%')}" if len(eu) > 1 and eu[-2][1] else ""
             put(items, "eurusd", eu[-1][1], "FRED (Fed H.10)", nl_date(eu[-1][0]), obs=eu[-1][0], change=chg, weak=True)
     except Exception as e:
-        errors.append(f"DEXUSEU: {e}")
+        if not fred_down():
+            errors.append(f"DEXUSEU: {e}")
+    try:
+        if fred_down():
+            raise sources.SourceError("overgeslagen")
+        jp = fred_obs("DEXJPUS", 30, "d")
+        if jp:
+            chg = f"dag: {signed((jp[-1][1] / jp[-2][1] - 1) * 100, 1, '%')}" if len(jp) > 1 and jp[-2][1] else ""
+            put(items, "usdjpy", jp[-1][1], "FRED (Fed H.10)", nl_date(jp[-1][0]), obs=jp[-1][0], change=chg, weak=True)
+    except Exception as e:
+        if not fred_down():
+            errors.append(f"DEXJPUS: {e}")
 
     # 2. Maandcijfers en weekcijfers
     try:
+        if fred_down():
+            raise sources.SourceError("overgeslagen")
         sa = fred_obs("SAHMREALTIME", 13, "m")
         if sa:
             it = ensure_item(items, "sahm")
@@ -542,8 +582,11 @@ def dagelijks():
                       change=f"vorige mnd {fmt_num(sa[-2][1], 2)} · alarm vanaf 0,50" if len(sa) > 1 else "alarm vanaf 0,50")
             series["sahm"] = [[a, b] for a, b in sa]
     except Exception as e:
-        errors.append(f"Sahm-regel: {e}")
+        if not fred_down():
+            errors.append(f"Sahm-regel: {e}")
     try:
+        if fred_down():
+            raise sources.SourceError("overgeslagen")
         un = fred_obs("UNRATE", 24, "m")
         if un:
             it = ensure_item(items, "unrate")
@@ -575,10 +618,13 @@ def dagelijks():
                       change=" · ".join(f"{nl_month(a)} {signed(b, 0, 'k')}" for a, b in last3))
             series["nfp3m"] = [[a, b] for a, b in diffs]
     except Exception as e:
-        errors.append(f"maandcijfers: {e}")
+        if not fred_down():
+            errors.append(f"maandcijfers: {e}")
 
     # 3. Netto liquiditeit = Fed-balans (WALCL, mln) − TGA (WTREGEN, mln) − reverse repo (RRPONTSYD, mld)
     try:
+        if fred_down():
+            raise sources.SourceError("overgeslagen")
         walcl, tga, rrp = fred_obs("WALCL", 60, "w"), fred_obs("WTREGEN", 60, "w"), fred_obs("RRPONTSYD", 400, "d")
         if walcl:
             wk = walcl[-1][1] - walcl[-2][1] if len(walcl) > 1 else None
@@ -605,12 +651,16 @@ def dagelijks():
                 it2.update(value=round(chg), asOf=nl_date(net[-1][0]), src="FRED (berekend)",
                            change="verandering over 4 weken")
     except Exception as e:
-        errors.append(f"liquiditeit: {e}")
+        if not fred_down():
+            errors.append(f"liquiditeit: {e}")
 
     # 4. Daggrafieken: Twelve Data met sleutel, anders Yahoo Finance (met hoog/laag)
     if not TD_KEY:
         with sources.client() as h:
             for key, sym in LEVEL_YAHOO.items():
+                if sources.yahoo_status()["pausedFor"]:
+                    errors.append("Yahoo blokkeert even (429): daggrafieken overgeslagen")
+                    break
                 try:
                     y = sources.yahoo_chart(sym, "1y", "1d", http=h)
                 except sources.SourceError as e:
@@ -645,6 +695,8 @@ def dagelijks():
 
     # 5. Bitcoin daggrafiek: Yahoo (met hoog/laag), anders CoinGecko
     try:
+        if sources.yahoo_status()["pausedFor"]:
+            raise sources.SourceError("Yahoo BTC-USD: even gepauzeerd")
         y = sources.yahoo_chart("BTC-USD", "1y", "1d")
         if len(y["bars"]) >= 20:
             bars_by_key["btc"] = (y["bars"], "Yahoo Finance")

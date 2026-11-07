@@ -88,6 +88,9 @@ def refresh():
             except (httpx.HTTPError, ValueError):
                 via_yahoo.append(sym)
         for sym in via_yahoo:
+            if sources.yahoo_status()["pausedFor"]:
+                out["errors"].append("Yahoo blokkeert even (429); volgende poging over een kwartier")
+                break
             try:
                 y = sources.yahoo_chart(sym, "5d", "1d", http=h)
             except sources.SourceError as e:
