@@ -1,0 +1,1092 @@
+{
+ "id": "2026-11-07",
+ "at": "2026-11-07T21:30:00+01:00",
+ "asOf": "2026-11-07",
+ "source": "Update door Claude",
+ "title": "Update 7 nov: AI-uitverkoop, verkiezingen en een geraakte planregel voor SMH",
+ "summary": "Het plan is bijgewerkt na de week van de verkiezingen: de AI-uitverkoop van 5 november, de Democratische winst, het sterke banenrapport, de cijfers van Circle en de olie die 16% zakte. SMH sloot onder $500, dus je planregel (een derde verkleinen) is geraakt. Elke planregel kun je nu als gedaan markeren.",
+ "changelog": [
+  "Nieuw scenario 'AI-correctie' (35%); olieschok 25% → 10%, zachte landing 15% → 20%",
+  "Posities: nieuwe tekst en niveaus; SMH 'afbouwen' (weekslot onder $500), Circle 'niet bijkopen'",
+  "Planregels met vaste ids, zodat je ze als gedaan kunt markeren; bedragen per regel in de Portefeuille",
+  "Kalender: CPI 10 nov, PPI 13 nov, Nvidia 17 nov, Fed-notulen 18 nov, Fed 9 dec",
+  "Cyclus: nieuw oordeel ('de AI-correctie is begonnen'), 2018 en 2000 als vergelijking",
+  "Volglijst opgeschoond: oude Mag 7-, mijn- en zilversymbolen eruit"
+ ],
+ "market": {
+  "set": {
+   "spx": {
+    "value": 7376.86,
+    "change": "week −2,7% · 5 nov −4,4%",
+    "asOf": "6 nov, slot",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "spxDD": {
+    "value": -5.65,
+    "change": "record 7.819 op 6 okt",
+    "asOf": "6 nov",
+    "src": "berekend",
+    "ath": 7818.93,
+    "athDate": "2026-10-06"
+   },
+   "ndx": {
+    "value": 24579.42,
+    "change": "week −3,4% · correctie sinds 5 nov",
+    "asOf": "6 nov, slot",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "vix": {
+    "value": 25.64,
+    "change": "5 nov 28,2 (+70%)",
+    "asOf": "6 nov, slot",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "us10y": {
+    "value": 4.86,
+    "change": "na het banenrapport +2 bp",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "us2y": {
+    "value": 4.51,
+    "change": "+5 bp",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "curve": {
+    "value": 0.35,
+    "change": "positief",
+    "asOf": "6 nov",
+    "src": "berekend"
+   },
+   "dxy": {
+    "value": 102.32,
+    "change": "+0,8% op 6 nov",
+    "asOf": "6 nov, slot",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "wti": {
+    "value": 90.37,
+    "change": "week ≈ −13%",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "brent": {
+    "value": 97.79,
+    "change": "week ≈ −16%, grootste daling sinds 2020",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "gold": {
+    "value": 4081,
+    "change": "6 nov −0,8%",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "silver": {
+    "value": 52.0,
+    "change": "1 maand −15%",
+    "asOf": "6 nov",
+    "src": "Fortune"
+   },
+   "kospiDay": {
+    "value": -6.0,
+    "change": "chips onder druk in Azië",
+    "asOf": "6 nov",
+    "src": "Nieuws (slot 6 nov)"
+   },
+   "nfp3m": {
+    "value": 137,
+    "change": "aug +186k · sep +60k · okt +165k",
+    "asOf": "okt",
+    "src": "BLS"
+   },
+   "unrate": {
+    "value": 4.1,
+    "change": "sep 4,2%",
+    "asOf": "okt",
+    "src": "BLS"
+   },
+   "claims": {
+    "value": 189,
+    "change": "4-wk gem. 194,8k",
+    "asOf": "week 31 okt",
+    "src": "Dept. of Labor"
+   }
+  },
+  "updatedAt": "2026-11-07T21:30:00+01:00",
+  "updatedBy": "Claude (webzoekopdracht)",
+  "note": "Momentopnames uit nieuwsbronnen; de server haalt daarna automatisch nieuwere cijfers op."
+ },
+ "plan": {
+  "replace": {
+   "regime": {
+    "name": "AI-correctie in een late cyclus",
+    "phase": "Late cyclus · correctie in tech",
+    "riskLevel": "verhoogd",
+    "thesis": "De AI-handel kreeg op 5 november een harde klap: na de Democratische winst in de midterms (vrees voor strengere regels voor AI-datacenters) zakten de chips 12% op één dag en kwam de Nasdaq in een correctie. De economie zelf is sterk (165.000 banen erbij in oktober, werkloosheid 4,1%), waardoor de Fed in december waarschijnlijk tóch verhoogt. Olie zakte juist hard (Brent −16% in een week) op hoop op vrede met Iran. Dit lijkt meer op het begin van een correctie in dure tech (zoals 2000) dan op een crisis zoals 2008.",
+    "masterVariable": {
+     "name": "AI-investeringen en de chipkoersen (daarna de rente)",
+     "why": "SMH en een groot deel van VWCE hangen aan de AI-uitgaven. Nvidia (17 nov) en de toon van de grote techbedrijven bepalen of dit een correctie blijft of een bearmarkt wordt. De rente is de tweede knop: een Fed-verhoging in december drukt alles behalve Circle."
+    },
+    "changesSinceJuly": [
+     "Fed: +25 bp in september (3,75–4,00%), pauze op 28 okt (10–2), een verhoging in december is waarschijnlijk.",
+     "Olie: van boven $110 (oorlog) terug naar ~$98 Brent op vredeshoop na de verkiezingen.",
+     "AI-handel: chips 38% onder de top van juni, de Nasdaq in een correctie (5 nov).",
+     "Politiek: de Democraten winnen Huis en Senaat (3 nov), vanaf januari.",
+     "Je portefeuille is omgezet naar VWCE, SMH, Circle, goud en bitcoin (28 okt)."
+    ]
+   },
+   "portfolioCheck": {
+    "headline": "Je grootste risico zit nu in één verhaal: AI",
+    "points": [
+     "SMH stond deze week 33% onder zijn top. Samen met de techreuzen in VWCE is AI je grootste blootstelling.",
+     "Circle en bitcoin hangen samen aan crypto en liquiditeit; bitcoin-ETF's zagen deze week $1,3 mld uitstroom.",
+     "Goud is je tegenwicht en hield zich goed in de uitverkoop (rond $4.080).",
+     "Een Fed-verhoging in december helpt Circle (meer rente-inkomsten), maar drukt SMH, bitcoin en goud.",
+     "Houd cash apart: de bijkoopregels voor VWCE (bij −10% en −20%) kunnen dichtbij komen; de S&P 500 staat op −5,7%."
+    ]
+   },
+   "actionsNow": [
+    "SMH sloot de week rond $468, onder $500: volgens je regel verklein je SMH met een derde. Doe het rustig (bijvoorbeeld maandag na de opening) en markeer het op de site als gedaan.",
+    "Circle onder $70: niet bijkopen. De cijfers van 4 november waren gemengd (USDC vlak, rente-inkomsten −8%, omzet opgepoetst door de ARC-tokenverkoop).",
+    "VWCE: vaste inleg door. De eerste extra tranche komt pas bij −10% vanaf het record (S&P 500 rond 7.040); nu −5,7%.",
+    "Bitcoin rond $76.000: vlak bij $75.000. Daaronder mag een kleine tranche, zonder hefboom.",
+    "Goud houden: het is je buffer en deed wat het moest doen.",
+    "Komende toetsen: de inflatie (di 10 nov, 14:30) en Nvidia (di 17 nov, na slot)."
+   ],
+   "scenarios": [
+    {
+     "id": "s5",
+     "name": "AI-correctie (zoals 2000, lichter)",
+     "prob": 35,
+     "horizon": "1–6 maanden",
+     "desc": "De AI-handel loopt leeg: chips en tech zakken 30–50% vanaf de top, de S&P 500 15–25%, maar de economie blijft overeind (banen +165.000). De Fed verhoogt in december toch. Kredietopslagen lopen op bij AI-bedrijven met veel schuld.",
+     "signals": [
+      "SMH en SOX maken lagere bodems",
+      "Nvidia (17 nov) stelt teleur",
+      "Junk-spread boven 4%",
+      "S&P 500 meer dan 10% onder het record"
+     ],
+     "impact": {
+      "vwce": -1,
+      "smh": -2,
+      "crcl": -1,
+      "gold": 1,
+      "btc": -2
+     },
+     "actions": [
+      "SMH: de afbouwregels volgen ($500 en $440), niet bijkopen tot het herstel bevestigd is.",
+      "VWCE: vaste inleg door; extra tranches bij −10% en −20%.",
+      "Goud houden als buffer.",
+      "Bitcoin en Circle: niet bijkopen zolang de koersen dalen; hun eigen stopniveaus volgen."
+     ]
+    },
+    {
+     "id": "s1",
+     "name": "Stagflatie-grind",
+     "prob": 25,
+     "horizon": "3–6 maanden",
+     "desc": "De inflatie blijft hangen rond 3,5–4%, de Fed verhoogt in december en houdt de rente hoog. Olie schommelt tussen $85 en $105. Aandelen bewegen zijwaarts met dalingen van 5–10%.",
+     "signals": [
+      "CPI boven 3,5%",
+      "Fed verhoogt op 9 dec",
+      "10-jaars tussen 4,7% en 5,3%",
+      "Brent $85–105"
+     ],
+     "impact": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 1,
+      "gold": 0,
+      "btc": -1
+     },
+     "actions": [
+      "VWCE: vaste inleg door.",
+      "Circle profiteert van de hogere rente.",
+      "Goud houden; de hoge reële rente remt.",
+      "Bitcoin houden, niet bijkopen."
+     ]
+    },
+    {
+     "id": "s4",
+     "name": "De-escalatie en zachte landing",
+     "prob": 20,
+     "horizon": "3–9 maanden",
+     "desc": "Een akkoord met Iran, olie onder $85, de inflatie koelt af en de Fed stopt met verhogen. De AI-correctie blijft beperkt en aandelen herstellen in 2027 (het historische patroon na een midterm-jaar).",
+     "signals": [
+      "Akkoord VS–Iran",
+      "Brent onder $85",
+      "CPI richting 3%",
+      "Fed slaat december over"
+     ],
+     "impact": {
+      "vwce": 2,
+      "smh": 1,
+      "crcl": 0,
+      "gold": 0,
+      "btc": 2
+     },
+     "actions": [
+      "VWCE: dit is zijn scenario; vaste inleg door.",
+      "SMH: terug naar normale weging pas boven $600.",
+      "Bitcoin profiteert van lagere rente.",
+      "Goud houden als buffer."
+     ]
+    },
+    {
+     "id": "s2",
+     "name": "Olieschok en escalatie",
+     "prob": 10,
+     "horizon": "0–3 maanden",
+     "desc": "De vredeshoop valt weg: nieuwe aanvallen rond Hormuz, Brent weer boven $120, inflatie boven 4%. De Fed verhoogt en de rente schiet omhoog. Risk-off.",
+     "signals": [
+      "Brent boven $120",
+      "CPI boven 4%",
+      "10-jaars boven 5,36%",
+      "VIX boven 30"
+     ],
+     "impact": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": 0,
+      "gold": 1,
+      "btc": -2
+     },
+     "actions": [
+      "VWCE niet in paniek verkopen; tranches volgens plan.",
+      "SMH volgens de afbouwregels.",
+      "Goud is hier de bescherming.",
+      "Bitcoin en Circle: niet bijkopen."
+     ]
+    },
+    {
+     "id": "s3",
+     "name": "Groeischok en kredietbreuk",
+     "prob": 10,
+     "horizon": "1–6 maanden",
+     "desc": "De banenmarkt kantelt alsnog, kredietopslagen schieten op (junk-spread boven 5%), private credit loopt vast. De rente daalt snel en de Fed draait naar verlagingen.",
+     "signals": [
+      "Banengroei negatief",
+      "Sahm-regel ≥ 0,5",
+      "Junk-spread boven 5%",
+      "Techreuzen verlagen hun investeringen"
+     ],
+     "impact": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": -2,
+      "gold": 2,
+      "btc": 0
+     },
+     "actions": [
+      "Goud is hier de winnaar: bijkopen in tranches als de reële rente daalt.",
+      "SMH verder afbouwen.",
+      "Circle verkleinen: lagere rente raakt het verdienmodel.",
+      "VWCE: in stappen bijkopen na de val, niet ervoor."
+     ]
+    }
+   ],
+   "calendar": [
+    {
+     "date": "2026-11-03",
+     "time": "",
+     "event": "Verkiezingen VS: Democraten winnen Huis en Senaat",
+     "why": "Vanaf januari: plannen om de Iran-oorlog te beëindigen en tarieven terug te draaien; Trump kondigt veto's aan.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2026-11-04",
+     "time": "nabeurs",
+     "event": "Circle Q3: omzet +17%, rente-inkomsten −8%",
+     "why": "USDC vlak (~$74 mld); $182 mln uit de ARC-tokenverkoop.",
+     "affects": [
+      "crcl"
+     ]
+    },
+    {
+     "date": "2026-11-05",
+     "time": "",
+     "event": "AI-uitverkoop: chips −12%, S&P 500 −4,4%",
+     "why": "Grootste chipdaling sinds 2020; Nasdaq in correctie.",
+     "affects": [
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-11-06",
+     "time": "14:30",
+     "event": "Banen VS oktober: +165.000, werkloosheid 4,1%",
+     "why": "Veel beter dan verwacht; kans op een Fed-verhoging in december omhoog.",
+     "affects": [
+      "crcl",
+      "gold",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-11-10",
+     "time": "14:30",
+     "event": "CPI-inflatie VS (oktober)",
+     "why": "Boven 4% maakt een Fed-verhoging in december vrijwel zeker; een meevaller geeft lucht.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2026-11-13",
+     "time": "14:30",
+     "event": "Producentenprijzen VS (PPI, oktober)",
+     "why": "Tweede inflatietoets van de week.",
+     "affects": [
+      "vwce",
+      "gold"
+     ]
+    },
+    {
+     "date": "2026-11-17",
+     "time": "22:20",
+     "event": "Cijfers Nvidia (Q3)",
+     "why": "De grootste toets voor SMH: eigen verwachting ~$108 mld omzet. Een tegenvaller kan de chipcorrectie verdiepen.",
+     "affects": [
+      "smh",
+      "vwce"
+     ]
+    },
+    {
+     "date": "2026-11-18",
+     "time": "20:00",
+     "event": "Notulen van de Fed (oktobervergadering)",
+     "why": "Hoeveel leden willen in december verhogen?",
+     "affects": [
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2026-12-04",
+     "time": "14:30",
+     "event": "Banen VS november (verwacht)",
+     "why": "Laatste banenrapport vóór het Fed-besluit; datum nog controleren.",
+     "affects": [
+      "vwce",
+      "crcl",
+      "gold"
+     ]
+    },
+    {
+     "date": "2026-12-09",
+     "time": "20:00",
+     "event": "Fed-rentebesluit december",
+     "why": "Kans op een verhoging rond 65–80% na het sterke banenrapport. Goed voor Circle, lastig voor SMH, goud en bitcoin.",
+     "affects": [
+      "vwce",
+      "smh",
+      "crcl",
+      "gold",
+      "btc"
+     ]
+    },
+    {
+     "date": "2027-01-03",
+     "time": "",
+     "event": "Nieuw Congres begint (Democratische meerderheid)",
+     "why": "Wetten over Iran, tarieven en mogelijk AI-datacenters; Trump kan een veto gebruiken.",
+     "affects": [
+      "vwce",
+      "smh",
+      "gold"
+     ]
+    }
+   ],
+   "simple": {
+    "headline": "Eén actie: SMH een derde kleiner (weekslot onder $500). Verder: houden, niet in paniek bijkopen, en de inflatie (10 nov) en Nvidia (17 nov) afwachten.",
+    "rules": [
+     "Doe alleen iets als een niveau wordt geraakt. Nieuws alleen is geen reden.",
+     "Koop bij in kleine stappen (tranches), nooit alles tegelijk en nooit met geleend geld.",
+     "Houd geld apart voor de tranches. Zonder cash kun je de dip niet kopen."
+    ]
+   }
+  },
+  "positionsPatch": {
+   "vwce": {
+    "stance": "aanhouden",
+    "stanceNote": "Vaste inleg door; extra bijkopen pas bij −10% vanaf het record.",
+    "doLabel": "Houden",
+    "doNow": "Vaste inleg door. Extra bijkopen pas bij −10% vanaf het record.",
+    "priceKey": "vwce",
+    "now": "VWCE volgt de wereldbeurs. De S&P 500 staat 5,7% onder het record van 6 oktober, na de zwaarste beursweek sinds april 2025; de techreuzen in VWCE kregen de grootste klap. De economie zelf is sterk (165.000 banen erbij in oktober). Je eerste extra tranche komt pas bij −10% (S&P 500 rond 7.040).",
+    "checks": [
+     {
+      "id": "vwce-dd20",
+      "key": "spxDD",
+      "op": "lt",
+      "level": -20,
+      "action": "2e extra tranche",
+      "tone": "good",
+      "label": "S&P 500 20% onder het record",
+      "near": -17,
+      "then": "Bearmarkt: koop je tweede extra tranche VWCE (een derde van je cash), alleen als de Sahm-regel onder 0,5 blijft.",
+      "fractionCash": 0.333
+     },
+     {
+      "id": "vwce-dd10",
+      "key": "spxDD",
+      "op": "lt",
+      "level": -10,
+      "action": "1e extra tranche",
+      "tone": "good",
+      "label": "S&P 500 10% onder het record",
+      "near": -8,
+      "then": "Correctie: koop je eerste extra tranche VWCE (een derde van je cash), alleen als de Sahm-regel onder 0,5 blijft.",
+      "fractionCash": 0.333
+     },
+     {
+      "id": "vwce-sahm",
+      "key": "sahm",
+      "op": "gt",
+      "level": 0.5,
+      "action": "Stop extra bijkopen",
+      "tone": "warn",
+      "label": "Sahm-regel boven 0,5",
+      "near": 0.3,
+      "then": "Recessiesignaal: alleen nog je vaste inleg, geen extra tranches."
+     }
+    ],
+    "catalysts": [
+     "CPI 10 nov",
+     "Nvidia 17 nov",
+     "Fed 9 dec",
+     "Nieuw Congres januari"
+    ]
+   },
+   "smh": {
+    "stance": "afbouwen",
+    "stanceNote": "Volgens je regel een derde kleiner (weekslot onder $500); daarna afwachten tot Nvidia.",
+    "doLabel": "Afbouwen",
+    "doNow": "Een derde verkleinen volgens je regel. Daarna niet bijkopen tot na Nvidia (17 nov).",
+    "priceKey": "smh",
+    "now": "SMH viel op 5 november 11,2% naar $447,73, de grootste daling sinds 2020, en stond toen 33% onder de top van $671,83. Op 6 november herstelde hij ruim 4% (rond $468), maar het weekslot ligt onder $500: volgens je planregel verklein je een derde. Aanleiding was de vrees voor strengere regels voor AI-datacenters na de Democratische winst; UBS schat dat ongeveer 30% van de datacentercapaciteit voor 2028 op de tocht staat. De volgende grote toets is Nvidia op 17 november.",
+    "levels": [
+     {
+      "label": "SMH $500",
+      "meaning": "Gebroken op het weekslot van 6 nov: de eerste derde eraf."
+     },
+     {
+      "label": "SMH $440",
+      "meaning": "Onder het dieptepunt van 5 nov ($445,59): nog een derde eraf."
+     },
+     {
+      "label": "SMH $520",
+      "meaning": "Het 200-daags gemiddelde: erboven is de ergste klap voorbij."
+     },
+     {
+      "label": "SMH $600",
+      "meaning": "Herstel bevestigd: terug naar je normale weging."
+     }
+    ],
+    "rules": [
+     "Weekslot onder $500: verklein met een derde (geraakt op 6 nov).",
+     "Weekslot onder $440: verklein nog een derde.",
+     "Niet bijkopen vóór de cijfers van Nvidia (17 nov).",
+     "Weekslot boven $600: herstel bevestigd, terug naar je normale weging."
+    ],
+    "checks": [
+     {
+      "id": "smh-500",
+      "key": "smh",
+      "op": "lt",
+      "level": 500,
+      "action": "Verklein met een derde",
+      "tone": "bad",
+      "label": "SMH onder $500",
+      "then": "Weekslot onder $500: verklein SMH met een derde. Markeer het hier als gedaan zodra je het hebt uitgevoerd.",
+      "note": "telt op het weekslot (vrijdag)",
+      "fraction": 0.333
+     },
+     {
+      "id": "smh-440",
+      "key": "smh",
+      "op": "lt",
+      "level": 440,
+      "action": "Verklein nog een derde",
+      "tone": "bad",
+      "label": "SMH onder $440",
+      "near": 455,
+      "then": "Weekslot onder $440 (onder het dieptepunt van 5 nov): verklein nog een derde.",
+      "note": "telt op het weekslot (vrijdag)",
+      "fraction": 0.333
+     },
+     {
+      "id": "smh-600",
+      "key": "smh",
+      "op": "gt",
+      "level": 600,
+      "action": "Terug naar normale weging",
+      "tone": "good",
+      "label": "SMH boven $600",
+      "near": 585,
+      "then": "Herstel bevestigd: SMH mag terug naar je normale weging, in stappen.",
+      "note": "telt op het weekslot"
+     }
+    ],
+    "catalysts": [
+     "Nvidia 17 nov",
+     "CPI 10 nov",
+     "Fed 9 dec"
+    ]
+   },
+   "crcl": {
+    "stance": "aanhouden",
+    "stanceNote": "Houden, niet bijkopen: de cijfers van 4 november waren gemengd.",
+    "doLabel": "Houden, niet bijkopen",
+    "doNow": "Houden, niet bijkopen. Verkleinen pas onder $53 (steun).",
+    "priceKey": "crcl",
+    "now": "Circle meldde op 4 november een omzet van $865 mln (+17%), maar $182 mln daarvan kwam uit de voorverkoop van ARC-tokens; zonder die eenmalige post daalde de omzet. De rente-inkomsten zakten 8% en USDC staat met ~$74 mld vrijwel gelijk aan een jaar geleden. Het aandeel steeg eerst (+4% naar $75), maar zakte in de uitverkoop naar rond $67. Plus: een Fed die in december verhoogt, levert Circle meer rente-inkomsten op.",
+    "levels": [
+     {
+      "label": "CRCL $53",
+      "meaning": "Steun; eronder verklein je een derde."
+     },
+     {
+      "label": "CRCL $70–74",
+      "meaning": "Herovering = het ergste is voorbij."
+     },
+     {
+      "label": "CRCL $100",
+      "meaning": "Herstel bevestigd."
+     }
+    ],
+    "rules": [
+     "Onder $70: niet bijkopen.",
+     "Onder $53 (steun): verklein met een derde.",
+     "Krimpt USDC in het volgende kwartaal, dan verkleinen, ook boven $53.",
+     "Tel Circle en bitcoin samen voor je maximum aan crypto."
+    ],
+    "checks": [
+     {
+      "id": "crcl-53",
+      "key": "crcl",
+      "op": "lt",
+      "level": 53,
+      "action": "Verklein met een derde",
+      "tone": "bad",
+      "label": "Circle onder $53",
+      "near": 57,
+      "then": "Onder de steun van $53: verklein Circle met een derde.",
+      "fraction": 0.333
+     },
+     {
+      "id": "crcl-70",
+      "key": "crcl",
+      "op": "lt",
+      "level": 70,
+      "action": "Niet bijkopen",
+      "tone": "warn",
+      "label": "Circle onder $70",
+      "near": 73,
+      "then": "Onder $70: niet bijkopen. Wachten tot $70–74 is heroverd."
+     },
+     {
+      "id": "crcl-100",
+      "key": "crcl",
+      "op": "gt",
+      "level": 100,
+      "action": "Herstel bevestigd",
+      "tone": "good",
+      "label": "Circle boven $100",
+      "near": 92,
+      "then": "Herstel bevestigd: houden en eventueel weer opbouwen volgens je doelweging."
+     }
+    ],
+    "catalysts": [
+     "CPI 10 nov",
+     "Fed 9 dec",
+     "Q4-cijfers februari"
+    ]
+   },
+   "gold": {
+    "stance": "aanhouden",
+    "stanceNote": "Houden als buffer; bijkopen pas bij een reële rente onder 2% of boven $4.450.",
+    "doLabel": "Houden",
+    "doNow": "Houden als buffer. Bijkopen pas bij een reële rente onder 2% of boven $4.450.",
+    "priceKey": "gold",
+    "now": "Goud hield zich goed in de uitverkoop en staat rond $4.080: het deed wat een buffer moet doen. De stijgende rente en de sterkere dollar na het banenrapport remmen; de vlucht uit risico helpt. Zilver zakte verder naar ongeveer $52.",
+    "checks": [
+     {
+      "id": "gold-4000",
+      "key": "gold",
+      "op": "lt",
+      "level": 4000,
+      "action": "Niet bijkopen",
+      "tone": "warn",
+      "label": "Goud onder $4.000",
+      "near": 4030,
+      "then": "Weekslot onder $4.000: niet bijkopen tot het niveau op weekbasis is heroverd.",
+      "note": "telt op het weekslot"
+     },
+     {
+      "id": "gold-real2",
+      "key": "realYield10",
+      "op": "lt",
+      "level": 2.0,
+      "action": "Bijkopen in tranches",
+      "tone": "good",
+      "label": "Reële rente onder 2%",
+      "near": 2.2,
+      "then": "Reële rente onder 2%: koop goud bij in tranches (een derde van je cash per keer).",
+      "fractionCash": 0.333
+     },
+     {
+      "id": "gold-4450",
+      "key": "gold",
+      "op": "gt",
+      "level": 4450,
+      "action": "Bijkopen in tranches",
+      "tone": "good",
+      "label": "Goud boven $4.450",
+      "near": 4350,
+      "then": "Goud boven $4.450: de trend draait omhoog, koop bij in tranches.",
+      "note": "telt op het weekslot",
+      "fractionCash": 0.333
+     }
+    ],
+    "catalysts": [
+     "CPI 10 nov",
+     "Fed 9 dec",
+     "Dollar en reële rente"
+    ]
+   },
+   "btc": {
+    "stance": "aanhouden",
+    "stanceNote": "Houden; een kleine tranche mag onder $75.000, zonder hefboom.",
+    "doLabel": "Houden",
+    "doNow": "Houden. Onder $75.000 mag een kleine tranche (bijv. 10% van je cash), zonder hefboom.",
+    "priceKey": "btc",
+    "now": "Bitcoin staat rond $76.000, vlak boven de steun van $75.000. Bitcoin-ETF's zagen deze week ongeveer $1,3 mld uitstroom. Volgens de 4-jaarscyclus zitten we rond de bodemperiode, maar bevestiging ontbreekt nog (een weekslot boven $90.000).",
+    "rules": [
+     "Onder $75.000: een kleine tranche mag (bijv. 10% van je cash), zonder hefboom.",
+     "Onder $65.000: niet verder bijkopen tot het stabiliseert.",
+     "Weekslot boven $90.000: bodem waarschijnlijk achter je, kleine tranche mag."
+    ],
+    "checks": [
+     {
+      "id": "btc-65k",
+      "key": "btc",
+      "op": "lt",
+      "level": 65000,
+      "action": "Niet verder bijkopen",
+      "tone": "warn",
+      "label": "Bitcoin onder $65.000",
+      "near": 68000,
+      "then": "Onder $65.000: zware steun, niet verder bijkopen tot het stabiliseert."
+     },
+     {
+      "id": "btc-75k",
+      "key": "btc",
+      "op": "lt",
+      "level": 75000,
+      "action": "Kleine tranche mag",
+      "tone": "good",
+      "label": "Bitcoin onder $75.000",
+      "near": 77000,
+      "then": "Onder $75.000: een kleine tranche mag (bijv. 10% van je cash), zonder hefboom.",
+      "fractionCash": 0.1
+     },
+     {
+      "id": "btc-90k",
+      "key": "btc",
+      "op": "gt",
+      "level": 90000,
+      "action": "Kleine tranche mag",
+      "tone": "good",
+      "label": "Bitcoin boven $90.000",
+      "near": 87000,
+      "then": "Weekslot boven $90.000: de bodem ligt waarschijnlijk achter je, een kleine tranche mag.",
+      "note": "telt op het weekslot",
+      "fractionCash": 0.1
+     }
+    ],
+    "catalysts": [
+     "CPI 10 nov",
+     "Fed 9 dec",
+     "ETF-stromen"
+    ]
+   }
+  },
+  "macro": {
+   "updatedAt": "2026-11-07T21:30:00+01:00",
+   "source": "Update door Claude, cijfers t/m 6 nov 2026 (slot)",
+   "riskMode": "defensief",
+   "regime": "AI-correctie",
+   "headline": "De AI-handel kraakt, de economie niet",
+   "summary": "Na de Democratische winst in de midterms brak op 5 november de AI-handel: chips −12%, de Nasdaq in een correctie, de VIX naar 28. De economie is juist sterk (165.000 banen erbij), waardoor de Fed in december waarschijnlijk verhoogt. Olie zakte 16% in een week op hoop op vrede met Iran. Goud hield stand als buffer; bitcoin zakte naar de steun van $75.000.",
+   "compass": {
+    "growth": 0.15,
+    "inflation": 0.35,
+    "heading": {
+     "growth": -0.1,
+     "inflation": -0.15
+    },
+    "why": "Groei sterk (banen +165.000), inflatie nog 3,7% maar de olie zakte hard. De klap zit in de waardering van AI, niet in de economie."
+   },
+   "keyPoints": [
+    {
+     "tone": "bad",
+     "title": "AI-uitverkoop",
+     "text": "5 nov: chips −12% (grootste daling sinds 2020), Nvidia −9%, Nasdaq in correctie. Aanleiding: vrees voor strengere regels voor datacenters na de Democratische winst."
+    },
+    {
+     "tone": "warn",
+     "title": "Democraten winnen Congres",
+     "text": "Huis en Senaat gaan in januari naar de Democraten. Plannen: Iran-oorlog beëindigen, tarieven terugdraaien. Trump kondigt veto's aan: kans op een patstelling."
+    },
+    {
+     "tone": "good",
+     "title": "Banen verrassen",
+     "text": "+165.000 in oktober (verwacht 59.000), werkloosheid 4,1%. Goed voor de economie, maar de Fed verhoogt daardoor waarschijnlijk in december."
+    },
+    {
+     "tone": "good",
+     "title": "Olie zakt hard",
+     "text": "Brent −16% deze week (rond $98), de grootste weekdaling sinds 2020, op hoop op vrede met Iran. Aanvallen op tankers gaan wel door."
+    },
+    {
+     "tone": "warn",
+     "title": "Rente en dollar omhoog",
+     "text": "10-jaars 4,86%, 2-jaars 4,51%, dollarindex 102,3. Kans op een Fed-verhoging in december ruim 65%."
+    },
+    {
+     "tone": "warn",
+     "title": "Circle gemengd",
+     "text": "Q3: omzet +17%, maar dankzij $182 mln uit de ARC-tokenverkoop; rente-inkomsten −8%, USDC vlak (~$74 mld). Aandeel rond $67."
+    }
+   ],
+   "pillars": [
+    {
+     "id": "inflatie",
+     "stage": 1,
+     "name": "Inflatie & energie",
+     "q": "Wordt geld minder waard?",
+     "status": "stress",
+     "keys": [
+      "cpiYoY",
+      "breakeven10",
+      "brent"
+     ],
+     "reading": "CPI 3,7% (september); oktober komt op 10 nov. Olie zakte hard (Brent ~$98), dat haalt wat druk van de inflatie.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 1,
+      "gold": 1,
+      "btc": -1
+     }
+    },
+    {
+     "id": "groei",
+     "stage": 1,
+     "name": "Groei & werk",
+     "q": "Draait de economie?",
+     "status": "gespannen",
+     "keys": [
+      "nfp3m",
+      "unrate",
+      "claims"
+     ],
+     "reading": "Sterk: +165.000 banen in oktober, werkloosheid 4,1%, WW-aanvragen laag (189.000).",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": -1,
+      "gold": 1,
+      "btc": 0
+     }
+    },
+    {
+     "id": "rente",
+     "stage": 2,
+     "name": "Rente & obligaties",
+     "q": "Wat kost geld?",
+     "status": "stress",
+     "keys": [
+      "us10y",
+      "us30y",
+      "realYield10"
+     ],
+     "reading": "Fed 3,75–4,00% met een verhoging in december waarschijnlijk. 10-jaars 4,86%, 2-jaars 4,51%. De reële rente blijft hoog.",
+     "effects": {
+      "vwce": -2,
+      "smh": -2,
+      "crcl": 2,
+      "gold": -2,
+      "btc": -2
+     }
+    },
+    {
+     "id": "liquiditeit",
+     "stage": 2,
+     "name": "Liquiditeit",
+     "q": "Is er geld in het systeem?",
+     "status": "gespannen",
+     "keys": [
+      "netLiq",
+      "netLiqChg"
+     ],
+     "reading": "Fed-balans vlak (~$6,75 bln). Geen extra geld in het systeem; bitcoin-ETF's zien uitstroom.",
+     "effects": {
+      "vwce": -1,
+      "smh": -1,
+      "crcl": 0,
+      "gold": 0,
+      "btc": -2
+     }
+    },
+    {
+     "id": "dollar",
+     "stage": 3,
+     "name": "Dollar & yen",
+     "q": "Is de dollar schaars?",
+     "status": "rustig",
+     "keys": [
+      "dxy",
+      "usdjpy"
+     ],
+     "reading": "Dollarindex 102,3 en stijgend na het banenrapport: lastig voor goud en bitcoin.",
+     "effects": {
+      "vwce": 0,
+      "smh": 0,
+      "crcl": 0,
+      "gold": -1,
+      "btc": -1
+     }
+    },
+    {
+     "id": "krediet",
+     "stage": 3,
+     "name": "Krediet",
+     "q": "Breekt er iets?",
+     "status": "gespannen",
+     "keys": [
+      "hySpread"
+     ],
+     "reading": "Kredietopslagen lopen op, vooral bij schuld van AI- en datacenterbedrijven; wereldwijd de hoogste sinds mei 2025.",
+     "effects": {
+      "vwce": -1,
+      "smh": -2,
+      "crcl": 0,
+      "gold": 1,
+      "btc": -1
+     }
+    },
+    {
+     "id": "sentiment",
+     "stage": 3,
+     "name": "Sentiment & AI",
+     "q": "Hoe zit de markt erin?",
+     "status": "gespannen",
+     "keys": [
+      "vix",
+      "kospi",
+      "btc"
+     ],
+     "reading": "Angst terug: VIX 25,6 (piek 28,2), Nasdaq in correctie, Kospi en Nikkei −6% op 6 nov.",
+     "effects": {
+      "vwce": -1,
+      "smh": -2,
+      "crcl": -1,
+      "gold": 1,
+      "btc": -1
+     }
+    }
+   ],
+   "positionImpact": {
+    "vwce": {
+     "dir": -1,
+     "why": "Tech-zware wereldindex: de AI-correctie drukt, maar de economie houdt stand."
+    },
+    "smh": {
+     "dir": -2,
+     "why": "Kern van de uitverkoop: ruim 30% onder de top; Nvidia op 17 nov is de toets."
+    },
+    "crcl": {
+     "dir": 0,
+     "why": "Een Fed die verhoogt helpt de rente-inkomsten, maar USDC groeit niet en crypto is zwak."
+    },
+    "gold": {
+     "dir": 1,
+     "why": "Buffer in de uitverkoop; minder steun nu olie zakt en de rente stijgt."
+    },
+    "btc": {
+     "dir": -1,
+     "why": "ETF-uitstroom en risk-off; $75.000 is de steun."
+    }
+   },
+   "cycle": {
+    "updatedAt": "2026-11-07T21:30:00+01:00",
+    "verdict": "De AI-correctie is begonnen; de economie houdt (nog) stand",
+    "summary": "Op 5 november brak de AI-handel: chips −12% op één dag, de Nasdaq in een correctie (meer dan 10% onder het record) en de VIX naar 28. De brede beurs staat 5,7% onder het record. Tegelijk is de economie sterk: 165.000 banen erbij en een werkloosheid van 4,1%. Dat is het patroon van 2000: een dure sector die leegloopt terwijl de economie nog draait. Een crisis zoals 2008 kondigt zich aan via oplopende ontslagen en kredietstress; die signalen staan nog op groen of oranje.",
+    "analogs": [
+     {
+      "label": "2000",
+      "what": "AI = internet",
+      "why": "Een dure, geconcentreerde techsector loopt leeg terwijl de economie nog groeit. Chips staan al 38% onder de top van juni."
+     },
+     {
+      "label": "najaar 2018",
+      "what": "Fed in een dalende markt",
+      "why": "De Fed bleef verhogen terwijl tech daalde; de S&P 500 zakte 20% tot de Fed omdraaide."
+     },
+     {
+      "label": "zomer 2007",
+      "what": "krediet",
+      "why": "Stress in een schaduwhoek (private credit, AI-schuld) terwijl de banen nog goed zijn."
+     },
+     {
+      "label": "2022",
+      "what": "rente",
+      "why": "Hoge reële rente drukt tech, goud en crypto tegelijk."
+     }
+    ],
+    "nowAsOf": "7 nov 2026, na de week van de verkiezingen",
+    "nowText": "Dit was de zwaarste beursweek sinds april 2025 (S&P 500 −2,7%, Nasdaq −3,4%). De komende twee weken beslissen: de inflatie (10 nov) bepaalt of de Fed in december verhoogt, en Nvidia (17 nov) of de AI-investeringen doorgaan.",
+    "news": [
+     {
+      "t": "AI-uitverkoop (5 nov)",
+      "why": "Chips −12%, Nvidia −9%, Nasdaq in correctie. Vrees voor regels voor datacenters na de verkiezingen."
+     },
+     {
+      "t": "Democraten winnen Congres",
+      "why": "Vanaf januari: Iran, tarieven en onderzoeken op de agenda; Trump dreigt met veto's."
+     },
+     {
+      "t": "Banen +165.000",
+      "why": "Sterke economie; de kans op een Fed-verhoging in december steeg naar ruim 65%."
+     },
+     {
+      "t": "Olie −16% in een week",
+      "why": "Vredeshoop rond Iran; Brent rond $98. Minder inflatiedruk, minder steun voor goud."
+     }
+    ],
+    "nextPhase": "Van 'correctie in tech' naar 'bearmarkt' gaat het als de S&P 500 meer dan 10% onder het record zakt, de junk-spread boven 4–5% komt of Nvidia op 17 november de verwachtingen verlaagt. Een crisis zoals 2008 kondigt zich aan via de banen (Sahm-regel naar 0,5) en het krediet (spread boven 5%); die staan nog ver weg. Tot dan: je planregels volgen, niet in paniek verkopen.",
+    "cycles": [
+     {
+      "id": "sentiment",
+      "pos": 0.64,
+      "why": "Net over de top en in de onrust-fase: de Nasdaq zakte in een correctie, chips staan 38% onder de top van juni en de VIX schoot naar 28. De brede beurs staat nog maar 5,7% onder het record: de pijn zit vooral in AI.",
+      "extra": [
+       {
+        "label": "Goud & zilver",
+        "pos": 0.8,
+        "why": "Hun euforie was in januari (goud $5.590, zilver boven $121). Goud hield zich deze week goed rond $4.080; zilver zakte verder naar ~$52."
+       }
+      ]
+     },
+     {
+      "id": "credit",
+      "pos": 0.6,
+      "why": "Kredietopslagen lopen op, vooral bij AI- en datacenterschuld (wereldwijd de hoogste sinds mei 2025). Private credit kraakt (wanbetalingen op een record). Nog geen breuk: de junk-spread zit ruim onder 5%."
+     },
+     {
+      "id": "economy",
+      "pos": 0.55,
+      "why": "Sterk: 165.000 banen erbij, werkloosheid 4,1%, weinig ontslagen. De inflatie (3,7%) houdt de Fed op scherp; een verhoging in december is waarschijnlijk. Laat in de cyclus, maar nog geen afkoeling."
+     }
+    ]
+   }
+  },
+  "claimsUpdate": [
+   {
+    "text": "De Fed pauzeert op 28 oktober en verhoogt in december.",
+    "status": "open",
+    "note": "Pauze bevestigd (10–2). Na het banenrapport van 6 nov ruim 65% kans op een verhoging in december."
+   },
+   {
+    "text": "AI-euforie houdt de aandelenmarkt overeind.",
+    "status": "weerlegd",
+    "note": "5 nov: AI-uitverkoop, chips −12% en de Nasdaq in een correctie. De euforie is (voorlopig) gebroken."
+   },
+   {
+    "text": "AI-agenten kunnen de vraag naar USDC raken.",
+    "note": "Q3: USDC vlak (~$74 mld) en rente-inkomsten −8%; nog geen bewijs, wel geen groei."
+   }
+  ],
+  "claimsAdd": [
+   {
+    "text": "Democratische winst leidt tot strengere regels voor AI-datacenters.",
+    "source": "Marktreactie 5 nov (UBS: ~30% van de capaciteit voor 2028 op de tocht)",
+    "date": "2026-11-05",
+    "status": "open",
+    "note": "Toets aan concrete wetsvoorstellen vanaf januari."
+   }
+  ],
+  "sourcesAdd": [
+   {
+    "label": "Zacks via Yahoo Finance: beurs 5 nov",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-news-nov-6-132900980.html"
+   },
+   {
+    "label": "Capp Notes: slot vrijdag 6 nov",
+    "url": "https://cappnotes.substack.com/p/closing-look-friday-november-6-2026"
+   },
+   {
+    "label": "24/7 Wall St.: chips tweede slechtste dag ooit",
+    "url": "https://247wallst.com/investing/2026/11/06/chip-stocks-just-had-their-second-worst-day-on-record/"
+   },
+   {
+    "label": "Yahoo Finance: chip-ETF's slechtste dag sinds 2020",
+    "url": "https://finance.yahoo.com/markets/stocks/articles/ai-selloff-deepens-chip-etfs-025227411.html"
+   },
+   {
+    "label": "BLS: banenrapport oktober",
+    "url": "https://www.bls.gov/news.release/empsit.nr0.htm"
+   },
+   {
+    "label": "CBS News: uitslag midterms",
+    "url": "https://www.cbsnews.com/live-updates/election-day-2026-midterms/"
+   },
+   {
+    "label": "SpazioCrypto: Circle Q3",
+    "url": "https://en.spaziocrypto.com/stablecoins/circle-q3-2026-results-usdc-arc-token-revenue/"
+   },
+   {
+    "label": "CoinGape: CRCL na de cijfers",
+    "url": "https://coingape.com/markets/crcl-stock-outlook-as-compass-point-raises-price-target-after-earnings-beat/"
+   },
+   {
+    "label": "Mansfield Energy: olie week 6 nov",
+    "url": "https://mansfield.energy/2026/11/06/week-in-review-oil-prices-retreat-on-iran-peace-hopes-and-weaker-global-demand/"
+   },
+   {
+    "label": "crypto.news: bitcoin en ETF-uitstroom",
+    "url": "https://crypto.news/bitcoin-price-76000-etf-outflows-75000-support/"
+   },
+   {
+    "label": "JorgAI: Nvidia-cijfers 17 nov",
+    "url": "https://jorgai.com/blog/nvidia-q3-fy2027-earnings-november-17-2026-what-nvda-did-the-day-after-every-report-since-2010"
+   }
+  ]
+ },
+ "watchlistRemove": [
+  "MAGS",
+  "AAPL",
+  "GOOGL",
+  "AMZN",
+  "META",
+  "TSLA",
+  "SIL",
+  "GDX"
+ ]
+}

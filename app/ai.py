@@ -5,8 +5,11 @@ zodat een API-limiet of storing nooit de site laat crashen.
 """
 import base64
 import json
+import logging
 import os
 import re
+import threading
+import time
 
 import httpx
 
@@ -19,6 +22,11 @@ XAI_MODEL_COMPLEX = os.environ.get("XAI_MODEL_COMPLEX", XAI_MODEL)
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
 CLAUDE_MODEL_COMPLEX = os.environ.get("CLAUDE_MODEL_COMPLEX", "claude-opus-5-5")
+
+
+log = logging.getLogger("handelsplan.ai")
+_models = {"at": 0.0, "ids": None, "note": ""}
+_models_lock = threading.Lock()
 
 
 class AIError(Exception):
@@ -57,6 +65,52 @@ def model_name(tier="default"):
     return None
 
 
+def available_models(force=False):
+    """De modellen die jouw xAI-sleutel mag gebruiken (6 uur onthouden). None als dat niet lukt."""
+    if provider() != "grok":
+        return None
+    with _models_lock:
+        if not force and _models["ids"] is not None and time.time() - _models["at"] < 6 * 3600:
+            return _models["ids"]
+        try:
+            r = httpx.get(f"{XAI_BASE}/models", timeout=15, headers={"Authorization": f"Bearer {XAI_KEY}"})
+            body = r.json() if r.status_code < 400 else {}
+            ids = sorted({m.get("id") for m in (body.get("data") or []) if isinstance(m, dict) and m.get("id")})
+        except (httpx.HTTPError, ValueError):
+            ids = []
+        _models.update(at=time.time(), ids=ids or None)
+        return _models["ids"]
+
+
+def _version(mid):
+    m = re.match(r"grok-(\d+)(?:[.-](\d{1,2})(?!\d))?", mid)
+    return (int(m.group(1)), int(m.group(2) or 0)) if m else (0, 0)
+
+
+def pick_model(ids, wanted, tier="default"):
+    """Kies het ingestelde model als dat bestaat, anders het best passende Grok-model uit de lijst."""
+    if not ids or wanted in ids:
+        return wanted
+    skip = ("image", "imagine", "vision", "video", "tts", "audio", "embed", "code")
+    cands = [i for i in ids if i.startswith("grok-") and not any(k in i for k in skip)]
+    if not cands:
+        return wanted
+
+    def score(i):
+        fast = "fast" in i
+        nonreason = "non-reasoning" in i
+        pref = (fast, nonreason) if tier == "default" else (not fast, not nonreason)
+        return (_version(i), pref, "latest" in i, -len(i))
+    return max(cands, key=score)
+
+
+def resolved_model(tier="default"):
+    want = model_name(tier)
+    if provider() != "grok":
+        return want
+    return pick_model(available_models(), want, tier)
+
+
 def _raise_for(r, who):
     if r.status_code == 429:
         raise AIRateLimit(f"{who}: limiet bereikt, later opnieuw")
@@ -71,7 +125,7 @@ def complete(prompt: str, images=None, tier="default", max_tokens=4000, timeout=
     p = provider()
     if not p:
         raise AINotConfigured("Geen XAI_API_KEY ingesteld")
-    model = model_name(tier)
+    model = resolved_model(tier)
     images = images or []
     try:
         if p == "grok":

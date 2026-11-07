@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import secrets
+import sys
 import threading
 import time
 from contextlib import asynccontextmanager
@@ -30,7 +31,9 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from . import ai, db, health, jobs, mail, patch, quotes, scheduler, updates
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)  # nooit volledige URL's (met sleutels) in de logs
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 log = logging.getLogger("handelsplan")
 BASE = Path(__file__).resolve().parent
 APP_PASSWORD = os.environ.get("APP_PASSWORD", "")
@@ -489,6 +492,7 @@ def status(request: Request):
         "finnhub": bool(quotes.finnhub_key()), "twelvedata": bool(jobs.TD_KEY), "fred": bool(jobs.FRED_KEY),
         "notify": {**jobs.channels(), "any": any(jobs.channels().values())}, "inboxToken": bool(INBOX_TOKEN),
         "marketAt": market_at, "dailyAt": daily.get("at"), "dailyErrors": daily.get("errors", []),
+        "sources": (db.get_doc("system/sources") or {}) if ok_db else {},
         "jobs": jobs_st, "site": jobs.site_url(),
     }
 
