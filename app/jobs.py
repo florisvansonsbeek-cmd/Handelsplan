@@ -1,10 +1,14 @@
 """Geplande taken. De ingebouwde planner (app/scheduler.py) start ze vanzelf; met de hand kan ook:
 python -m app.jobs post | koersen | markt | dagelijks | melding
 
-- markt     : elk halfuur. Actuele koersen (Twelve Data, CoinGecko), triggers, melding bij nieuw rood.
-- dagelijks : na slot van de beurs. Macrocijfers uit FRED (rente, reële rente, inflatie, banen,
-              liquiditeit, kredietspread), daggrafieken voor sparklines en het niveaubord
+- markt     : elk kwartier op werkdagen. Koersen van indexen, metalen, olie, valuta en rente
+              (Yahoo Finance zonder sleutel, of Twelve Data met sleutel), bitcoin (CoinGecko),
+              triggers en planregels, melding bij nieuw rood of een planregel die afgaat.
+- dagelijks : 's ochtends en 's avonds. Macrocijfers uit FRED (werkt zonder sleutel via de
+              CSV-download; met FRED_API_KEY via de API): rente, reële rente, inflatie, banen,
+              liquiditeit, kredietspread, Fed-balans. Daggrafieken voor sparklines en het niveaubord
               (50/200-daags gemiddelde, weekhoog/-laag, gemiddelde dagbeweging).
+- briefing  : 's ochtends en na slot van Wall Street: Grok schrijft een korte briefing uit de cijfers.
 - post      : e-mail ophalen (IMAP) en documenten laten analyseren door Grok.
 - koersen   : koersen van je volglijst (Finnhub, CoinGecko).
 - melding   : stuurt een testmelding naar je telefoon of mail.
@@ -18,7 +22,7 @@ from zoneinfo import ZoneInfo
 
 import httpx
 
-from . import db
+from . import db, sources
 
 TZ = ZoneInfo("Europe/Amsterdam")
 TD_KEY = os.environ.get("TWELVEDATA_API_KEY", "")
@@ -32,7 +36,29 @@ META = {
     "netLiqChg": dict(label="Netto liquiditeit, 4 weken", group="Macro", pillar="liquiditeit", prefix="$", suffix=" mld", decimals=0),
     "spxDD": dict(label="S&P 500 t.o.v. record", group="Aandelen", pillar="sentiment", prefix="", suffix="%", decimals=1),
     "sahm": dict(label="Sahm-regel (recessiesignaal)", group="Macro", pillar="groei", prefix="", suffix="", decimals=2),
+    "eurusd": dict(label="EUR/USD", group="Rente & valuta", pillar="dollar", prefix="", suffix="", decimals=4),
+    "vwce": dict(label="VWCE (wereldaandelen)", group="Jouw posities", pillar="sentiment", prefix="€", suffix="", decimals=2),
+    "fedAssets": dict(label="Fed-balans", group="Macro", pillar="liquiditeit", prefix="$", suffix=" bln", decimals=2),
+    "kospi": dict(label="Kospi", group="Aandelen", pillar="sentiment", prefix="", suffix="", decimals=0),
+    "kospiDay": dict(label="Kospi dagbeweging", group="Aandelen", pillar="sentiment", prefix="", suffix="%", decimals=1),
+    "unrate": dict(label="Werkloosheid", group="Macro", pillar="groei", prefix="", suffix="%", decimals=1),
+    "claims": dict(label="WW-aanvragen", group="Macro", pillar="groei", prefix="", suffix="k", decimals=0),
+    "cpiYoY": dict(label="CPI-inflatie (j/j)", group="Macro", pillar="inflatie", prefix="", suffix="%", decimals=1),
+    "coreCpi": dict(label="Kerninflatie (j/j)", group="Macro", pillar="inflatie", prefix="", suffix="%", decimals=1),
+    "nfp3m": dict(label="Banengroei, gem. 3 mnd", group="Macro", pillar="groei", prefix="", suffix="k", decimals=0),
+    "netLiq": dict(label="Netto liquiditeit", group="Macro", pillar="liquiditeit", prefix="$", suffix=" mld", decimals=0),
 }
+
+# Elk kwartier zonder sleutel: Yahoo Finance (±15 min vertraagd). Sleutel in het plan -> Yahoo-symbool.
+YAHOO_LIVE = {
+    "spx": "^GSPC", "ndx": "^IXIC", "vix": "^VIX", "kospi": "^KS11", "vwce": "VWCE.DE",
+    "gold": "GC=F", "silver": "SI=F", "brent": "BZ=F", "wti": "CL=F",
+    "dxy": "DX-Y.NYB", "usdjpy": "JPY=X", "eurusd": "EURUSD=X", "us10y": "^TNX",
+}
+YAHOO_IF_NO_FINNHUB = {"smh": "SMH", "crcl": "CRCL"}
+# Dagelijks zonder Twelve Data: daggrafieken (met hoog/laag) voor het niveaubord
+LEVEL_YAHOO = {"spy": "SPY", "vwce": "VWCE.DE", "smh": "SMH", "crcl": "CRCL", "gold": "GC=F", "silver": "SI=F",
+               "qqq": "QQQ", "usdjpy": "JPY=X"}
 
 # Elk halfuur (Twelve Data /price, max 8 symbolen per minuut op het gratis niveau)
 PRICE_TD = {"gold": "XAU/USD", "silver": "XAG/USD", "usdjpy": "USD/JPY", "crcl": "CRCL", "smh": "SMH"}
@@ -43,9 +69,9 @@ LEVEL_META = {
     "gold": ("Goud", "$", "", 0), "silver": ("Zilver", "$", "", 2), "spy": ("S&P 500 (SPY)", "$", "", 2),
     "qqq": ("Nasdaq 100 (QQQ)", "$", "", 2), "mags": ("Mag 7 (MAGS)", "$", "", 2), "smh": ("Chips (SMH)", "$", "", 2), "crcl": ("Circle (CRCL)", "$", "", 2),
     "usdjpy": ("USD/JPY", "", "", 2), "btc": ("Bitcoin", "$", "", 0), "us10y": ("US 10-jaars", "", "%", 2),
-    "wti": ("WTI-olie", "$", "", 2),
+    "wti": ("WTI-olie", "$", "", 2), "vwce": ("VWCE", "€", "", 2),
 }
-LEVEL_ORDER = ["spy", "smh", "crcl", "gold", "btc", "silver", "qqq", "us10y", "wti", "usdjpy"]
+LEVEL_ORDER = ["spy", "vwce", "smh", "crcl", "gold", "btc", "silver", "qqq", "us10y", "wti", "usdjpy"]
 
 # FRED-reeksen (gratis). Dagreeksen: laatste waarde + sparkline.
 FRED_DAILY = {
@@ -62,9 +88,20 @@ def now_nl():
     return datetime.now(TZ)
 
 
-def stamp():
-    n = now_nl()
+def stamp(when=None):
+    n = when.astimezone(TZ) if when else now_nl()
     return f"{n.day} {MONTHS[n.month - 1]} {n:%H:%M}"
+
+
+def stamp_iso(iso):
+    try:
+        return stamp(datetime.fromisoformat(iso))
+    except (TypeError, ValueError):
+        return stamp()
+
+
+def now_iso():
+    return now_nl().isoformat(timespec="seconds")
 
 
 def nl_date(iso):
@@ -86,9 +123,10 @@ def signed(v, dec=1, unit=""):
     return ("+" if v > 0 else "") + fmt_num(v, dec) + unit
 
 
-def fred_obs(series, limit=260):
+def fred_obs(series, limit=260, freq="d"):
+    """Laatste `limit` waarnemingen van een FRED-reeks, oplopend. Zonder FRED_API_KEY via de CSV-download."""
     if not FRED_KEY:
-        return []
+        return sources.fred_csv(series, sources.fred_start(limit, freq))[-limit:]
     r = httpx.get("https://api.stlouisfed.org/fred/series/observations",
                   params={"series_id": series, "api_key": FRED_KEY, "file_type": "json",
                           "sort_order": "desc", "limit": limit}, timeout=30)
@@ -153,6 +191,51 @@ def ensure_item(items, key):
         m = META.get(key, dict(label=key, group="Macro", pillar="", prefix="", suffix="", decimals=2))
         items[key] = dict(key=key, value=None, change="", asOf="", src="", **m)
     return items[key]
+
+
+LIVE_SRC = ("Yahoo", "Twelve Data", "CoinGecko", "Finnhub")
+
+
+def put(items, key, value, src, asOf, obs=None, change="", weak=False, **extra):
+    """Zet een automatisch cijfer, maar nooit over een nieuwere waarneming heen.
+    obs = datum (JJJJ-MM-DD) waar de waarde bij hoort; `at` = wanneer de server hem ophaalde.
+    weak = reservebron (FRED): een live koers van dezelfde dag blijft dan staan."""
+    it = ensure_item(items, key)
+    if obs and (it.get("obsDate") or "") > obs:
+        return False
+    if weak and obs and it.get("obsDate") == obs and str(it.get("src") or "").startswith(LIVE_SRC):
+        return False
+    it.update(value=value, src=src, asOf=asOf, change=change, display=None, at=now_iso(), **extra)
+    if obs:
+        it["obsDate"] = obs
+    return True
+
+
+def put_series(series, key, d, v, keep=130):
+    s = series.setdefault(key, [])
+    if s and s[-1][0] == d:
+        s[-1] = [d, v]
+    elif not s or s[-1][0] < d:
+        s.append([d, v])
+    del s[:-keep]
+
+
+def update_drawdown(items):
+    """S&P 500 ten opzichte van het record; het record wordt vanzelf bijgehouden."""
+    spx = items.get("spx")
+    if not spx or not isinstance(spx.get("value"), (int, float)):
+        return
+    dd = ensure_item(items, "spxDD")
+    v, ath = float(spx["value"]), float(dd.get("ath") or 0)
+    if v > ath:
+        dd["ath"], dd["athDate"] = v, spx.get("obsDate") or now_nl().date().isoformat()
+        ath = v
+    if not ath:
+        return
+    dd.update(value=round((v / ath - 1) * 100, 2), src="berekend", asOf=spx.get("asOf", ""), display=None, at=now_iso(),
+              change=f"record {fmt_num(ath, 0)} op {nl_date(dd.get('athDate') or now_nl().date().isoformat())}")
+    if spx.get("obsDate"):
+        dd["obsDate"] = spx["obsDate"]
 
 
 # ---------------------------------------------------------------- triggers & mail
@@ -257,51 +340,150 @@ def check_triggers(items):
     db.set_doc("system/alerts", {"red": nowred, "checkedAt": now_nl().isoformat(timespec="seconds")})
 
 
-# ---------------------------------------------------------------- elk halfuur
+def fmt_value(it):
+    if not it or not isinstance(it.get("value"), (int, float)):
+        return "–"
+    v = it["value"]
+    dec = 0 if abs(v) >= 1000 else (it.get("decimals") if it.get("decimals") is not None else 2)
+    return ("−" if v < 0 else "") + (it.get("prefix") or "") + fmt_num(abs(v), dec) + (it.get("suffix") or "")
+
+
+def check_actions(items):
+    """Melding zodra een planregel afgaat (bijv. 'SMH onder $500: verklein met een derde').
+    Een regel meldt zich één keer; pas als de koers duidelijk terug is, mag hij opnieuw melden."""
+    from . import planstatus
+    plan = db.get_doc("plan/current") or {}
+    state = db.get_doc("system/actions") or {}
+    by_id = planstatus.checks_by_id(plan)
+    alerted = []
+    for cid in state.get("alerted", state.get("hit", [])):
+        pc = by_id.get(cid)
+        if pc and not planstatus.recovered(pc[1], planstatus._val(items, pc[1].get("key"))):
+            alerted.append(cid)
+    now_hit = []
+    for st in planstatus.evaluate(plan, items):
+        n = st.get("next")
+        if not n or not n["hit"]:
+            continue
+        now_hit.append(n["id"])
+        if n["id"] in alerted:
+            continue
+        alerted.append(n["id"])
+        c = n["check"]
+        notify(f"Handelsplan: {st['name']}: {c.get('action', '')}",
+               f"{c.get('label', '')} (nu {fmt_value(items.get(c.get('key')))}).\n\n{c.get('then', '')}\n\n"
+               "Markeer het op de site als gedaan zodra je het hebt uitgevoerd.", site_url())
+        db.event("let op", "planregel", f"{st['name']}: {c.get('action', '')} ({c.get('label', '')})")
+    fresh = db.get_doc("plan/current") or {}
+    if planstatus.reset_done(fresh, items):
+        db.set_doc("plan/current", fresh)
+        db.event("info", "planregel", "Een als gedaan gemarkeerde regel staat weer scherp (koers is duidelijk terug).")
+    db.set_doc("system/actions", {"hit": now_hit, "alerted": alerted, "checkedAt": now_iso()})
+
+
+# ---------------------------------------------------------------- elk kwartier
+def _save_sources(part, status):
+    try:
+        st = db.get_doc("system/sources") or {}
+        st[part] = status
+        db.set_doc("system/sources", st)
+    except db.DBError:
+        pass
+
+
 def markt():
+    """Koersen van indexen, metalen, olie, valuta en rente; daarna signalen en planregels controleren."""
+    from . import quotes
     doc = db.get_doc("market/latest") or {"items": []}
     items = {i["key"]: i for i in doc.get("items", [])}
     series = (db.get_doc("market/series") or {}).get("series", {})
-    today = now_nl().date().isoformat()
+    status = {"at": now_iso(), "ok": [], "errors": [], "via": {}}
 
-    def prev_close(key):
-        s = [p for p in series.get(key, []) if p[0] < today]
-        return s[-1][1] if s else None
+    syms = dict(YAHOO_LIVE)
+    if not quotes.finnhub_key():
+        syms.update(YAHOO_IF_NO_FINNHUB)
 
+    # 1. Twelve Data (alleen met sleutel) voor de symbolen die het kent
     if TD_KEY:
         try:
-            syms = list(PRICE_TD.values())
-            r = httpx.get("https://api.twelvedata.com/price",
-                          params={"symbol": ",".join(syms), "apikey": TD_KEY}, timeout=30).json()
-            if len(syms) == 1:
-                r = {syms[0]: r}
+            tds = list(PRICE_TD.values())
+            r = httpx.get("https://api.twelvedata.com/price", params={"symbol": ",".join(tds), "apikey": TD_KEY}, timeout=30).json()
+            if len(tds) == 1:
+                r = {tds[0]: r}
             for key, sym in PRICE_TD.items():
                 v = r.get(sym, {})
                 if isinstance(v, dict) and "price" in v:
-                    it = ensure_item(items, key)
-                    price = float(v["price"])
-                    pc = prev_close(key)
-                    it.update(value=price, asOf=stamp(), src="Twelve Data", display=None,
-                              change=f"vs slot: {signed((price / pc - 1) * 100, 1, '%')}" if pc else "")
-                else:
-                    print(f"Twelve Data gaf geen prijs voor {sym}: {v}")
+                    put(items, key, float(v["price"]), "Twelve Data", stamp(), obs=now_nl().date().isoformat())
+                    status["ok"].append(key)
+                    status["via"][key] = "Twelve Data"
+                    syms.pop(key, None)
         except Exception as e:
-            print("Twelve Data mislukt:", e)
-    try:
-        cg = httpx.get("https://api.coingecko.com/api/v3/simple/price",
-                       params={"ids": "bitcoin", "vs_currencies": "usd", "include_24hr_change": "true"}, timeout=30).json()
-        it = ensure_item(items, "btc")
-        it.update(value=float(cg["bitcoin"]["usd"]), asOf=stamp(), src="CoinGecko",
-                  change=f"24u: {signed(cg['bitcoin'].get('usd_24h_change', 0), 1, '%')}")
-    except Exception as e:
-        print("CoinGecko mislukt:", e)
+            status["errors"].append(f"Twelve Data: {e.__class__.__name__}")
 
+    # 2. Yahoo Finance (zonder sleutel)
+    with sources.client() as h:
+        for key, sym in syms.items():
+            try:
+                y = sources.yahoo_chart(sym, "5d", "1d", http=h)
+            except sources.SourceError as e:
+                status["errors"].append(str(e))
+                continue
+            v, prev = y["price"], y["prev"]
+            if key == "us10y":  # ^TNX staat soms als rente x 10 genoteerd
+                v = v / 10 if v > 20 else v
+                prev = (prev / 10 if prev and prev > 20 else prev)
+                chg = f"dag: {signed((v - prev) * 100, 0, ' bp')}" if prev else ""
+            else:
+                chg = f"dag: {signed(y['changePct'], 1, '%')}" if y["changePct"] is not None else ""
+            if put(items, key, round(v, 6), "Yahoo Finance", stamp_iso(y["time"]) if y["time"] else stamp(), obs=y["date"], change=chg):
+                put_series(series, key, y["date"], round(v, 4))
+            status["ok"].append(key)
+            status["via"][key] = "Yahoo"
+            if key == "kospi" and y["changePct"] is not None:
+                put(items, "kospiDay", round(y["changePct"], 2), "Yahoo Finance (berekend)",
+                    stamp_iso(y["time"]) if y["time"] else stamp(), obs=y["date"], change="dagbeweging van de Kospi")
+
+        # 3. CoinGecko: bitcoin, en als reserve goud (PAXG), zilver (KAG) en de euro (USDC)
+        try:
+            cg = sources.coingecko(["bitcoin", "pax-gold", "kinesis-silver", "usd-coin"], ("usd", "eur"), http=h)
+            b = cg.get("bitcoin") or {}
+            if b.get("usd"):
+                ch = b.get("usd_24h_change")
+                put(items, "btc", float(b["usd"]), "CoinGecko", stamp(), obs=now_nl().date().isoformat(),
+                    change=f"24u: {signed(ch, 1, '%')}" if ch is not None else "")
+                put_series(series, "btc", now_nl().date().isoformat(), round(float(b["usd"])))
+                status["ok"].append("btc")
+                status["via"]["btc"] = "CoinGecko"
+            for key, cid, label in (("gold", "pax-gold", "PAXG"), ("silver", "kinesis-silver", "KAG")):
+                d = cg.get(cid) or {}
+                if key not in status["ok"] and d.get("usd"):
+                    ch = d.get("usd_24h_change")
+                    put(items, key, float(d["usd"]), f"CoinGecko ({label}, ≈ spotprijs)", stamp(), obs=now_nl().date().isoformat(),
+                        change=f"24u: {signed(ch, 1, '%')}" if ch is not None else "")
+                    status["ok"].append(key)
+                    status["via"][key] = "CoinGecko"
+            u = (cg.get("usd-coin") or {}).get("eur")
+            if "eurusd" not in status["ok"] and u:
+                put(items, "eurusd", round(1 / float(u), 4), "CoinGecko (via USDC)", stamp(), obs=now_nl().date().isoformat())
+                status["ok"].append("eurusd")
+                status["via"]["eurusd"] = "CoinGecko"
+        except sources.SourceError as e:
+            status["errors"].append(str(e))
+
+    update_drawdown(items)
     doc["items"] = list(items.values())
-    doc["updatedAt"] = now_nl().isoformat(timespec="seconds")
+    doc["updatedAt"] = now_iso()
     doc["updatedBy"] = "Server (automatisch)"
     db.set_doc("market/latest", doc)
+    db.set_doc("market/series", {"updatedAt": doc["updatedAt"], "series": series})
+    _save_sources("markt", status)
     check_triggers(items)
-    print("Koersen bijgewerkt", stamp())
+    check_actions(items)
+    print(f"Koersen bijgewerkt {stamp()}: {len(status['ok'])} gelukt, {len(status['errors'])} fouten", flush=True)
+    for e in status["errors"][:8]:
+        print("  let op:", e, flush=True)
+    if not status["ok"]:
+        raise RuntimeError("geen enkele koers opgehaald: " + "; ".join(status["errors"][:3]))
 
 
 # ---------------------------------------------------------------- dagelijks
@@ -312,36 +494,48 @@ def dagelijks():
     bars_by_key = {}
     errors = []
 
-    # 1. FRED dagreeksen
+    # 1. FRED dagreeksen (een nieuwere koers van Yahoo of Twelve Data blijft staan)
+    ok = []
     for key, sid in FRED_DAILY.items():
         try:
-            obs = fred_obs(sid, LONG_HISTORY.get(key, 260))
+            obs = fred_obs(sid, LONG_HISTORY.get(key, 260), "d")
         except Exception as e:
             errors.append(f"{sid}: {e}")
             continue
         if not obs:
             continue
+        ok.append(key)
         d, v = obs[-1]
-        it = ensure_item(items, key)
         chg = ""
         if len(obs) > 1:
             pv = obs[-2][1]
             chg = f"dag: {signed((v - pv) * 100, 0, ' bp')}" if key in RATE_LIKE else f"dag: {signed((v / pv - 1) * 100, 1, '%')}"
-        it.update(value=v, asOf=nl_date(d), src="FRED", change=chg, display=None)
+        put(items, key, v, "FRED", nl_date(d), obs=d, change=chg, weak=True)
         if key == "fedFunds":
-            it["label"] = "Fed-rente (effectief)"
+            items[key]["label"] = "Fed-rente (effectief)"
         if key == "spx":
             ath_d, ath_v = max(obs, key=lambda o: o[1])
             dd = ensure_item(items, "spxDD")
-            dd.update(value=round((v / ath_v - 1) * 100, 2), ath=ath_v, athDate=ath_d[:10], asOf=nl_date(d),
-                      src="FRED (berekend)", change=f"record {fmt_num(ath_v, 0)} op {nl_date(ath_d)}")
-        series[key] = [[a, b] for a, b in obs[-130:]]
+            if ath_v > float(dd.get("ath") or 0):
+                dd["ath"], dd["athDate"] = ath_v, ath_d[:10]
+        old = {p_[0]: p_[1] for p_ in series.get(key, [])}
+        old.update({a: b for a, b in obs[-130:]})
+        series[key] = [[a, old[a]] for a in sorted(old)][-130:]
         if key in ("us10y", "wti"):
             bars_by_key[key] = ([(a, b, b, b, b) for a, b in obs], "FRED")
+    update_drawdown(items)
+    # Wisselkoers EUR/USD (dollars per euro) als reserve voor Yahoo
+    try:
+        eu = fred_obs("DEXUSEU", 30, "d")
+        if eu:
+            chg = f"dag: {signed((eu[-1][1] / eu[-2][1] - 1) * 100, 1, '%')}" if len(eu) > 1 and eu[-2][1] else ""
+            put(items, "eurusd", eu[-1][1], "FRED (Fed H.10)", nl_date(eu[-1][0]), obs=eu[-1][0], change=chg, weak=True)
+    except Exception as e:
+        errors.append(f"DEXUSEU: {e}")
 
     # 2. Maandcijfers en weekcijfers
     try:
-        sa = fred_obs("SAHMREALTIME", 13)
+        sa = fred_obs("SAHMREALTIME", 13, "m")
         if sa:
             it = ensure_item(items, "sahm")
             it.update(value=round(sa[-1][1], 2), asOf=nl_month(sa[-1][0]), src="FRED",
@@ -350,13 +544,13 @@ def dagelijks():
     except Exception as e:
         errors.append(f"Sahm-regel: {e}")
     try:
-        un = fred_obs("UNRATE", 24)
+        un = fred_obs("UNRATE", 24, "m")
         if un:
             it = ensure_item(items, "unrate")
             it.update(value=un[-1][1], asOf=nl_month(un[-1][0]), src="FRED (BLS)",
                       change=f"vorige mnd {fmt_num(un[-2][1], 1)}%" if len(un) > 1 else "")
             series["unrate"] = [[a, b] for a, b in un]
-        cl = fred_obs("ICSA", 60)
+        cl = fred_obs("ICSA", 60, "w")
         if cl:
             ks = [(a, b / 1000) for a, b in cl]
             avg4 = sum(b for _, b in ks[-4:]) / min(4, len(ks))
@@ -365,14 +559,14 @@ def dagelijks():
                       change=f"4-wk gem. {fmt_num(avg4, 1)}k")
             series["claims"] = [[a, round(b, 1)] for a, b in ks]
         for key, sid in (("cpiYoY", "CPIAUCSL"), ("coreCpi", "CPILFESL")):
-            cp = fred_obs(sid, 40)
+            cp = fred_obs(sid, 40, "m")
             if len(cp) > 13:
                 yoy = [(cp[i][0], (cp[i][1] / cp[i - 12][1] - 1) * 100) for i in range(12, len(cp))]
                 it = ensure_item(items, key)
                 it.update(value=round(yoy[-1][1], 1), asOf=nl_month(yoy[-1][0]), src="FRED (BLS)",
                           change=f"vorige mnd {fmt_num(yoy[-2][1], 1)}%")
                 series[key] = [[a, round(b, 2)] for a, b in yoy]
-        pay = fred_obs("PAYEMS", 18)
+        pay = fred_obs("PAYEMS", 18, "m")
         if len(pay) > 4:
             diffs = [(pay[i][0], pay[i][1] - pay[i - 1][1]) for i in range(1, len(pay))]
             last3 = diffs[-3:]
@@ -385,7 +579,11 @@ def dagelijks():
 
     # 3. Netto liquiditeit = Fed-balans (WALCL, mln) − TGA (WTREGEN, mln) − reverse repo (RRPONTSYD, mld)
     try:
-        walcl, tga, rrp = fred_obs("WALCL", 60), fred_obs("WTREGEN", 60), fred_obs("RRPONTSYD", 400)
+        walcl, tga, rrp = fred_obs("WALCL", 60, "w"), fred_obs("WTREGEN", 60, "w"), fred_obs("RRPONTSYD", 400, "d")
+        if walcl:
+            wk = walcl[-1][1] - walcl[-2][1] if len(walcl) > 1 else None
+            put(items, "fedAssets", round(walcl[-1][1] / 1e6, 3), "FRED (Fed H.4.1)", nl_date(walcl[-1][0]), obs=walcl[-1][0],
+                change=(f"week: {signed(wk / 1000, 0, ' mld')}" if wk is not None else ""))
 
         def at(obs, d):
             vals = [v for a, v in obs if a <= d]
@@ -409,7 +607,21 @@ def dagelijks():
     except Exception as e:
         errors.append(f"liquiditeit: {e}")
 
-    # 4. Daggrafieken Twelve Data (één verzoek, ≤ 8 credits)
+    # 4. Daggrafieken: Twelve Data met sleutel, anders Yahoo Finance (met hoog/laag)
+    if not TD_KEY:
+        with sources.client() as h:
+            for key, sym in LEVEL_YAHOO.items():
+                try:
+                    y = sources.yahoo_chart(sym, "1y", "1d", http=h)
+                except sources.SourceError as e:
+                    errors.append(str(e))
+                    continue
+                bars = y["bars"]
+                if key == "usdjpy":
+                    bars = [b for b in bars if b[4] > 50]
+                if len(bars) >= 20:
+                    bars_by_key[key] = (bars, "Yahoo Finance")
+                    series[key] = [[b[0], round(b[4], 4)] for b in bars[-130:]]
     if TD_KEY:
         try:
             syms = list(LEVEL_TD.values())
@@ -431,22 +643,22 @@ def dagelijks():
         except Exception as e:
             errors.append(f"Twelve Data: {e}")
 
-    # 5. Bitcoin daggrafiek
+    # 5. Bitcoin daggrafiek: Yahoo (met hoog/laag), anders CoinGecko
     try:
-        cg = httpx.get("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart",
-                       params={"vs_currency": "usd", "days": 260, "interval": "daily"}, timeout=30).json()
-        pts = []
-        for ms, p in cg.get("prices", []):
-            d = datetime.fromtimestamp(ms / 1000, TZ).date().isoformat()
-            if pts and pts[-1][0] == d:
-                pts[-1] = (d, p)
-            else:
-                pts.append((d, p))
-        if pts:
-            bars_by_key["btc"] = ([(d, p, p, p, p) for d, p in pts], "CoinGecko")
-            series["btc"] = [[d, round(p)] for d, p in pts[-130:]]
-    except Exception as e:
-        errors.append(f"CoinGecko: {e}")
+        y = sources.yahoo_chart("BTC-USD", "1y", "1d")
+        if len(y["bars"]) >= 20:
+            bars_by_key["btc"] = (y["bars"], "Yahoo Finance")
+            series["btc"] = [[b[0], round(b[4])] for b in y["bars"][-130:]]
+    except sources.SourceError as e:
+        errors.append(str(e))
+    if "btc" not in bars_by_key:
+        try:
+            pts = sources.coingecko_chart("bitcoin", 260)
+            if pts:
+                bars_by_key["btc"] = ([(d, p, p, p, p) for d, p in pts], "CoinGecko")
+                series["btc"] = [[d, round(p)] for d, p in pts[-130:]]
+        except sources.SourceError as e:
+            errors.append(str(e))
 
     # 6. Niveaubord
     rows = []
@@ -465,7 +677,10 @@ def dagelijks():
     if rows:
         db.set_doc("market/levels", {"updatedAt": doc["updatedAt"], "rows": rows})
     db.set_doc("system/daily", {"at": doc["updatedAt"], "errors": errors[:20], "levels": len(rows), "series": len(series)})
+    _save_sources("dagelijks", {"at": doc["updatedAt"], "ok": ok, "errors": errors[:20], "levels": len(rows),
+                                "charts": sorted(bars_by_key)})
     check_triggers(items)
+    check_actions(items)
     print(f"Dagelijkse update klaar: {len(series)} reeksen, {len(rows)} niveaus.")
     for e in errors:
         print("  let op:", e)
@@ -505,11 +720,17 @@ def post():
 def koersen():
     from . import quotes
     r = quotes.refresh()
-    db.event("info" if not r["errors"] else "let op", "koersen",
-             f"{r['updated']} koersen bijgewerkt" + (": " + "; ".join(r["errors"][:3]) if r["errors"] else ""))
+    if r["errors"]:  # alleen problemen in het logboek, niet elk kwartier een regel
+        db.event("let op", "koersen", f"{r['updated']} koersen bijgewerkt: " + "; ".join(r["errors"][:3]))
 
 
-JOBS = {"post": post, "koersen": koersen, "markt": markt, "dagelijks": dagelijks, "melding": melding}
+def briefing():
+    from . import briefing as b
+    out = b.make()
+    print("Briefing:", out.get("kop", ""), flush=True)
+
+
+JOBS = {"post": post, "koersen": koersen, "markt": markt, "dagelijks": dagelijks, "briefing": briefing, "melding": melding}
 
 if __name__ == "__main__":
     JOBS[sys.argv[1] if len(sys.argv) > 1 else "markt"]()

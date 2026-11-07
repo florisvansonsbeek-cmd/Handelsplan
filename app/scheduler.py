@@ -4,9 +4,13 @@ Railway heeft geen systemd-timers en een volume hoort bij één dienst, dus de t
 in hetzelfde proces als de website. Draai daarom maar één exemplaar (geen replicas).
 
   post       elk kwartier: e-mail ophalen en documenten laten analyseren door Grok
+             (lukt inloggen 3x achter elkaar niet, dan nog maar één keer per uur)
   koersen    elk kwartier: koersen van je volglijst (Finnhub, CoinGecko)
-  markt      werkdagen 08:00–23:30, elk halfuur (alleen met TWELVEDATA_API_KEY)
-  dagelijks  maandag t/m zaterdag 23:20 (alleen met FRED_API_KEY of TWELVEDATA_API_KEY)
+  markt      werkdagen 07:00–23:45 elk kwartier, zaterdag 08:02: indexen, metalen, olie, valuta,
+             rente (Yahoo Finance, zonder sleutel), bitcoin; signalen en planregels
+  dagelijks  maandag t/m zaterdag 07:20 en 23:20: macrocijfers uit FRED (zonder sleutel) en
+             daggrafieken voor het niveaubord
+  briefing   werkdagen 08:05 en 22:35: Grok schrijft de dagbriefing (alleen met XAI_API_KEY)
 
 Bij het opstarten worden verouderde cijfers één keer bijgewerkt (net als 'Persistent=true' bij systemd).
 """
@@ -20,11 +24,13 @@ from . import db, jobs
 
 TZ = jobs.TZ
 _every = max(5, int(os.environ.get("EMAIL_INTERVAL_MIN", "15") or 15))
+_fails = {"post": 0}
 RULES = {
-    "post": lambda n: n.minute % _every == 0,
+    "post": lambda n: n.minute % _every == 0 and (_fails["post"] < 3 or n.minute == 0),
     "koersen": lambda n: n.minute % 15 == 7,
-    "markt": lambda n: n.weekday() < 5 and 8 <= n.hour <= 23 and n.minute in (0, 30),
-    "dagelijks": lambda n: n.weekday() < 6 and n.hour == 23 and n.minute == 20,
+    "markt": lambda n: (n.weekday() < 5 and 7 <= n.hour <= 23 and n.minute % 15 == 2) or (n.weekday() == 5 and n.hour == 8 and n.minute == 2),
+    "dagelijks": lambda n: n.weekday() < 6 and n.hour in (7, 23) and n.minute == 20,
+    "briefing": lambda n: n.weekday() < 5 and ((n.hour == 8 and n.minute == 5) or (n.hour == 22 and n.minute == 35)),
 }
 
 
@@ -32,10 +38,8 @@ def enabled(name):
     from . import ai, mail
     if name == "post":
         return mail.configured() or bool(ai.provider())
-    if name == "markt":
-        return bool(jobs.TD_KEY)
-    if name == "dagelijks":
-        return bool(jobs.FRED_KEY or jobs.TD_KEY)
+    if name == "briefing":
+        return bool(ai.provider())
     return True
 
 
@@ -89,6 +93,8 @@ def run(name, why="gepland"):
             if name in USES_TWELVEDATA:
                 _last_td[0] = time.time()
             _state["running"] = None
+        if name == "post":
+            _fails["post"] = 0 if ok else _fails["post"] + 1
         _record(name, ok, time.time() - t0, why, err)
         if not ok:
             db.event("fout", name, err)
@@ -118,16 +124,18 @@ def _hours_since(iso):
 def _catch_up():
     """Na een herstart of nieuwe versie: meteen mail en koersen ophalen, oude macrocijfers verversen."""
     time.sleep(15)
-    for name in ("post", "koersen"):
+    for name in ("post", "koersen", "markt"):
         if enabled(name):
             run(name, "na opstart")
-    if jobs.FRED_KEY or jobs.TD_KEY:
-        try:
-            stale = _hours_since((db.get_doc("system/daily") or {}).get("at")) > 20
-        except db.DBError:
-            stale = False
-        if stale:
-            run("dagelijks", "inhalen na opstart")
+    try:
+        stale = _hours_since((db.get_doc("system/daily") or {}).get("at")) > 12
+        brief_old = _hours_since((db.get_doc("briefing/latest") or {}).get("at")) > 14
+    except db.DBError:
+        stale, brief_old = False, False
+    if stale:
+        run("dagelijks", "inhalen na opstart")
+    if brief_old and enabled("briefing"):
+        run("briefing", "inhalen na opstart")
 
 
 def _loop():

@@ -14,7 +14,7 @@ from pathlib import Path
 from . import db
 
 UPD_DIR = Path(__file__).resolve().parent.parent / "seed" / "updates"
-LIVE_SOURCES = ("Finnhub", "CoinGecko", "Twelve Data", "FRED")
+LIVE_SOURCES = ("Finnhub", "CoinGecko", "Twelve Data", "FRED", "Yahoo")
 
 
 def _now():
@@ -104,6 +104,11 @@ def _apply_plan(u):
 
 def _apply_watchlist(u):
     add = u.get("watchlistAdd") or []
+    remove = [str(x).upper() for x in (u.get("watchlistRemove") or [])]
+    if remove:
+        with db.conn() as c:
+            c.execute("DELETE FROM watchlist WHERE symbol = ANY(%s)", (remove,))
+            c.execute("DELETE FROM quotes WHERE symbol = ANY(%s)", (remove,))
     if not add:
         return 0
     with db.conn() as c:

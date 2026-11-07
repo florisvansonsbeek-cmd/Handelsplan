@@ -1,13 +1,19 @@
 # Handelsplan 2027
 
-Je handelsplan (Markt, Cyclus, Plan, Signalen, Inbox, **Post**, Historie) op Railway, met:
+Je handelsplan op Railway. Tabs: **Vandaag**, Plan, **Portefeuille**, Markt, Cyclus, Signalen, Challenges, Post, Inbox, Historie en Uitleg. Met:
+
+- **Vandaag** (startpagina): in één oogopslag of een planregel is geraakt, wat dat in euro's betekent, je portefeuille, acht kerncijfers met hun leeftijd, de briefing van Grok, wat er veranderde sinds je vorige bezoek, opvallende signalen en de komende momenten.
+- **Portefeuille**: vul aantal, inleg, doel en maximum per positie in (plus cash). De site rekent waarde, winst, weging en de bedragen van je planregels uit (bijv. "SMH een derde kleiner = ca. € 2.984"). Alles blijft in je eigen database.
+- **Automatische marktdata zonder sleutels**: Yahoo Finance (koersen elk kwartier op werkdagen), FRED van de St. Louis Fed (rente, inflatie, banen, liquiditeit, twee keer per dag) en CoinGecko (bitcoin; reserve voor goud, zilver en de euro). Een cijfer wordt nooit overschreven door een oudere waarneming, en bij elk cijfer staat hoe oud het is.
+- **Planregels met meldingen**: elke positie heeft regels (bijv. "SMH onder $500: verklein met een derde"). Raakt de koers zo'n regel, dan krijg je één melding (ntfy, of mail als die werkt). Met *Gedaan* of *Gezien* zet je hem uit; hij staat pas weer scherp als de koers eerst duidelijk terug is geweest, zodat heen-en-weer rond een niveau geen dubbele meldingen geeft.
+- **Dagbriefing van Grok**: elke werkdag om 08:05 en 22:35 een korte briefing, alleen op basis van de cijfers en planregels op de site (geen verzonnen nieuws). De site kiest zelf het nieuwste Grok-model dat je account heeft, ook als `XAI_MODEL` niet (meer) bestaat.
 
 - **Inloggen met één wachtwoord** (`APP_PASSWORD`); zonder inlog is niets te zien. HTTP wordt doorgestuurd naar HTTPS.
 - **PostgreSQL** (`DATABASE_URL`) voor je plan, verwerkte mails, documenten, koersen, notities en het logboek. De tabellen maakt de site zelf aan.
 - **E-mail via IMAP** (iCloud): elk kwartier nieuwe mails ophalen, alleen lezen. Bijlagen (PDF, Word, Excel, PowerPoint, HTML, tekst, JPG/PNG) worden omgezet naar tekst.
 - **Grok** (`XAI_API_KEY`) haalt per mail en bijlage de handelsinformatie eruit: soort document, samenvatting, bedrijven, tickers, bedragen, datums, belang en acties. Grok doet ook de transcriptanalyse en "Vraag het plan".
 - **Dashboard (tab Post)**: alle verwerkte mails en documenten met filters, koersen van je volglijst, notities en een logboek. Met één klik zet je een document in de Inbox van je plan.
-- **Live koersen** (optioneel `FINNHUB_API_KEY`); crypto komt van CoinGecko.
+- **Volglijst** elk kwartier: via Finnhub als je `FINNHUB_API_KEY` hebt, anders (of bij een limiet) via Yahoo Finance; crypto via CoinGecko.
 - **Verbindingsstatus**: bovenin de site zie je of Railway verbonden is (groen, oranje of rood). Klik erop voor de echte test per koppeling: database, Grok, e-mail en Finnhub. Ook het inlogscherm laat al zien of de server en de database bereikbaar zijn.
 - **Foutafhandeling**: mailserver weg, verkeerd wachtwoord, API-limiet of database even niet bereikbaar? Dan komt er een melding in het logboek en draait de rest gewoon door.
 
@@ -30,7 +36,7 @@ Je handelsplan (Markt, Cyclus, Plan, Signalen, Inbox, **Post**, Historie) op Rai
    - Tip: maak in iCloud Mail een map **Handelsplan** met een regel (bijv. alles van je broker) en zet `EMAIL_FOLDER=Handelsplan`. Dan leest Grok alleen die mails en niet je hele inbox.
    - Klik bovenaan op **Deploy** om de wijzigingen door te voeren.
 3. **Inloggen:** open je site en log in met `APP_PASSWORD`.
-4. Optioneel: `NTFY_TOPIC` (push naar je telefoon), `FRED_API_KEY` en `TWELVEDATA_API_KEY` (macrocijfers op de Markt-pagina), `INBOX_TOKEN` (transcripts vanaf je laptop), `EMAIL_SINCE_DAYS` (hoe ver terug bij de eerste keer, standaard 14), `XAI_MODEL` (standaard grok-4.7). Alles staat in `.env.example`.
+4. Optioneel: `NTFY_TOPIC` (push naar je telefoon; zie Uitleg → *Meldingen op je telefoon*), `FRED_API_KEY` en `TWELVEDATA_API_KEY` (niet nodig: zonder sleutel komen dezelfde cijfers via FRED-csv en Yahoo), `INBOX_TOKEN` (transcripts vanaf je laptop), `EMAIL_SINCE_DAYS` (hoe ver terug bij de eerste keer, standaard 14), `XAI_MODEL` (standaard grok-4.7). Alles staat in `.env.example`.
 
 Gebruik één exemplaar (geen replicas) en laat Serverless uit: de planner voor mail en koersen draait in de site zelf.
 
@@ -41,7 +47,7 @@ Gebruik één exemplaar (geen replicas) en laat Serverless uit: de planner voor 
   - Groen: *Railway verbonden*.
   - Oranje: een koppeling werkt niet, bijvoorbeeld *E-mail niet verbonden*.
   - Rood: geen verbinding met de server of de database.
-  - De stipjes erachter zijn database, AI, e-mail en koersen.
+  - De stipjes erachter zijn database, AI, e-mail, marktdata en Finnhub.
 - **Klik erop** voor de details per koppeling, met wat je moet aanpassen, bijvoorbeeld een verkeerd app-wachtwoord of een modelnaam die niet in je xAI-account staat. *Opnieuw testen* test meteen opnieuw.
 - **Hoe vaak:** de database wordt elke minuut gecontroleerd. Mail, Grok en Finnhub worden hoogstens elke 5 minuten echt getest (inloggen bij IMAP, de modellijst van xAI, één koers bij Finnhub). Dat kost geen AI-tokens. Gaat een koppeling stuk of werkt hij weer, dan staat dat in het logboek (tab Post).
 
@@ -65,10 +71,13 @@ In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uit
 | `app/mail.py` | IMAP ophalen en tekst uit bijlagen halen |
 | `app/analyze.py` | Grok-analyse van mails en bijlagen |
 | `app/ai.py` | Koppeling met Grok (xAI), of Claude als je `ANTHROPIC_API_KEY` gebruikt |
-| `app/quotes.py` | Koersen (Finnhub, CoinGecko) |
+| `app/quotes.py` | Koersen van je volglijst (Finnhub, anders Yahoo; CoinGecko voor crypto) |
+| `app/sources.py` | Databronnen zonder sleutel: FRED-csv, Yahoo Finance-grafieken, CoinGecko |
+| `app/planstatus.py` | Planregels per positie toetsen (zelfde logica als de site), met *gedaan* en weer scherp zetten |
+| `app/briefing.py` | De dagbriefing van Grok |
 | `app/updates.py`, `seed/updates/` | Inhoudelijke updates van plan en cijfers; elke update wordt één keer toegepast bij het starten, met een stap in Historie om terug te zetten |
 | `app/health.py` | Verbindingstest per koppeling (`/api/connections`) |
-| `app/scheduler.py`, `app/jobs.py` | Planner: mail elk kwartier, koersen elk kwartier, macrocijfers 's avonds |
+| `app/scheduler.py`, `app/jobs.py` | Planner: mail en koersen elk kwartier, marktkoersen elk kwartier op werkdagen (07–23 u), macrocijfers om 07:20 en 23:20, briefing om 08:05 en 22:35 |
 | `page/handelsplan.html` | De pagina; bij het bouwen wordt hier `app/pages/index.html` van gemaakt |
 | `seed/` | Je startplan en de cyclus-analyse; alleen ontbrekende onderdelen worden toegevoegd |
 

@@ -87,11 +87,45 @@ def check_ai():
         pass
     ids.discard(None)
     if ids and model not in ids:
+        if p == "grok":
+            used = ai.pick_model(sorted(ids), model)
+            if used != model:
+                return _res("ok", f"Grok verbonden · gebruikt {used} (ingesteld model '{model}' bestaat niet in je account; "
+                                  "dat gaat vanzelf goed)", ms, provider=p, model=used)
         sample = ", ".join(sorted(i for i in ids if i)[:4])
         return _res("let-op", f"Sleutel werkt, maar model '{model}' staat niet in je account. "
                               f"Zet {'XAI_MODEL' if p == 'grok' else 'CLAUDE_MODEL'} in Railway op bijv. {sample}.",
                     ms, provider=p, model=model)
     return _res("ok", f"{who} verbonden · model {model}", ms, provider=p, model=model)
+
+
+def check_data():
+    """Werkt het automatisch ophalen van marktcijfers? (geen extra verzoek: leest de laatste ronde)"""
+    try:
+        st = db.get_doc("system/sources") or {}
+    except db.DBError:
+        return _res("fout", "Database niet bereikbaar, dus geen marktcijfers.")
+    m, d = st.get("markt") or {}, st.get("dagelijks") or {}
+    if not m and not d:
+        return _res("let-op", "Nog geen automatische ronde gedraaid; dat gebeurt binnen een paar minuten na de start.")
+    parts, state = [], "ok"
+    if m:
+        n_ok, n_err = len(m.get("ok") or []), len(m.get("errors") or [])
+        via = sorted(set((m.get("via") or {}).values()))
+        parts.append(f"koersen: {n_ok} gelukt" + (f", {n_err} niet" if n_err else "") + (f" via {', '.join(via)}" if via else ""))
+        if not n_ok:
+            state = "fout"
+        elif n_err:
+            state = "let-op"
+    if d:
+        n_ok, n_err = len(d.get("ok") or []), len(d.get("errors") or [])
+        n_ch = len(d.get("charts") or []) or d.get("levels") or 0
+        parts.append(f"dagcijfers: {n_ok} FRED-reeksen" + (f", {n_ch} grafieken" if n_ch else "")
+                     + (f", {n_err} {'fout' if n_err == 1 else 'fouten'}" if n_err else ""))
+        if not n_ok and state == "ok":
+            state = "let-op"
+    last = (m or d).get("at")
+    return _res(state, "; ".join(parts), lastRun=last, errors=((m.get("errors") or []) + (d.get("errors") or []))[:4])
 
 
 def check_mail(client_factory=None):
@@ -133,7 +167,7 @@ def check_finnhub():
         return _res("uit", "Optioneel: zet FINNHUB_API_KEY voor koersen van aandelen en ETF's.")
     t0 = time.monotonic()
     try:
-        r = httpx.get("https://finnhub.io/api/v1/quote", params={"symbol": "SPY", "token": key}, timeout=10)
+        r = httpx.get("https://finnhub.io/api/v1/quote", params={"symbol": "SPY"}, headers={"X-Finnhub-Token": key}, timeout=10)
     except httpx.HTTPError as e:
         return _res("fout", f"Finnhub niet bereikbaar ({e.__class__.__name__})", _ms(t0))
     ms = _ms(t0)
@@ -146,9 +180,9 @@ def check_finnhub():
     return _res("ok", "Finnhub verbonden", ms)
 
 
-CHECKS = {"database": check_database, "ai": check_ai, "mail": check_mail, "finnhub": check_finnhub}
-REQUIRED = ("database", "ai", "mail")
-NAMES = {"database": "Database", "ai": "AI", "mail": "E-mail", "finnhub": "Finnhub"}
+CHECKS = {"database": check_database, "ai": check_ai, "mail": check_mail, "data": check_data, "finnhub": check_finnhub}
+REQUIRED = ("database", "ai", "mail", "data")
+NAMES = {"database": "Database", "ai": "AI", "mail": "E-mail", "data": "Marktdata", "finnhub": "Finnhub"}
 
 
 # ---------------- samenvoegen ----------------
@@ -191,7 +225,7 @@ def connections(force=False):
     if force:
         _last_force[0] = now
     with _lock:
-        todo = [k for k in CHECKS if k == "database" or force or k not in _cache or now - _cache[k][0] > TTL]
+        todo = [k for k in CHECKS if k in ("database", "data") or force or k not in _cache or now - _cache[k][0] > TTL]
     with ThreadPoolExecutor(max_workers=len(todo) or 1) as ex:
         futs = {k: ex.submit(CHECKS[k]) for k in todo}
         fresh = {}
