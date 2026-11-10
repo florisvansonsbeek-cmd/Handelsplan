@@ -1,9 +1,20 @@
 # Handelsplan 2027
 
-Je handelsplan op Railway. Tabs: **Vandaag**, Plan, **Portefeuille**, Markt, Cyclus, Signalen, Challenges, Post, Inbox, Historie en Uitleg. Met:
+Je handelsplan op Railway, in vier tabs plus Uitleg:
 
-- **Vandaag** (startpagina): in één oogopslag of een planregel is geraakt, wat dat in euro's betekent, je portefeuille, acht kerncijfers met hun leeftijd, de briefing van Grok, wat er veranderde sinds je vorige bezoek, opvallende signalen en de komende momenten.
-- **Portefeuille**: vul aantal, inleg, doel en maximum per positie in (plus cash). De site rekent waarde, winst, weging en de bedragen van je planregels uit (bijv. "SMH een derde kleiner = ca. € 2.984"). Alles blijft in je eigen database.
+| Tab | Wat erin staat |
+|-----|----------------|
+| **Vandaag** | Wat je nu doet (geraakte planregels), de cijfers die je regels sturen, briefing en agenda |
+| **Plan** | Per positie: wat je hebt, je regels als ladder en waarom; daaronder portefeuille, scenario's en Eightcap-challenges (uitklapbaar) |
+| **Markt** | Overzicht, Signalen, Cyclus en Cijfers (subtabs) |
+| **Inbox** | Transcripts, Post (verwerkte mail) en Historie (subtabs) |
+
+Informatie heeft een label: **Doen** (alleen hierop handel je), **Volgen** (de paar cijfers en momenten die je regels sturen) en **Achtergrond** (begrijpen waarom). Oude links zoals `#historie` of `#cyclus` werken nog.
+
+Met:
+
+- **Vandaag** (startpagina): in één oogopslag of een planregel is geraakt en wat dat in euro's betekent, je portefeuille, en het **kompas**: alleen de cijfers die je planregels sturen (bijv. SMH, bitcoin, S&P 500 vanaf de top, reële rente), met de volgende regel en de afstand ernaartoe. Daarnaast de briefing van Grok, de komende momenten en wat er veranderde sinds je vorige bezoek.
+- **Plan**: een kaart per positie met wat je nu doet, wat je hebt (aantal, waarde, weging tegenover je doel) en je regels als ladder met de huidige koers ertussen. De **portefeuille** vul je in onder Plan → Portefeuille; de site rekent waarde, winst, weging en de bedragen van je planregels uit (bijv. "SMH een derde kleiner = ca. € 2.984"). Alles blijft in je eigen database.
 - **Automatische marktdata zonder sleutels**: Yahoo Finance (koersen elk kwartier op werkdagen), FRED van de St. Louis Fed (rente, inflatie, banen, liquiditeit, twee keer per dag) en CoinGecko (bitcoin; reserve voor goud, zilver en de euro). Een cijfer wordt nooit overschreven door een oudere waarneming, en bij elk cijfer staat hoe oud het is.
   - Yahoo en de FRED-site weigeren gewone scripts vanaf servers; de site haalt ze daarom op met de verbindingsvingerafdruk van Chrome (`curl_cffi`, zoals yfinance).
   - Blokkeert een bron toch, dan wordt die even overgeslagen (Yahoo 15 min, FRED 30 min) en vullen de andere bronnen aan. De planner loopt nooit vast.

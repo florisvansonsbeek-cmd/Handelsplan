@@ -282,7 +282,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .ir .s{grid-area:s}
 .ir .v{grid-area:v;font:500 .95rem var(--font-mono);text-align:right;white-space:nowrap}
 .ir .c{grid-area:c;font-size:.76rem;color:var(--muted)}
-.ir .m{grid-area:m;font-size:.72rem;color:var(--faint);text-align:right;white-space:nowrap}
+.ir .m{grid-area:m;font-size:.72rem;color:var(--faint);text-align:right;min-width:0;overflow-wrap:anywhere}
 .ir .v.bad{color:var(--bad)} .ir .v.warn{color:var(--warn)}
 .ir .l{overflow-wrap:break-word;min-width:0}
 @media (max-width:620px){
@@ -610,10 +610,10 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
 .brief ul{margin:4px 0 0;padding-left:18px}
 .brief .posl{display:grid;gap:6px;font-size:.88rem}
 .brief .posl b{font-weight:600}
-.chg{display:grid;gap:7px;margin:0;padding:0;list-style:none}
-.chg li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;font-size:.9rem;align-items:baseline}
-.chg li i{width:8px;height:8px;border-radius:50%;background:var(--faint);transform:translateY(-1px)}
-.chg li.bad i{background:var(--bad)} .chg li.warn i{background:var(--warn)} .chg li.good i{background:var(--good)} .chg li.info i{background:var(--info)}
+.chgl{display:grid;gap:7px;margin:0;padding:0;list-style:none}
+.chgl li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;font-size:.9rem;align-items:baseline}
+.chgl li i{width:8px;height:8px;border-radius:50%;background:var(--faint);transform:translateY(-1px)}
+.chgl li.bad i{background:var(--bad)} .chgl li.warn i{background:var(--warn)} .chgl li.good i{background:var(--good)} .chgl li.info i{background:var(--info)}
 .sig-mini{display:grid;gap:8px}
 .sig-mini div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;font-size:.88rem;padding-bottom:8px;border-bottom:1px solid var(--line-2)}
 .sig-mini div:last-child{border-bottom:0;padding-bottom:0}
@@ -650,6 +650,99 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
 .pf-advice div{border-radius:10px;padding:10px 12px;background:var(--surface-2);font-size:.9rem;border-left:4px solid var(--line)}
 .pf-advice div.bad{border-left-color:var(--bad)} .pf-advice div.warn{border-left-color:var(--warn)} .pf-advice div.good{border-left-color:var(--good)}
 .src-tbl td,.src-tbl th{font-size:.86rem}
+
+/* ---------- indeling: lagen, uitklapblokken, subtabs ---------- */
+.tab-end{margin-left:auto}
+.lyr{display:inline-flex;align-items:center;font:600 .64rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 8px;white-space:nowrap;line-height:1.2;vertical-align:middle}
+.lyr.l1{background:var(--accent);color:var(--on-accent)}
+.lyr.l2{background:var(--info-soft);color:var(--info)}
+.lyr.l3{background:var(--surface-3);color:var(--muted)}
+.layer-note{display:flex;gap:6px 10px;align-items:baseline;flex-wrap:wrap;color:var(--muted);font-size:.9rem;max-width:92ch}
+.subnav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;align-self:flex-start;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subnav button{appearance:none;border:0;background:none;border-radius:999px;padding:7px 15px;font:500 .9rem var(--font-body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.subnav button:hover{color:var(--ink)}
+.subnav button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.subnav button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+@media (max-width:420px){.subnav button{padding:7px 11px;font-size:.86rem}}
+.subview{display:flex;flex-direction:column;gap:var(--gap)}
+details.fold{padding:0}
+details.fold > summary{list-style:none;cursor:pointer;padding:16px clamp(16px,2.2vw,22px);display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold > summary h2{font-size:1.18rem}
+details.fold > summary .fs{color:var(--muted);font-size:.88rem;flex:1 1 220px;min-width:0}
+details.fold > summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);transform:rotate(45deg);transition:transform .15s;margin-left:auto;flex:none}
+details.fold[open] > summary::after{transform:rotate(225deg)}
+details.fold > .fold-body{padding:16px clamp(16px,2.2vw,22px) clamp(16px,2.2vw,22px);border-top:1px solid var(--line-2)}
+.sbar.mini{height:10px;flex:0 1 220px;min-width:120px;font-size:0}
+/* ---------- kompas: de cijfers die je plan sturen ---------- */
+.kp{display:grid;grid-template-columns:minmax(150px,1.25fr) minmax(96px,.75fr) minmax(0,2.4fr) minmax(120px,.85fr);column-gap:16px}
+.kp > .h{font:500 .66rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding-bottom:6px;border-bottom:1px solid var(--line)}
+.kp > .h.r{text-align:right}
+.kp-row{display:contents}
+.kp-row > div{padding:11px 0;border-bottom:1px solid var(--line-2);min-width:0}
+.kp-name b{font-weight:600}
+.kp-name .for{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.kp-name .for .chip{font-size:.72rem;padding:1px 7px}
+.kp-now .v{font:600 1rem var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.kp-now .c{display:block;font-size:.76rem;color:var(--muted)}
+.kp-next{font-size:.9rem}
+.kp-next .pill{margin-right:6px}
+.kp-next small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+.kp-dist{text-align:right;font:500 .86rem var(--font-mono);color:var(--muted)}
+.kp-dist small{display:block;font:400 .74rem var(--font-body);color:var(--faint)}
+.kp-row.near .kp-dist{color:var(--warn);font-weight:600}
+.kp-row.bad .kp-now .v{color:var(--bad)} .kp-row.warn .kp-now .v{color:var(--warn)} .kp-row.good .kp-now .v{color:var(--good)}
+.kp-foot{display:flex;gap:6px 10px;align-items:center;flex-wrap:wrap;font-size:.86rem;color:var(--muted);padding-top:2px}
+@media (max-width:760px){
+  .kp{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);column-gap:12px}
+  .kp > .h{display:none}
+  .kp-row > div{border-bottom:0;padding:0}
+  .kp-row > .kp-name,.kp-row > .kp-now{padding-top:12px;border-top:1px solid var(--line-2)}
+  .kp-row > .kp-now{text-align:right}
+  .kp-row > .kp-next{grid-column:1/-1;padding-top:6px}
+  .kp-row > .kp-dist{grid-column:1/-1;text-align:left;padding:3px 0 12px}
+  .kp-dist small{display:inline;margin-left:6px}
+  .kp-dist .hitd{display:none}
+}
+/* ---------- plan: kaart per positie ---------- */
+.plan-intro .lede{font-size:1.05rem;color:var(--ink);max-width:80ch}
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,350px),1fr));gap:var(--gap)}
+.pcard{display:flex;flex-direction:column;gap:12px;border-top:4px solid var(--line)}
+.pcard.bad{border-top-color:var(--bad)} .pcard.warn{border-top-color:var(--warn)} .pcard.good{border-top-color:var(--good)}
+.pc-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pc-head h3{font-size:1.16rem;margin-top:2px}
+.pc-head .pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pc-price{text-align:right;font:600 1.02rem var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pc-price small{display:block;font:400 .76rem var(--font-body);color:var(--muted)}
+.pc-do{border-radius:10px;padding:10px 12px;background:var(--surface-2);border-left:4px solid var(--line);display:flex;flex-direction:column;gap:5px;font-size:.9rem}
+.pc-do.bad{border-left-color:var(--bad);background:var(--bad-soft)} .pc-do.warn{border-left-color:var(--warn);background:var(--warn-soft)} .pc-do.good{border-left-color:var(--good);background:var(--good-soft)}
+.pc-do .hd{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.pc-do .hd b{font-weight:600;font-size:.98rem}
+.pc-have{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:.88rem;align-items:center}
+.pc-have .wb{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+.pc-have .pos{color:var(--good)} .pc-have .neg{color:var(--bad)}
+.ladder{display:flex;flex-direction:column;font-size:.86rem}
+.ladder .lg{font:500 .66rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:8px 0 2px}
+.ladder .lg:first-child{margin-top:0}
+.ladder .rung,.ladder .now{display:grid;grid-template-columns:12px 84px minmax(0,1fr);gap:9px;align-items:baseline;padding:6px 0;border-top:1px dashed var(--line-2)}
+.ladder .rung .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--faint);align-self:center}
+.ladder .rung .lv{font:600 .84rem var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.ladder .rung .ac small{display:block;color:var(--muted);font-size:.78rem}
+.ladder .rung.hit .dot{background:var(--warn);border-color:var(--warn)}
+.ladder .rung.hit.bad .dot{background:var(--bad);border-color:var(--bad)}
+.ladder .rung.hit.good .dot{background:var(--good);border-color:var(--good)}
+.ladder .rung.hit .ac{font-weight:600}
+.ladder .rung.near .dot{border-color:var(--warn);border-style:dashed}
+.ladder .rung.done{color:var(--muted)} .ladder .rung.done .dot{background:var(--surface-3)}
+.ladder .now{color:var(--info);font:600 .78rem var(--font-mono);border-top:1px solid var(--info);align-items:center}
+.ladder .now i{display:block;width:12px;height:2px;background:var(--info)}
+.ladder .now .lv{text-align:right}
+details.pc-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem;list-style:none}
+details.pc-more > summary::-webkit-details-marker{display:none}
+details.pc-more > summary::before{content:"+ "}
+details.pc-more[open] > summary::before{content:"− "}
+details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap:12px;font-size:.9rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 <!--BODY-->
@@ -665,15 +758,9 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
     <nav class="tabs" role="tablist" aria-label="Onderdelen">
       <button class="tab" role="tab" id="tb-vandaag" data-tab="vandaag">Vandaag</button>
       <button class="tab" role="tab" id="tb-plan" data-tab="plan">Plan</button>
-      <button class="tab" role="tab" id="tb-portefeuille" data-tab="portefeuille">Portefeuille</button>
       <button class="tab" role="tab" id="tb-markt" data-tab="markt">Markt</button>
-      <button class="tab" role="tab" id="tb-cyclus" data-tab="cyclus">Cyclus</button>
-      <button class="tab" role="tab" id="tb-signalen" data-tab="signalen">Signalen</button>
-      <button class="tab" role="tab" id="tb-challenges" data-tab="challenges">Challenges</button>
-      <button class="tab" role="tab" id="tb-post" data-tab="post" hidden>Post</button>
       <button class="tab" role="tab" id="tb-inbox" data-tab="inbox">Inbox<span class="count" id="inboxCount" hidden></span></button>
-      <button class="tab" role="tab" id="tb-historie" data-tab="historie">Historie</button>
-      <button class="tab" role="tab" id="tb-uitleg" data-tab="uitleg">Uitleg</button>
+      <button class="tab tab-end" role="tab" id="tb-uitleg" data-tab="uitleg">Uitleg</button>
     </nav>
   </div>
 </header>
@@ -688,32 +775,20 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
     <div id="vd-body"><div class="empty"><b>Vandaag laden…</b><span>Je acties, cijfers en de briefing verschijnen zodra de opslag antwoordt.</span></div></div>
   </section>
 
-  <!-- PORTEFEUILLE -->
-  <section class="panel" id="p-portefeuille" role="tabpanel" aria-labelledby="tb-portefeuille" hidden>
-    <div id="pf-body"><div class="empty"><b>Portefeuille laden…</b></div></div>
-  </section>
-
-  <!-- MARKT -->
-  <section class="panel" id="p-markt" role="tabpanel" aria-labelledby="tb-markt" hidden>
-    <div id="mk-hero"><div class="empty"><b>Marktstatus laden…</b><span>Je macro-overzicht, cijfers en signalen verschijnen zodra de opslag antwoordt.</span></div></div>
-    <div id="mk-points"></div>
-    <div id="mk-machine"></div>
-    <div id="mk-lenses"></div>
-    <div id="mk-ind"></div>
-    <div id="mk-cal"></div>
-  </section>
-
-  <!-- CYCLUS -->
-  <section class="panel" id="p-cyclus" role="tabpanel" aria-labelledby="tb-cyclus" hidden>
-    <div id="cy-body" class="grid"><div class="empty"><b>Cyclus laden…</b><span>De cyclusgrafieken en de crashvergelijking verschijnen zodra de opslag antwoordt.</span></div></div>
-  </section>
-
-  <!-- PLAN -->
+  <!-- PLAN: je plan per positie, je portefeuille, scenario's en challenges -->
   <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="tb-plan" hidden>
     <div id="pl-top"></div>
     <div id="pl-pos"></div>
+    <details class="box fold" id="fold-pf">
+      <summary><span class="lyr l2">Je geld</span><h2>Portefeuille</h2><span class="fs" id="pfSum">aantallen, inleg, doel en cash</span></summary>
+      <div class="fold-body" id="pf-body"><div class="empty"><b>Portefeuille laden…</b></div></div>
+    </details>
     <div id="pl-sc"></div>
     <div id="pl-check"></div>
+    <details class="box fold" id="fold-ch">
+      <summary><span class="lyr l3">Apart</span><h2>Eightcap-challenges</h2><span class="fs" id="chSum">je eigen resultaten</span></summary>
+      <div class="fold-body" id="ch-body"><div class="empty"><b>Challenges laden…</b></div></div>
+    </details>
     <div class="box stack" id="askBox">
       <div class="sechead"><h2>Vraag het plan</h2><span class="muted small">De AI (Grok) antwoordt met je plan, het marktbeeld en de laatste cijfers als context.</span></div>
       <form id="askForm" class="btnrow" autocomplete="off">
@@ -726,68 +801,88 @@ footer ul{margin:6px 0 0;padding-left:18px;columns:2 280px;column-gap:28px}
     </div>
   </section>
 
-  <!-- SIGNALEN -->
-  <section class="panel" id="p-signalen" role="tabpanel" aria-labelledby="tb-signalen" hidden>
-    <div id="sig-body" class="grid"></div>
+  <!-- MARKT: overzicht, signalen, cyclus en alle cijfers -->
+  <section class="panel" id="p-markt" role="tabpanel" aria-labelledby="tb-markt" hidden>
+    <div class="layer-note"><span class="lyr l3">Achtergrond</span><span>Hier lees je <b>waarom</b> je plan zo staat. Dagelijks hoef je dit niet te volgen: je planregels op <b>Vandaag</b> rekenen al met deze cijfers.</span></div>
+    <div class="subnav" role="tablist" aria-label="Markt">
+      <button type="button" role="tab" id="sb-markt-overzicht" data-subtab="markt:overzicht">Overzicht</button>
+      <button type="button" role="tab" id="sb-markt-signalen" data-subtab="markt:signalen">Signalen</button>
+      <button type="button" role="tab" id="sb-markt-cyclus" data-subtab="markt:cyclus">Cyclus</button>
+      <button type="button" role="tab" id="sb-markt-cijfers" data-subtab="markt:cijfers">Cijfers</button>
+    </div>
+    <div class="subview" data-view="overzicht">
+      <div id="mk-hero"><div class="empty"><b>Marktstatus laden…</b><span>Je macro-overzicht, cijfers en signalen verschijnen zodra de opslag antwoordt.</span></div></div>
+      <div id="mk-points"></div>
+      <div id="mk-machine"></div>
+    </div>
+    <div class="subview" data-view="signalen" hidden>
+      <div id="sig-body" class="grid"></div>
+    </div>
+    <div class="subview" data-view="cyclus" hidden>
+      <div id="cy-body" class="grid"><div class="empty"><b>Cyclus laden…</b><span>De cyclusgrafieken en de crashvergelijking verschijnen zodra de opslag antwoordt.</span></div></div>
+    </div>
+    <div class="subview" data-view="cijfers" hidden>
+      <div id="mk-ind"></div>
+      <div id="mk-cal"></div>
+      <div id="mk-lenses"></div>
+    </div>
   </section>
 
-  <!-- INBOX -->
+  <!-- INBOX: transcripts, post en historie -->
   <section class="panel" id="p-inbox" role="tabpanel" aria-labelledby="tb-inbox" hidden>
-    <div class="grid g-2">
-      <form class="box stack" id="inForm" autocomplete="off">
-        <div class="sechead"><h2>Nieuw transcript of notitie</h2><span class="muted small" id="inWords"></span></div>
-        <div class="frow">
-          <div><label for="inSource">Bron</label>
-            <select id="inSource">
-              <option>TradersReality</option><option>Rebel Capitalist</option><option>Wolf of Washington</option>
-              <option>Eigen video</option><option>Eigen notitie</option><option>Overig</option>
-            </select></div>
-          <div><label for="inDate">Datum video of notitie</label><input id="inDate" type="date"></div>
+    <div class="subnav" role="tablist" aria-label="Inbox">
+      <button type="button" role="tab" id="sb-inbox-transcripts" data-subtab="inbox:transcripts">Transcripts</button>
+      <button type="button" role="tab" id="sb-inbox-post" data-subtab="inbox:post" hidden>Post</button>
+      <button type="button" role="tab" id="sb-inbox-historie" data-subtab="inbox:historie">Historie</button>
+    </div>
+    <div class="subview" data-view="transcripts">
+      <div class="grid g-2">
+        <form class="box stack" id="inForm" autocomplete="off">
+          <div class="sechead"><h2>Nieuw transcript of notitie</h2><span class="muted small" id="inWords"></span></div>
+          <div class="frow">
+            <div><label for="inSource">Bron</label>
+              <select id="inSource">
+                <option>TradersReality</option><option>Rebel Capitalist</option><option>Wolf of Washington</option>
+                <option>Eigen video</option><option>Eigen notitie</option><option>Overig</option>
+              </select></div>
+            <div><label for="inDate">Datum video of notitie</label><input id="inDate" type="date"></div>
+          </div>
+          <div class="frow">
+            <div><label for="inTitle">Titel</label><input id="inTitle" placeholder="Bijv. Weekly outlook: Fed, olie, goud"></div>
+            <div><label for="inUrl">Link (optioneel)</label><input id="inUrl" type="url" placeholder="https://youtube.com/watch?v=…"></div>
+          </div>
+          <div><label for="inText">Transcript of tekst</label>
+            <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag)."></textarea></div>
+          <div class="btnrow">
+            <button class="btn primary" type="submit" id="inAnalyze">Analyseer en stel wijzigingen voor</button>
+            <button class="btn" type="button" id="inSave">Alleen bewaren</button>
+            <button class="btn" type="button" id="inStop" hidden>Stop</button>
+            <span class="status" id="inStatus" role="status"></span>
+          </div>
+        </form>
+        <div class="box stack">
+          <h3>Wat er gebeurt</h3>
+          <ul class="actions">
+            <li><span>De AI (Grok) leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
+            <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
+            <li><span>Is de bron TradersReality of Rebel Capitalist, dan wordt hun <b>bril</b> bijgewerkt met hún visie (Markt → Cijfers).</span></li>
+            <li><span>Je krijgt voorstellen voor scenario's, posities, triggers, kalender en marktbeeld. Jij vinkt aan wat je overneemt; alles is terug te draaien.</span></li>
+          </ul>
+          <p class="muted small">Een analyse duurt meestal 30–90 seconden.</p>
         </div>
-        <div class="frow">
-          <div><label for="inTitle">Titel</label><input id="inTitle" placeholder="Bijv. Weekly outlook: Fed, olie, goud"></div>
-          <div><label for="inUrl">Link (optioneel)</label><input id="inUrl" type="url" placeholder="https://youtube.com/watch?v=…"></div>
-        </div>
-        <div><label for="inText">Transcript of tekst</label>
-          <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag)."></textarea></div>
-        <div class="btnrow">
-          <button class="btn primary" type="submit" id="inAnalyze">Analyseer en stel wijzigingen voor</button>
-          <button class="btn" type="button" id="inSave">Alleen bewaren</button>
-          <button class="btn" type="button" id="inStop" hidden>Stop</button>
-          <span class="status" id="inStatus" role="status"></span>
-        </div>
-      </form>
-      <div class="box stack">
-        <h3>Wat er gebeurt</h3>
-        <ul class="actions">
-          <li><span>De AI (Grok) leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
-          <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
-          <li><span>Is de bron TradersReality of Rebel Capitalist, dan wordt hun <b>bril</b> op de Markt-pagina bijgewerkt met hún visie.</span></li>
-          <li><span>Je krijgt voorstellen voor scenario's, posities, triggers, kalender en marktbeeld. Jij vinkt aan wat je overneemt; alles is terug te draaien.</span></li>
-        </ul>
-        <p class="muted small">Een analyse duurt meestal 30–90 seconden.</p>
+      </div>
+      <div class="box">
+        <div class="sechead"><h2>Inbox</h2><span class="muted small" id="inboxMeta"></span></div>
+        <div id="inboxList"></div>
       </div>
     </div>
-    <div class="box">
-      <div class="sechead"><h2>Inbox</h2><span class="muted small" id="inboxMeta"></span></div>
-      <div id="inboxList"></div>
+    <div class="subview" data-view="post" hidden>
+      <div id="po-body"><div class="empty"><b>Post laden…</b></div></div>
     </div>
-  </section>
-
-  <!-- HISTORIE -->
-  <!-- POST: verwerkte e-mails en documenten -->
-  <section class="panel" id="p-post" role="tabpanel" aria-labelledby="tb-post" hidden>
-    <div id="po-body"><div class="empty"><b>Post laden…</b></div></div>
-  </section>
-
-  <!-- CHALLENGES: Eightcap, zelf bijgehouden -->
-  <section class="panel" id="p-challenges" role="tabpanel" aria-labelledby="tb-challenges" hidden>
-    <div id="ch-body"><div class="empty"><b>Challenges laden…</b></div></div>
-  </section>
-
-  <section class="panel" id="p-historie" role="tabpanel" aria-labelledby="tb-historie" hidden>
-    <div class="sechead"><h2>Historie</h2><span class="muted small">Elke planwijziging, met reden. Terugzetten kan per stap.</span></div>
-    <div class="box" id="hist-body"></div>
+    <div class="subview" data-view="historie" hidden>
+      <div class="sechead"><h2>Historie</h2><span class="muted small">Elke planwijziging, met reden. Terugzetten kan per stap.</span></div>
+      <div class="box" id="hist-body"></div>
+    </div>
   </section>
 
   <!-- UITLEG -->
@@ -815,14 +910,18 @@ const PILLAR_NAME = {inflatie:"Inflatie & energie", groei:"Groei & werk", rente:
 const STAGES = [{n:1,title:"Oorzaken",sub:"Wat zet de toon?"},{n:2,title:"Prijs van geld",sub:"Rente en liquiditeit"},{n:3,title:"Doorgifte",sub:"Dollar, krediet en sentiment"},{n:4,title:"Jouw posities",sub:"Wat het voor jou betekent"}];
 const SC_COLORS = {s1:"var(--sc1)", s2:"var(--sc2)", s3:"var(--sc3)", s4:"var(--sc4)", s5:"var(--sc5)"};
 const IMPACT = {"-2":["im2","↓↓"],"-1":["im1","↓"],"0":["i0","→"],"1":["i1","↑"],"2":["i2","↑↑"]};
-const TABS = ["vandaag","plan","portefeuille","markt","cyclus","signalen","challenges","post","inbox","historie","uitleg"];
+const TABS = ["vandaag","plan","markt","inbox","uitleg"];
+// Onderdelen binnen een tab. Oude namen (bijv. "historie", "cyclus") blijven werken als link.
+const SUBS = {markt:["overzicht","signalen","cyclus","cijfers"], inbox:["transcripts","post","historie"]};
+const ALIAS = {portefeuille:["plan","pf"], challenges:["plan","ch"], scenarios:["plan","sc"], cyclus:["markt","cyclus"], signalen:["markt","signalen"],
+  cijfers:["markt","cijfers"], overzicht:["markt","overzicht"], post:["inbox","post"], historie:["inbox","historie"], transcripts:["inbox","transcripts"]};
 const SIGNED = new Set(["nfp3m","netLiqChg","kospiDay","curve"]);
 const LENS_SOURCE = {tr:"TradersReality", rebel:"Rebel Capitalist"};
 const SOURCE_LENS = {"TradersReality":"tr", "Rebel Capitalist":"rebel"};
 const MAX_TEXT = 180000;
 const HIDE_CODES = ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"];
 
-const S = {portfolio:null, briefing:null, plan:null, planLoaded:false, market:null, series:{}, levels:null, inbox:[], history:[], db:null, sample:null, downloads:null, server:null, srvStatus:null,
+const S = {sub:{markt:"overzicht", inbox:"transcripts"}, portfolio:null, briefing:null, plan:null, planLoaded:false, market:null, series:{}, levels:null, inbox:[], history:[], db:null, sample:null, downloads:null, server:null, srvStatus:null,
   canWrite:true, offline:false, pending:null, anaCtl:null, askCtl:null, histConfirm:null, sel:null, tab:"vandaag"};
 
 /* ================= helpers ================= */
@@ -897,30 +996,52 @@ function spark(key, w=72, h=22){
 }
 
 /* ================= tabs & global events ================= */
-function showTab(name){
+function onPost(){ return S.tab==="inbox" && S.sub.inbox==="post"; }
+function showSub(tab, sub){
+  const list=SUBS[tab]; if(!list) return;
+  if(!list.includes(sub)) sub=list[0];
+  if(sub==="post" && $("sb-inbox-post")?.hidden) sub=list[0];
+  S.sub[tab]=sub;
+  $("p-"+tab).querySelectorAll(":scope > .subview").forEach(v=>{ v.hidden = v.dataset.view!==sub; });
+  $("p-"+tab).querySelectorAll(":scope > .subnav [data-subtab]").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.subtab===tab+":"+sub)));
+  try{ localStorage.setItem("hp-sub-"+tab, sub); }catch(e){}
+  if(tab==="inbox" && sub==="post" && typeof loadPost==="function") loadPost();
+}
+function openFold(id){
+  const d=$(id==="sc"? "scDet" : "fold-"+id); if(!d) return false;
+  d.open=true; setTimeout(()=>d.scrollIntoView({behavior:"smooth", block:"start"}), 60); return true;
+}
+function showTab(name, sub){
+  if(ALIAS[name]) [name, sub] = ALIAS[name];
   if(!TABS.includes(name)) name="vandaag";
   S.tab=name;
   TABS.forEach(t=>{ $("p-"+t).hidden = t!==name; $("tb-"+t).setAttribute("aria-selected", String(t===name)); });
-  if(name==="post" && typeof loadPost==="function") loadPost();
-  try{ localStorage.setItem("hp-tab3", name); }catch(e){}
+  let scrolled=false;
+  if(SUBS[name]) showSub(name, sub||S.sub[name]);
+  try{ localStorage.setItem("hp-tab4", name); }catch(e){}
   if(name==="vandaag" && typeof renderVandaag==="function") renderVandaag();
-  if(name==="portefeuille" && typeof renderPortfolio==="function") renderPortfolio();
+  if(name==="plan" && typeof renderPortfolio==="function") renderPortfolio();
+  if(name==="plan" && sub) scrolled=openFold(sub);
+  return scrolled;
 }
+try{ SUBS.markt.forEach(()=>0); const m=localStorage.getItem("hp-sub-markt"), i=localStorage.getItem("hp-sub-inbox");
+  if(SUBS.markt.includes(m)) S.sub.markt=m; if(SUBS.inbox.includes(i)) S.sub.inbox=i; }catch(e){}
 let startTab=(location.hash||"").replace("#","");
-if(!TABS.includes(startTab)){ try{ startTab=localStorage.getItem("hp-tab3")||"vandaag"; }catch(e){ startTab="vandaag"; } }
+if(!TABS.includes(startTab) && !ALIAS[startTab]){ try{ startTab=localStorage.getItem("hp-tab4")||"vandaag"; }catch(e){ startTab="vandaag"; } }
 showTab(startTab);
 
 document.addEventListener("click", (ev)=>{
-  const t = ev.target.closest("[data-tab],[data-goto],[data-pillar],[data-act],[data-ana],[data-undo],[data-done],[data-undone]");
+  const t = ev.target.closest("[data-tab],[data-goto],[data-subtab],[data-pillar],[data-act],[data-ana],[data-undo],[data-done],[data-undone]");
   if(!t) return;
-  if(t.dataset.tab || t.dataset.goto){ showTab(t.dataset.tab||t.dataset.goto); window.scrollTo({top:0}); return; }
+  if(t.dataset.subtab){ const [tab,sub]=t.dataset.subtab.split(":"); showSub(tab, sub); return; }
+  if(t.dataset.tab || t.dataset.goto){ const scrolled=showTab(t.dataset.tab||t.dataset.goto); if(!scrolled) window.scrollTo({top:0}); return; }
   if(t.dataset.pillar){ S.sel = S.sel===t.dataset.pillar? null : t.dataset.pillar; renderMachine(); return; }
   if(t.dataset.ana){ const it=S.inbox.find(x=>x.id===t.dataset.ana); if(it) runAnalysis(it.id,{source:it.source,title:it.title,url:it.url,date:it.date}, it.text); return; }
   if(t.dataset.undo){ undo(t.dataset.undo); return; }
   if(t.dataset.done){ const [pid,cid]=t.dataset.done.split("|"); markDone(pid,cid,true); return; }
   if(t.dataset.undone){ const [pid,cid]=t.dataset.undone.split("|"); markDone(pid,cid,false); return; }
   const a=t.dataset.act;
-  if(a==="paste"){ $("inSource").value=t.dataset.source||"Overig"; showTab("inbox"); window.scrollTo({top:0}); $("inText").focus(); }
+  if(a==="paste"){ $("inSource").value=t.dataset.source||"Overig"; showTab("inbox","transcripts"); window.scrollTo({top:0}); $("inText").focus(); }
   if(a==="refresh-macro") refreshMacro();
   if(a==="export") exportMd();
   if(a==="apply") applyPending();
@@ -1005,7 +1126,7 @@ function renderMarkt(){
         <div class="btnrow">
           ${m.cycle? `<button class="btn primary" type="button" data-goto="cyclus">Waar staan we in de cyclus?</button>`:""}
           <button class="btn" type="button" data-act="refresh-macro" id="refreshBtn" ${S.sample?"":"disabled"}>Marktstatus bijwerken met AI</button>
-          <span class="status" id="refreshStatus" role="status">${S.sample? "Herschrijft dit overzicht op basis van de cijfers hieronder; jij keurt goed." : ""}</span>
+          <span class="status" id="refreshStatus" role="status">${S.sample? "Herschrijft dit overzicht op basis van de actuele cijfers (zie Cijfers); jij keurt goed." : ""}</span>
         </div>
         <p class="faint small" style="margin-top:10px">${esc(m.source||"")}</p>
       </div>
@@ -1571,38 +1692,48 @@ window.addEventListener("scroll", ()=>{ if(tipFor) hideTip(); }, {passive:true})
 function renderPlan(){
   const p=S.plan;
   if(!p){ ["pl-top","pl-pos","pl-sc","pl-check"].forEach(id=>$(id).innerHTML=""); return; }
-  const sc=arr(p.scenarios);
-  $("pl-top").innerHTML = todoHTML(p) + `<details class="box" ${S.openNow?"open":""} id="nowDet"><summary style="cursor:pointer"><b>Toelichting en scenario's</b> <span class="muted small">· waarom het plan zo staat</span></summary><div class="grid g-2" style="margin-top:12px">
-    <div class="box stack"><div class="sechead"><h2>Nu doen</h2><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))}</span></div>
-      <ul class="actions">${arr(p.actionsNow).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
-    <div class="box stack"><div class="sechead"><h2>Scenario's</h2><span class="muted small">kans</span></div>
-      <div class="sbar" role="img" aria-label="${esc(sc.map(s=>s.name+" "+s.prob+"%").join(", "))}">${sc.map(s=>`<div style="flex-grow:${Math.max(0,+s.prob||0)};background:${SC_COLORS[s.id]||"var(--faint)"}">${s.prob>=10? esc(s.prob)+"%":""}</div>`).join("")}</div>
-      <div class="slegend">${sc.map(s=>`<div class="it"><span class="sw" style="background:${SC_COLORS[s.id]||"var(--faint)"}"></span><span>${esc(s.name)}</span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div></div>
-  </div></details>`;
-  $("nowDet")?.addEventListener("toggle", e=>{ S.openNow=e.target.open; });
-  if(!document.activeElement?.closest?.("#pl-pos")) renderPositions();
-  $("pl-sc").innerHTML = `<details class="stack" ${S.openSc?"open":""} id="scDet"><summary style="cursor:pointer;list-style:none"><div class="sechead"><h2>Scenario's in detail ▾</h2><span class="muted small">Klik om open te klappen · kansen zijn inschattingen</span></div></summary>
-    <div class="grid g-2e">${sc.map(s=>`<article class="box sc stack" style="--c:${SC_COLORS[s.id]||"var(--faint)"}">
-      <div class="hd"><div><span class="eyebrow">${esc(s.horizon||"")}</span><h3 style="margin-top:3px">${esc(s.name)}</h3></div><div class="prob">${esc(s.prob)}%</div></div>
-      <p class="small">${esc(s.desc)}</p>
-      <div><span class="eyebrow">Herken je aan</span><div class="chips" style="margin-top:5px">${arr(s.signals).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div></div>
-      <div><span class="eyebrow">Effect op je posities</span><div class="scrow">${POS_IDS.map(id=>`<div>${impactCell(s.impact?.[id])}<span>${esc(POS_SHORT[id])}</span></div>`).join("")}</div></div>
-      <div><span class="eyebrow">Wat je dan doet</span><ul class="actions">${arr(s.actions).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
-    </article>`).join("")}</div>
-    <details class="box"><summary style="cursor:pointer"><b>Gewogen impact per positie</b> <span class="muted small">(kans × effect)</span></summary>
-      <div class="tbl" style="margin-top:10px"><table><thead><tr><th>Scenario</th><th class="c">Kans</th>${POS_IDS.map(id=>`<th class="c">${esc(POS_SHORT[id])}</th>`).join("")}</tr></thead>
-      <tbody>${sc.map(s=>`<tr><td>${esc(s.name)}</td><td class="c num">${esc(s.prob)}%</td>${POS_IDS.map(id=>`<td class="c">${impactCell(s.impact?.[id])}</td>`).join("")}</tr>`).join("")}
-      <tr><td><b>Gewogen</b></td><td class="c num">100%</td>${POS_IDS.map(id=>{ const w=sc.reduce((a,s)=>a+(s.prob||0)*(s.impact?.[id]||0),0)/100; return `<td class="c"><span class="num">${w>0?"+":""}${nf(w,2)}</span></td>`; }).join("")}</tr></tbody></table></div>
-    </details></details>`;
+  const sc=arr(p.scenarios), m=p.macro, rg=p.regime||{};
+  const RISKTXT={verhoogd:"verhoogd risico", hoog:"hoog risico", normaal:"normaal risico", laag:"laag risico"};
+  $("pl-top").innerHTML = `<div class="box stack plan-intro">
+    <div class="sechead"><div><span class="lyr l1">Je plan</span><h2 style="margin-top:6px">${esc(rg.name||m?.regime||"Je plan in het kort")}</h2></div><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))}</span></div>
+    ${rg.phase||rg.riskLevel? `<div class="pills">${rg.phase? `<span class="pill t-accent plain">${esc(rg.phase)}</span>`:""}${rg.riskLevel? `<span class="pill ${rg.riskLevel==="laag"?"t-good":rg.riskLevel==="normaal"?"t-neutral":"t-warn"}">${esc(RISKTXT[rg.riskLevel]||rg.riskLevel)}</span>`:""}</div>`:""}
+    ${arr(p.simple?.rules).length? `<div><span class="eyebrow">Drie vaste regels</span><ol class="rules" style="margin-top:6px">${p.simple.rules.map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
+    <p class="muted small" style="margin:0">Per positie hieronder zie je wat je hebt, welke regel nu telt en bij welk niveau je iets doet. Alles rekent mee met de koersen; je hoeft alleen te handelen als een regel geraakt wordt.</p>
+  </div>`;
+  renderPositions();
+  const top=sc.slice().sort((a,b)=>(b.prob||0)-(a.prob||0))[0];
+  $("pl-sc").innerHTML = `<details class="box fold" ${S.openSc?"open":""} id="scDet"><summary><span class="lyr l3">Achtergrond</span><h2>Scenario's</h2><span class="fs">${top? `Meest waarschijnlijk: ${esc(top.name)} (${esc(top.prob)}%)` : ""}</span>
+      <span class="sbar mini" role="img" aria-label="${esc(sc.map(s=>s.name+" "+s.prob+"%").join(", "))}">${sc.map(s=>`<div style="flex-grow:${Math.max(0,+s.prob||0)};background:${SC_COLORS[s.id]||"var(--faint)"}"></div>`).join("")}</span></summary>
+    <div class="fold-body stack">
+      <div class="slegend">${sc.map(s=>`<div class="it"><span class="sw" style="background:${SC_COLORS[s.id]||"var(--faint)"}"></span><span>${esc(s.name)}</span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div>
+      <div class="grid g-2e">${sc.map(s=>`<article class="box sc stack" style="--c:${SC_COLORS[s.id]||"var(--faint)"}">
+        <div class="hd"><div><span class="eyebrow">${esc(s.horizon||"")}</span><h3 style="margin-top:3px">${esc(s.name)}</h3></div><div class="prob">${esc(s.prob)}%</div></div>
+        <p class="small">${esc(s.desc)}</p>
+        <div><span class="eyebrow">Herken je aan</span><div class="chips" style="margin-top:5px">${arr(s.signals).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div></div>
+        <div><span class="eyebrow">Effect op je posities</span><div class="scrow">${POS_IDS.map(id=>`<div>${impactCell(s.impact?.[id])}<span>${esc(POS_SHORT[id])}</span></div>`).join("")}</div></div>
+        <div><span class="eyebrow">Wat je dan doet</span><ul class="actions">${arr(s.actions).map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul></div>
+      </article>`).join("")}</div>
+      <details class="box"><summary style="cursor:pointer"><b>Gewogen impact per positie</b> <span class="muted small">(kans × effect)</span></summary>
+        <div class="tbl" style="margin-top:10px"><table><thead><tr><th>Scenario</th><th class="c">Kans</th>${POS_IDS.map(id=>`<th class="c">${esc(POS_SHORT[id])}</th>`).join("")}</tr></thead>
+        <tbody>${sc.map(s=>`<tr><td>${esc(s.name)}</td><td class="c num">${esc(s.prob)}%</td>${POS_IDS.map(id=>`<td class="c">${impactCell(s.impact?.[id])}</td>`).join("")}</tr>`).join("")}
+        <tr><td><b>Gewogen</b></td><td class="c num">100%</td>${POS_IDS.map(id=>{ const w=sc.reduce((a,s)=>a+(s.prob||0)*(s.impact?.[id]||0),0)/100; return `<td class="c"><span class="num">${w>0?"+":""}${nf(w,2)}</span></td>`; }).join("")}</tr></tbody></table></div>
+      </details>
+    </div></details>`;
   $("scDet")?.addEventListener("toggle", e=>{ S.openSc=e.target.open; });
-  const pc=p.portfolioCheck, r=p.regime||{};
-  $("pl-check").innerHTML = pc? `<div class="grid g-2e">
-    <div class="box stack check"><span class="eyebrow">Portefeuille-check</span><h2>${esc(pc.headline)}</h2><ul>${arr(pc.points).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
-    <div class="box stack"><span class="eyebrow">Veranderd sinds het juli-plan</span><ul class="actions">${arr(r.changesSinceJuly).map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul></div></div>` : "";
+  const pc=p.portfolioCheck;
+  const notes=arr(p.actionsNow), changes=arr(rg.changesSinceJuly);
+  $("pl-check").innerHTML = (pc||notes.length)? `<details class="box fold" ${S.openWhy?"open":""} id="whyDet"><summary><span class="lyr l3">Achtergrond</span><h2>Toelichting bij je plan</h2><span class="fs">${esc(pc?.headline||"waarom het plan zo staat")}</span></summary>
+    <div class="fold-body grid g-2e">
+      ${notes.length? `<div class="stack"><span class="eyebrow">Toelichting bij de laatste update (${esc(fmtDate(p.meta?.updatedAt||""))})</span><ul class="actions">${notes.map(a=>`<li><span>${esc(a)}</span></li>`).join("")}</ul>
+        <p class="faint small" style="margin:0">Dit is een momentopname. Wat nu telt, staat live bij de posities hierboven.</p></div>`:""}
+      ${pc? `<div class="stack check"><span class="eyebrow">Portefeuille-check</span><h3>${esc(pc.headline)}</h3><ul>${arr(pc.points).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+        ${changes.length? `<span class="eyebrow">Wat er veranderde</span><ul class="actions">${changes.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul>`:""}</div>`:""}
+    </div></details>` : "";
+  $("whyDet")?.addEventListener("toggle", e=>{ S.openWhy=e.target.open; });
 }
 /* ---------- eenvoudig: wat moet ik doen? ---------- */
 const TODO_TONE={bad:["t-bad","bad"], warn:["t-warn","warn"], good:["t-good","good"], base:["t-neutral",""]};
-function fmtLvl(key, v){ const it=item(key)||{}; return (v<0?"−":"")+(it.prefix||"")+nf(Math.abs(v), Math.abs(v)>=1000? 0 : (it.decimals??2))+(it.suffix||""); }
+function fmtLvl(key, v){ const it=item(key)||{}; const d = Math.abs(v)>=1000 || (Number.isInteger(v) && Math.abs(v)>=10)? 0 : (it.decimals??2); return (v<0?"−":"")+(it.prefix||"")+nf(Math.abs(v), d)+(it.suffix||""); }
 function posStatus(x){
   const out={label:x.doLabel||(STANCES[x.stance]?.label)||"Houden", tone:"base", why:x.doNow||x.stanceNote||"", next:null, done:[]};
   let best=null, rank={bad:3, warn:2, good:1};
@@ -1668,29 +1799,67 @@ function todoHTML(p){
     ${arr(p.simple?.rules).length? `<div><span class="eyebrow">Drie vaste regels</span><ol class="rules" style="margin-top:6px">${p.simple.rules.map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
   </div>`;
 }
-function renderPositions(){
-  const p=S.plan, m=p.macro;
-  const sc=arr(p.scenarios);
-  const ws=arr(p.positions).map(x=>x.myWeight).filter(v=>typeof v==="number"), sum=ws.reduce((a,b)=>a+b,0);
-  $("pl-pos").innerHTML = `<div class="stack"><div class="sechead"><h2>Posities in detail</h2><span class="muted small">Klik open voor regels, niveaus en scenario's. Je weging wordt bewaard.</span></div>
-  ${arr(p.positions).map((x,ix)=>{ const pi=m?.positionImpact?.[x.id]||{}; return `<details class="pos" ${S.openPos===x.id?"open":""} data-pos="${esc(x.id)}">
-    <summary><div><span class="eyebrow">${esc(x.role||"")}</span><h3 style="margin-top:2px">${esc(x.name)}</h3></div><span style="display:flex;gap:8px;align-items:center">${dirMark(pi.dir)}${stancePill(x.stance)}</span><span class="chev" aria-hidden="true"></span>
-      <span class="sumwhy"><b style="color:var(--ink);font-weight:600">${esc(x.stanceNote||"")}</b></span></summary>
-    <div class="posbody">
-      <div class="sechead" style="padding-top:12px"><span class="muted mono small">${esc(x.tickers||"")}</span>
-        <div class="weight"><label for="w-${ix}" style="margin:0">Mijn weging</label><input id="w-${ix}" data-ix="${ix}" class="wIn" inputmode="decimal" placeholder="%" value="${x.myWeight==null?"":esc(x.myWeight)}" ${S.canWrite&&S.db?"":"disabled"}><span>%</span></div></div>
+function ladderHTML(x){
+  const groups=new Map();
+  arr(x.checks).forEach((c,i)=>{ if(!c.key) return; const g=groups.get(c.key)||[]; g.push({c, cid:c.id||(x.id+"-"+i)}); groups.set(c.key, g); });
+  return [...groups.entries()].map(([key, list])=>{
+    const it=item(key)||{}, v=typeof it.value==="number"? it.value : null;
+    const rungs=list.slice().sort((a,b)=>b.c.level-a.c.level);
+    let out=`<div class="lg">${esc(it.label||key)}</div>`, nowDone=v==null;
+    const nowRow=`<div class="now"><i></i><span class="lv">${esc(itemText(it))}</span><span>nu</span></div>`;
+    rungs.forEach(({c,cid})=>{
+      if(!nowDone && v>=c.level){ out+=nowRow; nowDone=true; }
+      const hit = v!=null && (c.op==="lt"? v<c.level : v>c.level), done=!!x.done?.[cid];
+      const near = v!=null && !hit && c.near!=null && (c.op==="lt"? v<c.near : v>c.near);
+      const cls = done? "done" : hit? "hit "+(c.tone||"warn") : near? "near" : "";
+      const tag = done? ` · ${isTrade(c)? "gedaan" : "gezien"} ${esc(fmtDate(x.done[cid]))}` : hit? " · geraakt" : near? " · dichtbij" : "";
+      out+=`<div class="rung ${cls}"><span class="dot"></span><span class="lv">${c.op==="lt"? "&lt; " : "&gt; "}${esc(fmtLvl(key,c.level))}</span><span class="ac">${esc(c.action)}<small>${esc(c.label)}${tag}</small></span></div>`;
+    });
+    if(!nowDone) out+=nowRow;
+    return out;
+  }).join("");
+}
+function posCard(x, C, m, sc){
+  const s=posStatus(x), n=s.next, pi=m?.positionImpact?.[x.id]||{};
+  const it=item(x.priceKey||x.id)||{}, row=C.rows.find(r=>r.id===x.id);
+  const tone = n?.hit? (n.c.tone||"warn") : n?.near? "warn" : "";
+  const doBlock = n?.hit
+    ? `<div class="pc-do ${tone}"><div class="hd"><b>${esc(n.c.action)}</b><button class="btn sm donebtn" type="button" data-done="${esc(x.id)}|${esc(n.cid)}" ${S.db&&S.canWrite?"":"disabled"}>${doneLabel(n.c)}</button></div>
+        <span>${esc(n.c.then||s.why)}</span>${amountTxt(x, n.c).replace(/class="nx"/g,'class="small"')}</div>`
+    : `<div class="pc-do ${tone}"><div class="hd"><b>${esc(n?.near? "Let op: "+fmtLvl(n.c.key,n.c.level)+" komt dichtbij" : s.label)}</b></div><span>${esc(s.why)}</span>
+        ${n? `<span class="small muted">Volgende regel: ${esc(n.c.label)} → ${esc(n.c.action.toLowerCase())}</span>`:""}</div>`;
+  const unit=PF_DEF[x.id]?.unit||"stuks";
+  const have = row && row.qty>0
+    ? `<div class="pc-have"><span>${esc(nf(row.qty, row.qty<10?4:0))} ${esc(unit)} · <b class="num">${esc(eur(row.value))}</b></span>
+        <span class="num ${row.pnl>0?"pos":row.pnl<0?"neg":""}">${row.pnl!=null? esc(eur(row.pnl,true)) : ""}</span>
+        <span class="wb">${wbar(row.w, row.h.target, row.h.max)}<span class="num small">${row.w!=null? esc(nf(row.w,1))+"%" : "–"}${typeof row.h.target==="number"? " / doel "+esc(nf(row.h.target,0))+"%" : ""}</span></span></div>`
+    : `<div class="pc-have"><span class="muted small">Nog niet ingevuld in je portefeuille.</span><button class="linkbtn" type="button" data-goto="portefeuille">Invullen</button></div>`;
+  return `<article class="box pcard ${tone}" data-pos="${esc(x.id)}">
+    <div class="pc-head"><div><span class="eyebrow">${esc(x.role||"")}</span><h3>${esc(x.name)}</h3><div class="pills">${stancePill(x.stance)}${dirMark(pi.dir)}</div></div>
+      <div class="pc-price">${esc(itemText(it))}<small>${esc(it.change||"")}</small></div></div>
+    ${doBlock}
+    ${have}
+    <div class="ladder" aria-label="Planregels van ${esc(x.name)}">${ladderHTML(x)}</div>
+    ${doneTxt({x, s})? `<div>${doneTxt({x, s})}</div>`:""}
+    <details class="pc-more" ${S.openPos===x.id?"open":""}><summary>Waarom, wind mee en tegen, scenario's</summary><div class="posbody">
       ${pi.why? `<p><b>Marktbeeld nu:</b> ${esc(pi.why)}</p>`:""}
-      <p>${esc(x.now||"")}</p>
+      ${x.now? `<p>${esc(x.now)}</p>`:""}
       <div class="cols2"><div><span class="eyebrow">Wind mee</span><ul class="blist plus">${arr(x.bull).map(b=>`<li><span>${esc(b)}</span></li>`).join("")}</ul></div>
         <div><span class="eyebrow">Wind tegen</span><ul class="blist minus">${arr(x.bear).map(b=>`<li><span>${esc(b)}</span></li>`).join("")}</ul></div></div>
-      <div><span class="eyebrow">Niveaus</span><div class="levels">${arr(x.levels).map(l=>`<div class="level"><b>${esc(l.label)}</b><span>${esc(l.meaning)}</span></div>`).join("")}</div></div>
-      <div><span class="eyebrow">Planregels</span><ol class="rules">${arr(x.rules).map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>
-      <div class="cols2"><div><span class="eyebrow">Per scenario</span><div class="scrow">${sc.map(s=>`<div>${impactCell(s.impact?.[x.id])}<span>${esc(s.name)}</span></div>`).join("")}</div></div>
+      ${arr(x.levels).length? `<div><span class="eyebrow">Niveaus</span><div class="levels">${arr(x.levels).map(l=>`<div class="level"><b>${esc(l.label)}</b><span>${esc(l.meaning)}</span></div>`).join("")}</div></div>`:""}
+      ${arr(x.rules).length? `<div><span class="eyebrow">Planregels in woorden</span><ol class="rules">${arr(x.rules).map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
+      <div class="cols2"><div><span class="eyebrow">Per scenario</span><div class="scrow">${sc.map(t=>`<div>${impactCell(t.impact?.[x.id])}<span>${esc(t.name)}</span></div>`).join("")}</div></div>
         <div><span class="eyebrow">Momenten</span><div class="chips" style="margin-top:8px">${arr(x.catalysts).map(c=>`<span class="chip">${esc(c)}</span>`).join("")}</div></div></div>
-    </div></details>`; }).join("")}
-  ${ws.length? `<div class="notice ${sum>100?"bad":""}">Ingevulde wegingen samen: <b class="num">${nf(sum,1)}%</b>. ${sum<100? "De rest ("+nf(100-sum,1)+"%) is cash of overig: je droog kruit." : sum>100? "Meer dan 100%: controleer je invoer." : "Geen cashbuffer."}</div>`:""}</div>`;
-  $("pl-pos").querySelectorAll("details.pos").forEach(d=>d.addEventListener("toggle",()=>{ if(d.open) S.openPos=d.dataset.pos; else if(S.openPos===d.dataset.pos) S.openPos=null; }));
-  $("pl-pos").querySelectorAll(".wIn").forEach(inp=>inp.addEventListener("change", ()=>saveWeight(+inp.dataset.ix, inp.value)));
+      ${x.tickers? `<span class="muted mono small">${esc(x.tickers)}</span>`:""}
+    </div></details>
+  </article>`;
+}
+function renderPositions(){
+  const p=S.plan; if(!p) return;
+  const C=pfCompute();
+  $("pl-pos").innerHTML = `<div class="stack"><div class="sechead"><div><span class="lyr l1">Doen</span> <span class="lyr l2">Volgen</span><h2 style="margin-top:6px">Per positie</h2></div><span class="muted small">Bovenaan wat je nu doet, daaronder je regels als ladder: ● geraakt, ◌ dichtbij, ○ nog ver weg.</span></div>
+    <div class="pcards">${arr(p.positions).map(x=>posCard(x, C, p.macro, arr(p.scenarios))).join("")}</div></div>`;
+  $("pl-pos").querySelectorAll("details.pc-more").forEach(d=>d.addEventListener("toggle",()=>{ const id=d.closest("[data-pos]")?.dataset.pos; if(d.open) S.openPos=id; else if(S.openPos===id) S.openPos=null; }));
 }
 async function saveWeight(ix, raw){
   const v = raw.trim()==="" ? null : Number(raw.replace(",","."));
@@ -1759,7 +1928,7 @@ function connSummary(){
 function connAct(k,v){
   const out=[];
   if(k==="database" && v.ms!=null && v.state==="ok") out.push(`antwoord in ${v.ms} ms`);
-  if(k==="ai"){ if(v.lastUse) out.push("laatste analyse "+ago(v.lastUse)); const b=v.backlog||{}; const w=(b.nieuw||0)+(b.wacht||0); if(w) out.push(`${w} wachten op analyse`); if(b.fout) out.push(`${b.fout} mislukt (zie Post)`); }
+  if(k==="ai"){ if(v.lastUse) out.push("laatste analyse "+ago(v.lastUse)); const b=v.backlog||{}; const w=(b.nieuw||0)+(b.wacht||0); if(w) out.push(`${w} wachten op analyse`); if(b.fout) out.push(`${b.fout} mislukt (zie Inbox → Post)`); }
   if(k==="mail"){ const r=v.lastRun; if(r) if(r.ok || v.state==="ok") out.push(r.ok? "laatst opgehaald "+ago(r.at) : "laatste ronde mislukt: "+String(r.error||"zie logs").replace(/^\w+Error: /,"")); if(v.lastMail) out.push("laatste nieuwe mail "+ago(v.lastMail)); }
   if(k==="finnhub"){ if(v.quotesAt) out.push("koersen "+ago(v.quotesAt)); arr(v.quoteErrors).slice(0,1).forEach(e=>out.push(e)); }
   if(k==="data"){ if(v.lastRun) out.push("laatste ronde "+ago(v.lastRun)); arr(v.errors).slice(0,2).forEach(e=>out.push(e)); }
@@ -1796,7 +1965,7 @@ function bindConn(){
     if(x.dataset.conn==="test") loadConn(true);
   }));
 }
-async function loadServerStatus(){ if(!S.server) return; try{ S.srvStatus = await S.server.status(); }catch(e){ S.srvStatus=null; } renderUitleg(); if(S.tab==="post" && PO.docs && !poBusyTyping()) renderPost(); }
+async function loadServerStatus(){ if(!S.server) return; try{ S.srvStatus = await S.server.status(); }catch(e){ S.srvStatus=null; } renderUitleg(); if(onPost() && PO.docs && !poBusyTyping()) renderPost(); }
 const JOB_NAME={post:"mail ophalen en analyseren", koersen:"koersen van je volglijst ophalen", markt:"marktkoersen ophalen", dagelijks:"macrocijfers ophalen", briefing:"briefing laten schrijven", melding:"testmelding sturen"};
 function renderUitleg(){
   if(document.activeElement?.closest?.("#kForm")) return;   // niet wissen wat je aan het typen bent
@@ -1855,7 +2024,21 @@ function renderUitleg(){
       <li><span>Zet in Railway <code>EMAIL_USER</code> op je iCloud-adres (bijv. naam@icloud.com) en <code>EMAIL_PASS</code> op dat app-wachtwoord (met streepjes).</span></li>
       <li><span>Controleer <code>EMAIL_HOST</code> = <code>imap.mail.me.com</code> en <code>EMAIL_PORT</code> = <code>993</code>, en klik daarna op <b>Mail nu ophalen</b>.</span></li></ol></div>
   </div>` : "";
-  $("ux-body").innerHTML = `${conn}${howto}
+  const guide = `<div class="box stack"><div class="sechead"><h2>Zo lees je je site</h2><span class="muted small">Vier tabs, drie soorten informatie</span></div>
+    <div class="grid g-2e">
+      <div class="stack" style="gap:10px">
+        <div><span class="lyr l1">Doen</span> <span class="small">Een planregel is geraakt: dit is het enige waarop je handelt. Staat op <b>Vandaag</b> en bovenaan elke positie in <b>Plan</b>, met het bedrag uit je portefeuille.</span></div>
+        <div><span class="lyr l2">Volgen</span> <span class="small">De paar cijfers die je regels sturen en hoe ver ze nog van het volgende niveau af zijn, plus de komende momenten (CPI, Nvidia, Fed).</span></div>
+        <div><span class="lyr l3">Achtergrond</span> <span class="small">Briefing, signalen, scenario's, cyclus en alle cijfers. Handig om te begrijpen waarom het plan zo staat, maar geen reden om te handelen.</span></div>
+      </div>
+      <div class="tbl"><table class="src-tbl"><tbody>
+        <tr><td><b>Vandaag</b></td><td>Wat je nu doet, de cijfers die tellen, briefing en agenda.</td></tr>
+        <tr><td><b>Plan</b></td><td>Per positie: wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
+        <tr><td><b>Markt</b></td><td>Overzicht, signalen, cyclus en alle cijfers met hun bron.</td></tr>
+        <tr><td><b>Inbox</b></td><td>Transcripts analyseren, verwerkte mail (Post) en de historie van je plan.</td></tr>
+      </tbody></table></div>
+    </div></div>`;
+  $("ux-body").innerHTML = `${guide}${conn}${howto}
   <div class="box stack"><h2>Zo stroomt informatie door je site</h2>
     <div class="flow"><div class="st"><b>Bronnen</b><span class="muted small">${S.local? "Koersen (automatisch), macrocijfers (Claude zoekt ze op), transcripts (plakken)" : "Koersen en macrocijfers (automatisch), transcripts (plakken of laptop-script)"}</span></div><div class="ar">→</div>
     <div class="st"><b>${S.local? "Chrome" : "Server"}</b><span class="muted small">${S.local? "Bewaart alles op deze computer en rekent signalen uit" : "Slaat alles op en rekent signalen, trends en niveaus uit"}</span></div><div class="ar">→</div>
@@ -1865,7 +2048,7 @@ function renderUitleg(){
     <div class="box stack"><h3>Transcript toevoegen</h3><ul class="actions">
       <li><span>Open de video op YouTube (computer) → <b>…meer</b> → <b>Transcript weergeven</b> → alles selecteren en kopiëren.</span></li>
       <li><span>Ga naar <b>Inbox</b>, kies de bron, plak en klik <b>Analyseer</b>.</span></li>
-      <li><span>Bron TradersReality of Rebel Capitalist? Dan wordt hun bril op de Markt-pagina bijgewerkt.</span></li></ul></div>
+      <li><span>Bron TradersReality of Rebel Capitalist? Dan wordt hun bril bijgewerkt (Markt → Cijfers).</span></li></ul></div>
     <div class="box stack"><h3>${S.local? "Een nieuwe versie gebruiken" : "Je site bijwerken"}</h3>${S.local? `<ul class="actions">
         <li><span>Nieuwe versie van Claude gekregen? Open het nieuwe bestand gewoon in Chrome.</span></li>
         <li><span>Je plan, inbox en sleutels staan in Chrome, niet in het bestand, dus ze blijven staan.</span></li>
@@ -2232,7 +2415,7 @@ async function runAnalysis(inboxId, meta, text){
   const st=$("inStatus"), btn=$("inAnalyze"), stop=$("inStop");
   if(!S.sample){ setStatus(st,"Analyse met AI is hier niet beschikbaar. Het transcript staat wel in de inbox.",true); return; }
   if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
-  showTab("inbox");
+  showTab("inbox","transcripts");
   S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
   setStatus(st,"De AI leest het transcript… meestal 30–90 seconden.");
   try{
@@ -2423,11 +2606,12 @@ function renderChallenges(){
   if(!S.db && !S.offline){ el.innerHTML=`<div class="empty"><b>Challenges laden…</b></div>`; return; }
   const d=CH.data||{currency:"USD",items:[],notes:""}, items=arr(d.items);
   const t=chTotals(items), ed=CH.edit? items.find(c=>c.id===CH.edit)||{} : {};
+  const chs=$("chSum"); if(chs) chs.textContent = t.n? `${t.n} challenge${t.n===1?"":"s"} · netto ${chMoney(t.payout+t.refund-t.fee, true)}` : "je eigen resultaten bijhouden";
   const tone=(v)=> v>0? "pos" : v<0? "neg" : "";
   const sorted=[...items].sort((a,b)=>String(b.start||"").localeCompare(String(a.start||"")));
   const opt=(list,cur)=>list.map(([v,l])=>`<option value="${esc(v)}"${v===cur?" selected":""}>${esc(l)}</option>`).join("");
   el.innerHTML=`<div class="stack">
-    <div class="sechead"><h2>Challenges · Eightcap</h2><span class="muted small">Eightcap heeft geen openbare koppeling voor challenge-resultaten, dus je houdt ze hier zelf bij. Alles wordt bewaard${S.server? " in je database op Railway" : S.local? " in Chrome op deze computer" : ""}.</span></div>
+    <p class="muted small" style="margin:0">Eightcap heeft geen openbare koppeling voor challenge-resultaten, dus je houdt ze hier zelf bij. Alles wordt bewaard${S.server? " in je database op Railway" : S.local? " in Chrome op deze computer" : ""}.</p>
     <div class="ch-kpis">
       <div class="box"><span class="eyebrow">Netto verdiend</span><b class="${tone(t.net)}">${esc(chMoney(t.net,true))}</b><span class="muted small">uitbetaald + terugbetaalde fees − kosten</span></div>
       <div class="box"><span class="eyebrow">Uitbetaald</span><b>${esc(chMoney(t.payout))}</b><span class="muted small">${t.refund? esc(chMoney(t.refund))+" fees terug" : "alle payouts samen"}</span></div>
@@ -2566,8 +2750,10 @@ function renderPortfolio(){
   if(document.activeElement?.closest?.("#pfForm")) return;
   if(!S.db && !S.offline){ el.innerHTML=`<div class="empty"><b>Portefeuille laden…</b></div>`; return; }
   const C=pfCompute(), P=S.portfolio||{}, fx=eurPerUsd(), adv=pfAdvice(C);
+  const sum=$("pfSum"); if(sum) sum.textContent = C.filled? `${eur(C.total)} · ${C.pnl!=null? "resultaat "+eur(C.pnl,true)+" · " : ""}cash ${C.cashW!=null? nf(C.cashW,1)+"%" : "–"}` : "nog niet ingevuld: vul je aantallen en cash in";
+  const fold=$("fold-pf"); if(fold && !C.filled && !S.pfFoldSet && S.pfLoaded){ fold.open=true; S.pfFoldSet=true; }
   el.innerHTML = `<div class="stack">
-    <div class="sechead"><h2>Portefeuille</h2><span class="muted small">Vul in wat je hebt; de waarde rekent mee met de koersen${fx? ` · 1 euro = $${esc(nf(1/fx,4))}` : ""}.</span></div>
+    <p class="muted small" style="margin:0">Vul in wat je hebt; de waarde rekent mee met de koersen${fx? ` · 1 euro = $${esc(nf(1/fx,4))}` : ""}.</p>
     <div class="pf-kpis">
       <div class="kpi"><span class="l">Totaal vermogen</span><span class="v">${esc(eur(C.total))}</span><span class="c">belegd ${esc(eur(C.invested))} · cash ${esc(eur(C.cash))}</span></div>
       <div class="kpi ${C.pnl>0?"rustig":C.pnl<0?"stress":""}"><span class="l">Winst of verlies</span><span class="v">${esc(eur(C.pnl,true))}</span><span class="c">${C.pnlPct!=null? esc((C.pnlPct>0?"+":"")+nf(C.pnlPct,1))+"% op je inleg" : "vul je inleg in"}</span></div>
@@ -2674,8 +2860,8 @@ function briefOrder(pp){ const ids=arr(S.plan?.positions).map(x=>x.id).filter(id
 function briefHTML(){
   const b=S.briefing, btn=S.server? `<button class="btn sm" type="button" id="briefBtn">Nieuwe briefing</button>` : "";
   const RP={laag:["t-good","Risico laag"], gemiddeld:["t-warn","Risico gemiddeld"], hoog:["t-bad","Risico hoog"]};
-  if(!b) return `<div class="box stack brief"><div class="sechead"><h2>Briefing</h2>${btn}</div><div class="empty small"><b>Nog geen briefing</b><span>${S.server? "Grok schrijft elke werkdag om 08:05 en 22:35 een korte briefing uit je cijfers en planregels. Je kunt er ook nu een laten maken." : "De briefing komt van je server op Railway."}</span></div><span class="status" id="briefStatus" role="status"></span></div>`;
-  return `<div class="box stack brief"><div class="sechead"><h2>Briefing</h2><span class="btnrow">${RP[b.risico]? `<span class="pill ${RP[b.risico][0]}">${RP[b.risico][1]}</span>`:""}${btn}</span></div>
+  if(!b) return `<div class="box stack brief"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Briefing</h2></div>${btn}</div><div class="empty small"><b>Nog geen briefing</b><span>${S.server? "Grok schrijft elke werkdag om 08:05 en 22:35 een korte briefing uit je cijfers en planregels. Je kunt er ook nu een laten maken." : "De briefing komt van je server op Railway."}</span></div><span class="status" id="briefStatus" role="status"></span></div>`;
+  return `<div class="box stack brief"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Briefing</h2></div><span class="btnrow">${RP[b.risico]? `<span class="pill ${RP[b.risico][0]}">${RP[b.risico][1]}</span>`:""}${btn}</span></div>
     <div class="kop">${esc(b.kop||"")}</div><p>${esc(b.samenvatting||"")}</p>${b.veranderd? `<p class="small"><b>Veranderd:</b> ${esc(b.veranderd)}</p>`:""}
     ${Object.keys(b.posities||{}).length? `<div class="posl">${briefOrder(b.posities).map(id=>`<div><b>${esc(POS_SHORT[id]||id)}:</b> ${esc(b.posities[id])}</div>`).join("")}</div>`:""}
     ${arr(b.letop).length? `<div><span class="eyebrow">Let op</span><ul class="small">${b.letop.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
@@ -2686,8 +2872,61 @@ function firstVisitHTML(){
   const intro=`<p class="muted small" style="margin:0">Eerste bezoek op dit apparaat. Vanaf je volgende bezoek zie je hier wat er veranderde: signalen, acties, grote koersbewegingen en planversies.</p>`;
   if(!h) return intro;
   return intro+`<div><span class="eyebrow">Laatste planwijziging</span><div style="margin-top:4px"><b style="font-weight:600">v${esc(h.version)} · ${esc(h.title||h.source||"")}</b> <span class="faint small">${esc(fmtDT(h.at))}</span></div></div>
-    <ul class="chg">${arr(h.changelog).slice(0,6).map(x=>`<li class="info"><i></i><span>${esc(x)}</span></li>`).join("")}</ul>
+    <ul class="chgl">${arr(h.changelog).slice(0,6).map(x=>`<li class="info"><i></i><span>${esc(x)}</span></li>`).join("")}</ul>
     <button class="btn sm" type="button" data-goto="historie" style="align-self:flex-start">Alle wijzigingen</button>`;
+}
+/* ---------- kompas: welke cijfers je plan echt gebruikt ---------- */
+function kompas(p){
+  const rows=new Map(), rank={bad:3,warn:2,good:1};
+  arr(p?.positions).forEach(x=>arr(x.checks).forEach((c,i)=>{
+    if(!c.key) return;
+    const cid=c.id||(x.id+"-"+i), it=item(c.key), v=typeof it?.value==="number"? it.value : null;
+    let r=rows.get(c.key); if(!r){ r={key:c.key, it, v, uses:[]}; rows.set(c.key, r); }
+    const hit = v!=null && (c.op==="lt"? v<c.level : v>c.level);
+    const near = v!=null && !hit && c.near!=null && (c.op==="lt"? v<c.near : v>c.near);
+    const gap = v==null? null : (c.op==="lt"? v-c.level : c.level-v);
+    const rel = v==null || !c.level? null : Math.abs(gap/c.level)*100;
+    r.uses.push({x, c, cid, hit, near, gap, rel, done: !!x.done?.[cid]});
+  }));
+  return [...rows.values()].map(r=>{
+    const open=r.uses.filter(u=>!u.done);
+    const hits=open.filter(u=>u.hit).sort((a,b)=>(rank[b.c.tone]||0)-(rank[a.c.tone]||0));
+    const next=open.filter(u=>!u.hit && u.gap!=null).sort((a,b)=>(a.rel??1e9)-(b.rel??1e9))[0]||null;
+    r.focus=hits[0]||next; r.hits=hits;
+    r.state= hits.length? (hits[0].c.tone||"warn") : next?.near? "near" : "calm";
+    r.order= hits.length? 0 : next?.near? 1 : 2;
+    r.posIds=[...new Set(r.uses.map(u=>u.x.id))];
+    return r;
+  }).sort((a,b)=> a.order-b.order || ((a.focus?.rel??1e9)-(b.focus?.rel??1e9)));
+}
+function gapTxt(key, gap){
+  const it=item(key)||{};
+  if(it.suffix==="%" || it.suffix===" pp") return nf(Math.abs(gap), 1)+" procentpunt";
+  return fmtLvl(key, Math.abs(gap)).replace(/^−/,"");
+}
+function kompasHTML(p){
+  const rows=kompas(p); if(!rows.length) return "";
+  const trig=arr(p.triggers).map(t=>trigLevel(t, trigValue(t).v)), red=trig.filter(x=>x==="stress").length, orange=trig.filter(x=>x==="gespannen").length;
+  const row=(r)=>{ const it=r.it||{}, f=r.focus, c=f?.c;
+    const label=it.label||r.key, age=it.at? ago(it.at) : (it.asOf||"");
+    const nxt = !f? `<span class="muted">Geen open regel.</span>`
+      : f.hit? `<span class="pill ${TODO_TONE[c.tone||"warn"][0]}">Geraakt</span><b style="font-weight:600">${esc(POS_SHORT[f.x.id]||f.x.name)}: ${esc(c.action)}</b><small>${esc(c.label)}${r.hits.length>1? " · en nog "+(r.hits.length-1)+" regel"+(r.hits.length>2?"s":""):""}</small>`
+      : `Bij <b class="num">${esc(fmtLvl(r.key,c.level))}</b>: ${esc(POS_SHORT[f.x.id]||f.x.name)} · ${esc(c.action.toLowerCase())}<small>${esc(c.label)}</small>`;
+    const dist = !f || f.hit || f.gap==null? (f?.hit? `<span class="hitd">geraakt</span>` : "–")
+      : `nog ${esc(gapTxt(r.key, f.gap))} ${c.op==="lt"? "↓" : "↑"}${f.rel!=null && it.prefix? `<small>${esc(nf(f.rel,1))}% ${c.op==="lt"? "omlaag" : "omhoog"}</small>` : `<small>${c.op==="lt"? "omlaag" : "omhoog"}${f.near? " · dichtbij" : ""}</small>`}`;
+    return `<div class="kp-row ${r.state}">
+      <div class="kp-name"><b>${esc(label)}</b><div class="for">${r.posIds.map(id=>`<span class="chip">${esc(POS_SHORT[id]||id)}</span>`).join("")}</div></div>
+      <div class="kp-now"><span class="v">${r.v==null? "–" : esc(itemText(it))}</span><span class="c">${esc(it.change||"")}${it.change&&age? " · " : ""}${esc(age)}</span></div>
+      <div class="kp-next">${nxt}</div>
+      <div class="kp-dist">${dist}</div></div>`; };
+  return `<div class="box stack">
+    <div class="sechead"><div><span class="lyr l2">Volgen</span><h2 style="margin-top:6px">De cijfers die je plan sturen</h2></div><span class="muted small">Alleen deze ${rows.length} bepalen of je iets doet. De rest is achtergrond.</span></div>
+    <div class="kp" role="table" aria-label="Cijfers die je planregels sturen">
+      <div class="h" role="columnheader">Cijfer</div><div class="h" role="columnheader">Nu</div><div class="h" role="columnheader">Volgende regel</div><div class="h r" role="columnheader">Afstand</div>
+      ${rows.map(row).join("")}
+    </div>
+    <div class="kp-foot"><span class="lyr l3">Achtergrond</span><span>Signalen: ${red? `<b style="color:var(--bad)">${red} rood</b>` : "0 rood"}, ${orange} oranje. Ze kleuren het marktbeeld, maar je doet alleen iets als een regel hierboven geraakt wordt.</span><button class="btn sm" type="button" data-goto="signalen">Bekijk signalen</button></div>
+  </div>`;
 }
 function renderVandaag(){
   const el=$("vd-body"); if(!el) return;
@@ -2712,20 +2951,17 @@ function renderVandaag(){
       ${pfAdvice(C).filter(a=>a.tone==="bad").slice(0,2).map(a=>`<div class="small" style="color:var(--bad)">${esc(a.t)}</div>`).join("")}</div>`
     : `<div class="vd-side"><span class="eyebrow">Je portefeuille</span><p style="margin:0">Vul in wat je hebt, dan zie je hier je vermogen, je verdeling en wat elke planregel in euro's betekent.</p><button class="btn primary" type="button" data-goto="portefeuille">Portefeuille invullen</button></div>`;
   const ch=changesList();
-  const changes = !snapNow()? "" : `<div class="box stack"><div class="sechead"><h2>Sinds je vorige bezoek</h2><span class="muted small">${PREV_SNAP?.at? esc(ago(PREV_SNAP.at)) : ""}</span></div>
+  const changes = !snapNow()? "" : `<div class="box stack"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Sinds je vorige bezoek</h2></div><span class="muted small">${PREV_SNAP?.at? esc(ago(PREV_SNAP.at)) : ""}</span></div>
     ${ch===null? firstVisitHTML()
-      : ch.length? `<ul class="chg">${ch.slice(0,10).map(c=>`<li class="${c.tone}"><i></i><span>${esc(c.t)}</span></li>`).join("")}</ul>` : `<p class="muted small" style="margin:0">Niets belangrijks veranderd.</p>`}</div>`;
-  const trig=arr(p.triggers).map(t=>{ const {v}=trigValue(t); return {t, v, lv:trigLevel(t,v)}; }).filter(x=>x.lv==="stress"||x.lv==="gespannen").sort((a,b)=>LV[b.lv].rank-LV[a.lv].rank);
-  const sigs = `<div class="box stack"><div class="sechead"><h2>Signalen die opvallen</h2><button class="btn sm" type="button" data-goto="signalen">Alle signalen</button></div>
-    ${trig.length? `<div class="sig-mini">${trig.slice(0,6).map(x=>`<div><b style="font-weight:600">${esc(x.t.label)}</b><span>${lvPill(x.lv)} <span class="num">${esc(fmtTrig(x.t,x.v))}</span></span><span class="m">${esc(x.t.meaning||"")}</span></div>`).join("")}</div>` : `<p class="muted small" style="margin:0">Alle signalen staan op groen.</p>`}</div>`;
+      : ch.length? `<ul class="chgl">${ch.slice(0,10).map(c=>`<li class="${c.tone}"><i></i><span>${esc(c.t)}</span></li>`).join("")}</ul>` : `<p class="muted small" style="margin:0">Niets belangrijks veranderd.</p>`}</div>`;
   const up=arr(p.calendar).filter(c=>daysFrom(c.date)>=0).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
   const chd=CH.data, cht=chd? chTotals(arr(chd.items)) : null;
-  const cal = `<div class="box stack"><div class="sechead"><h2>Komende momenten</h2><span class="muted small">Nederlandse tijd</span></div>${up.length? `<ul class="cal">${up.map(calItem).join("")}</ul>` : `<p class="muted small">Geen momenten gepland.</p>`}
+  const cal = `<div class="box stack"><div class="sechead"><div><span class="lyr l2">Volgen</span><h2 style="margin-top:6px">Komende momenten</h2></div><span class="muted small">Nederlandse tijd</span></div>${up.length? `<ul class="cal">${up.map(calItem).join("")}</ul>` : `<p class="muted small">Geen momenten gepland.</p>`}
     ${cht&&cht.n? `<div class="sechead" style="border-top:1px solid var(--line);padding-top:10px"><span><b style="font-weight:600">Challenges</b> <span class="muted small">netto</span> <b class="num" style="color:${cht.net>=0?"var(--good)":"var(--bad)"}">${esc(chMoney(cht.net,true))}</b></span><button class="btn sm" type="button" data-goto="challenges">Bekijk</button></div>`:""}</div>`;
   el.innerHTML = `<div class="stack">
     <div class="vd-hero">
       <div class="vd-main">
-        <div class="vd-state"><span class="eyebrow">${esc(DAYS_NL[d.getDay()])} ${esc(fmtDate(todayISO(),{day:"numeric",month:"long"}))}</span>${ms.text? `<span class="mstate ${ms.open?"open":""}"><i></i>${esc(ms.text)}</span>`:""}<span class="eyebrow">Plan v${esc(p.meta?.version||1)}</span></div>
+        <div class="vd-state"><span class="lyr l1">Doen</span><span class="eyebrow">${esc(DAYS_NL[d.getDay()])} ${esc(fmtDate(todayISO(),{day:"numeric",month:"long"}))}</span>${ms.text? `<span class="mstate ${ms.open?"open":""}"><i></i>${esc(ms.text)}</span>`:""}<span class="eyebrow">Plan v${esc(p.meta?.version||1)}</span></div>
         <h1>${esc(h1)}</h1>
         ${lede? `<p class="lede">${esc(lede)}</p>`:""}
         ${actRows? `<div class="vd-acts">${actRows}</div>` : `<div class="vd-ok"><span>✓</span><span>Geen enkele planregel is geraakt. Houd je aan je vaste inleg en kijk weer bij de momenten hieronder.</span></div>`}
@@ -2733,9 +2969,8 @@ function renderVandaag(){
       </div>
       ${side}
     </div>
-    <div class="kpis">${KPI_KEYS.map(kpiTile).join("")}</div>
-    <div class="grid g-2e">${briefHTML()}${changes}</div>
-    <div class="grid g-2e">${sigs}${cal}</div>
+    ${kompasHTML(p)}
+    <div class="grid g-2e">${briefHTML()}<div class="stack">${cal}${changes}</div></div>
   </div>`;
   $("briefBtn")?.addEventListener("click", async ()=>{ const b=$("briefBtn"), stEl=$("briefStatus"); b.disabled=true;
     try{ const r=await S.server.run("briefing"); setStatus(stEl, r.started? "Grok schrijft de briefing; die verschijnt hier binnen een minuut." : "Er loopt al een taak; probeer het zo opnieuw."); }
@@ -2816,11 +3051,11 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
   $("connBtn").addEventListener("click",()=>{ CONN.open=!CONN.open; renderConn(); if(CONN.open){ window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); if(S.server && Date.now()-CONN.at>20000) loadConn(); } });
-  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("tb-post").hidden=false; loadServerStatus(); loadConn(); if(S.tab==="post") loadPost();
+  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("sb-inbox-post").hidden=false; if(S.tab==="inbox") showSub("inbox", localStorage.getItem("hp-sub-inbox")||S.sub.inbox); loadServerStatus(); loadConn(); if(onPost()) loadPost();
     setInterval(()=>{ if(!document.hidden) loadConn(); }, 60000);
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-CONN.at>30000) loadConn(); });
     window.addEventListener("online",()=>loadConn()); window.addEventListener("offline",()=>{ CONN.err="Je bent offline."; renderConn(); });
-    setInterval(()=>{ if(S.tab==="post" && !document.hidden) loadPost(true); }, 60000); } }).catch(()=>{});
+    setInterval(()=>{ if(onPost() && !document.hidden) loadPost(true); }, 60000); } }).catch(()=>{});
   window.claude.use("local").then(l=>{ if(l){ S.local=l; renderConn(); loadLocalStatus(); window.addEventListener("hp-local", loadLocalStatus); } }).catch(()=>{});
   window.claude.use("user").then(async u=>{ if(!u) return; const c=await u.can("data.write"); if(c===false){ S.canWrite=false; renderAll(); } }).catch(()=>{});
 })();
