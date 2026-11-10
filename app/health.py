@@ -124,6 +124,13 @@ def check_data():
                      + (f", {n_err} {'fout' if n_err == 1 else 'fouten'}" if n_err else ""))
         if not n_ok and state == "ok":
             state = "let-op"
+    from . import sources
+    for src, name in (("yahoo", "Yahoo blokkeert even"), ("fred", "FRED niet bereikbaar")):
+        left = sources.paused(src)
+        if left:
+            parts.append(f"{name}, nieuwe poging over {max(1, left // 60)} min")
+            if state == "ok":
+                state = "let-op"
     last = (m or d).get("at")
     return _res(state, "; ".join(parts), lastRun=last, errors=((m.get("errors") or []) + (d.get("errors") or []))[:4])
 
