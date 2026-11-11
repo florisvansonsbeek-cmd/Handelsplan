@@ -91,8 +91,11 @@ def analyze_one(doc):
             "actions": _clean_list(res.get("actions"), 8), "raw": res}
 
 
-def analyze_pending(limit=20):
-    """Analyseert documenten met status nieuw/wacht. Stopt netjes bij een API-limiet."""
+def analyze_pending(limit=20, budget=300):
+    """Analyseert documenten met status nieuw/wacht. Stopt netjes bij een API-limiet, en na `budget` seconden:
+    de rest komt bij de volgende ronde, zodat de planner (koersen, markt) niet op een trage AI blijft wachten."""
+    import time
+    t0 = time.monotonic()
     if not ai.provider():
         return {"skipped": "XAI_API_KEY ontbreekt"}
     from psycopg.types.json import Jsonb
@@ -101,7 +104,10 @@ def analyze_pending(limit=20):
             "SELECT d.*, m.from_addr, m.subject, m.received_at FROM documents d LEFT JOIN mails m ON m.id=d.mail_id "
             "WHERE d.status IN ('nieuw','wacht') ORDER BY d.id LIMIT %s", (limit,)).fetchall()
     out = {"analyzed": 0, "failed": 0, "stopped": None}
-    for d in docs:
+    for i, d in enumerate(docs):
+        if i and time.monotonic() - t0 > budget:
+            out["stopped"] = f"tijdslimiet: nog {len(docs) - i} document(en) bij de volgende ronde"
+            break
         try:
             r = analyze_one(d)
         except ai.AIRateLimit as e:

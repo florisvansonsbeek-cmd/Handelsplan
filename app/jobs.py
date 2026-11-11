@@ -763,7 +763,7 @@ def post():
         if a["analyzed"] or a["failed"]:
             db.event("info", "grok", f"{a['analyzed']} geanalyseerd, {a['failed']} mislukt")
         if a.get("stopped"):
-            db.event("let op", "grok", a["stopped"])
+            db.event("info" if a["stopped"].startswith("tijdslimiet") else "let op", "grok", a["stopped"])
     db.set_json("post:last", {"at": now_nl().isoformat(timespec="seconds"), "error": mail_error})
     if mail_error:
         raise RuntimeError(mail_error)
