@@ -2419,7 +2419,7 @@ async function runAnalysis(inboxId, meta, text){
   if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
   showTab("inbox","transcripts");
   S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
-  setStatus(st,"De AI leest het transcript… meestal 30–90 seconden.");
+  setStatus(st,"De AI leest het transcript… dit duurt meestal 1 tot 3 minuten. Je kunt dit tabblad open laten staan.");
   try{
     const res=await S.sample.json(analysisPrompt(meta, text), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
     if(!res || typeof res!=="object" || !res.summary) throw {code:"invalid_json"};
@@ -2438,7 +2438,7 @@ async function refreshMacro(){
   if(!S.sample||!S.plan?.macro) return;
   if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
   S.anaCtl=new AbortController(); if(btn) btn.disabled=true;
-  setStatus(st,"De AI leest de cijfers… meestal 30–60 seconden.");
+  setStatus(st,"De AI leest de cijfers… dit duurt meestal 1 tot 3 minuten.");
   try{
     const res=await S.sample.json(macroPrompt(), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
     if(!res || typeof res!=="object") throw {code:"invalid_json"};
@@ -3019,10 +3019,17 @@ function sampleErrText(e){
     case "rate_limited": return "Je AI-limiet of API-tegoed is even op. Probeer het later opnieuw.";
     case "prompt_too_large": return "De tekst is te lang. Plak hem in delen.";
     case "invalid_json": return "Het antwoord was onleesbaar. Probeer het opnieuw.";
-    case "refused": return "Claude wilde deze tekst niet verwerken.";
+    case "refused": return "De AI wilde deze tekst niet verwerken.";
     case "session_expired": return "Je sessie is verlopen. Log opnieuw in.";
-    default: return "De analyse is onderbroken. Controleer of je Claude API-sleutel is ingevuld en probeer het opnieuw.";
+    case "cancelled": return "Analyse gestopt.";
   }
+  const m=String(e?.message||"");
+  if(/ReadTimeout|Timeout/i.test(m)) return "De AI gaf binnen 5 minuten geen antwoord. Probeer het opnieuw; een korter stuk tekst gaat sneller.";
+  if(/sleutel/i.test(m)) return "Grok accepteert de sleutel niet. Controleer XAI_API_KEY in Railway (Uitleg laat zien of AI op groen staat).";
+  if(/XAI_API_KEY ontbreekt|Geen XAI_API_KEY/i.test(m)) return "Er is nog geen XAI_API_KEY ingesteld in Railway.";
+  if(m) return "De analyse lukte niet: "+m.slice(0,160);
+  if(e?.code==="upstream_error") return "De server was even niet bereikbaar, bijvoorbeeld door een herstart na een wijziging in Railway. Probeer het over een minuut opnieuw.";
+  return "De analyse is onderbroken. Probeer het opnieuw; blijft het misgaan, kijk dan in Uitleg of AI (Grok) op groen staat.";
 }
 
 /* ================= render & boot ================= */

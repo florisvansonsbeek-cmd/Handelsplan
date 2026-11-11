@@ -122,7 +122,7 @@ def make():
     prev = db.get_doc("briefing/latest")
     prompt = build_prompt(plan, market, prev)
     try:
-        raw, _ = ai.complete(prompt, tier="complex", max_tokens=1600, timeout=150)
+        raw, _ = ai.complete(prompt, tier="complex", max_tokens=1600, timeout=280)
     except ai.AIError as e:
         raise RuntimeError(f"briefing mislukt: {e}") from e
     out = clean(ai.parse_json(raw), plan)

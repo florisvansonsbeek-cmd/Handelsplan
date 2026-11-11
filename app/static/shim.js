@@ -61,14 +61,27 @@
 
   async function sample(input, opts = {}) {
     const prompt = typeof input === "string" ? input : input.map((m) => m.content).join("\n\n");
-    let r;
-    try {
-      r = await fetch(U("/api/ai"), { method: "POST", headers: H({ "Content-Type": "application/json" }), credentials: CRED,
-        body: JSON.stringify({ prompt, tier: opts.modelTier || "default" }), signal: opts.signal });
-    } catch (e) { throw { code: e && e.name === "AbortError" ? "cancelled" : "upstream_error" }; }
+    const send = () => fetch(U("/api/ai"), { method: "POST", headers: H({ "Content-Type": "application/json" }), credentials: CRED,
+      body: JSON.stringify({ prompt, tier: opts.modelTier || "default" }), signal: opts.signal });
+    const wait = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    let r, detail = "", status = 0;
+    // Herstart de server midden in een analyse (bijv. na een wijziging in Railway), dan één keer opnieuw.
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try { r = await send(); }
+      catch (e) {
+        if (e && e.name === "AbortError") throw { code: "cancelled" };
+        if (attempt === 0) { await wait(5000); continue; }
+        throw { code: "upstream_error", status: 0, message: "" };
+      }
+      status = r.status; detail = "";
+      if (r.ok || r.status === 401 || r.status === 429) break;
+      try { const j = await r.clone().json(); detail = j.detail || ""; } catch (e) {}
+      if (attempt === 0 && !detail && [502, 503, 504].includes(r.status)) { await wait(5000); continue; }
+      break;
+    }
     if (r.status === 401) { unauth(); throw { code: "session_expired" }; }
-    if (r.status === 429) throw { code: "rate_limited" };
-    if (!r.ok) { let m = ""; try { const j = await r.json(); m = j.detail || ""; } catch (e) {} throw { code: r.status === 503 ? "upstream_error" : "upstream_error", message: m }; }
+    if (r.status === 429) throw { code: "rate_limited", message: detail };
+    if (!r.ok) throw { code: "upstream_error", status, message: detail };
     const data = await r.json();
     opts.onText && opts.onText({ text: data.text, delta: data.text });
     return { text: data.text, truncated: !!data.truncated, modelTierApplied: opts.modelTier || "default" };
