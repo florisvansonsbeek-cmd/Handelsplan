@@ -2023,10 +2023,12 @@ function renderUitleg(){
       <li><span>Bedenk een lang, geheim onderwerp, bijvoorbeeld <code>handelsplan-</code> plus willekeurige letters en cijfers, en abonneer je daarop in de app.</span></li>
       <li><span>Zet in Railway bij je website-dienst onder <b>Variables</b>: <code>NTFY_TOPIC</code> = dat onderwerp.</span></li>
       <li><span>Klik hierboven op <b>Testmelding sturen</b>. Daarna krijg je een bericht als een signaal rood wordt of een planregel afgaat.</span></li></ol>
-      <h3 style="margin-top:6px">Mail werkt niet?</h3><ol class="rules">
-      <li><span>Ga naar <b>account.apple.com</b> → <b>Inloggen en beveiliging</b> → <b>App-specifieke wachtwoorden</b> en maak er een (naam: Handelsplan).</span></li>
-      <li><span>Zet in Railway <code>EMAIL_USER</code> op je iCloud-adres (bijv. naam@icloud.com) en <code>EMAIL_PASS</code> op dat app-wachtwoord (met streepjes).</span></li>
-      <li><span>Controleer <code>EMAIL_HOST</code> = <code>imap.mail.me.com</code> en <code>EMAIL_PORT</code> = <code>993</code>, en klik daarna op <b>Mail nu ophalen</b>.</span></li></ol></div>
+      <h3 style="margin-top:6px">Mail koppelen (iCloud)</h3><ol class="rules">
+      <li><span>Ga naar <b>account.apple.com</b> → <b>Inloggen en beveiliging</b> → <b>App-specifieke wachtwoorden</b> en maak er een (naam: Handelsplan). Je gewone Apple-wachtwoord werkt hier niet.</span></li>
+      <li><span>Zet in Railway <code>EMAIL_USER</code> op de naam vóór <b>@icloud.com</b> (dus zonder @icloud.com). Ook als je mail op je eigen domein binnenkomt: inloggen kan alleen met je iCloud-naam.</span></li>
+      <li><span><code>EMAIL_PASS</code> = dat app-wachtwoord (met streepjes, zonder spaties). <code>EMAIL_HOST</code> = <code>imap.mail.me.com</code>, <code>EMAIL_PORT</code> = <code>993</code>.</span></li>
+      <li><span>Alleen mail aan één adres laten lezen? Zet <code>EMAIL_TO</code> op dat adres, bijvoorbeeld je adres op je eigen domein. Andere mail wordt dan niet opgehaald en niet geanalyseerd.</span></li>
+      <li><span>Klik daarna op <b>Mail nu ophalen</b>.</span></li></ol></div>
   </div>` : "";
   const guide = `<div class="box stack"><div class="sechead"><h2>Zo lees je je site</h2><span class="muted small">Vier tabs, drie soorten informatie</span></div>
     <div class="grid g-2e">

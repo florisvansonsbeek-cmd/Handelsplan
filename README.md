@@ -46,8 +46,10 @@ Met:
    EMAIL_PASS=
    FINNHUB_API_KEY=
    ```
-   - `EMAIL_USER` is je Apple ID-adres (de iCloud-mailbox), `EMAIL_PASS` een **app-specifiek wachtwoord** (account.apple.com → Aanmelden en beveiliging → App-specifieke wachtwoorden), niet je Apple ID-wachtwoord.
-   - Tip: maak in iCloud Mail een map **Handelsplan** met een regel (bijv. alles van je broker) en zet `EMAIL_FOLDER=Handelsplan`. Dan leest Grok alleen die mails en niet je hele inbox.
+   - `EMAIL_USER` is de naam vóór **@icloud.com** (bijv. `jansen` voor jansen@icloud.com). Dat geldt ook als je mail op een eigen domein ontvangt via iCloud+: inloggen met het adres op je eigen domein lukt niet.
+   - `EMAIL_PASS` is een **app-specifiek wachtwoord** (account.apple.com → Inloggen en beveiliging → App-specifieke wachtwoorden), niet je Apple-wachtwoord.
+   - **Alleen mail aan één adres:** zet `EMAIL_TO=naam@jouwdomein.nl`. Dan haalt de site alleen berichten aan dat adres op (de mailserver filtert zelf op To, Cc en Delivered-To) en leest Grok de rest van je mailbox niet.
+   - Of maak in iCloud Mail een map **Handelsplan** met een regel en zet `EMAIL_FOLDER=Handelsplan`.
    - Klik bovenaan op **Deploy** om de wijzigingen door te voeren.
 3. **Inloggen:** open je site en log in met `APP_PASSWORD`.
 4. Optioneel: `NTFY_TOPIC` (push naar je telefoon; zie Uitleg → *Meldingen op je telefoon*), `FRED_API_KEY` en `TWELVEDATA_API_KEY` (niet nodig: zonder sleutel komen dezelfde cijfers via FRED-csv en Yahoo), `INBOX_TOKEN` (transcripts vanaf je laptop), `EMAIL_SINCE_DAYS` (hoe ver terug bij de eerste keer, standaard 14), `XAI_MODEL` (standaard grok-4.7). Alles staat in `.env.example`.

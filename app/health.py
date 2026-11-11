@@ -147,9 +147,9 @@ def check_mail(client_factory=None):
     try:
         try:
             M.login(s["user"], s["password"])
-        except imaplib.IMAP4.error:
-            return _res("fout", "Inloggen bij de mailserver mislukt. Bij iCloud heb je een app-specifiek wachtwoord nodig "
-                                "(appleid.apple.com → Inloggen en beveiliging).", _ms(t0))
+        except imaplib.IMAP4.error as e:
+            hint = mail.login_hint(s)
+            return _res("fout", f"Inloggen bij de mailserver mislukt ({mail.server_reason(e)}): {hint[0].upper() + hint[1:]}.", _ms(t0))
         typ, data = M.select(mail._quote(s["folder"]), readonly=True)
         if typ != "OK":
             return _res("let-op", f"Ingelogd, maar de map '{s['folder']}' bestaat niet. Controleer EMAIL_FOLDER.", _ms(t0))
@@ -157,8 +157,9 @@ def check_mail(client_factory=None):
             n = int((data or [b"0"])[0])
         except (TypeError, ValueError):
             n = None
-        return _res("ok", f"Ingelogd · map {s['folder']}" + (f" · {n} berichten" if n is not None else ""), _ms(t0),
-                    host=s["host"], folder=s["folder"])
+        only = f" · alleen mail aan {', '.join(s['to'])}" if s["to"] else " · alle mail in deze map (zet EMAIL_TO om te filteren)"
+        return _res("ok", f"Ingelogd · map {s['folder']}" + (f" · {n} berichten" if n is not None and not s["to"] else "") + only,
+                    _ms(t0), host=s["host"], folder=s["folder"], to=s["to"])
     except (OSError, socket.timeout, imaplib.IMAP4.error) as e:
         return _res("fout", f"Verbinding met de mailserver verbroken ({e.__class__.__name__})", _ms(t0))
     finally:
