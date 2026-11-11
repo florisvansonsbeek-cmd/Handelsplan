@@ -5,6 +5,11 @@
 - Per ronde maximaal EMAIL_MAX_PER_RUN berichten (standaard 40).
 - Map instelbaar met EMAIL_FOLDER (standaard INBOX). Tip: maak in iCloud Mail een map "Handelsplan"
   met een regel, dan analyseert Grok alleen wat daarin komt.
+- EMAIL_TO (bijv. floris@vsonsbeek.nl, meerdere met komma's): alleen mail aan dat adres wordt opgehaald.
+  De mailserver filtert zelf (IMAP SEARCH op To/Cc/Delivered-To), dus andere mail wordt niet eens gedownload;
+  daarna controleert de site de kopregels nog een keer.
+- iCloud met een eigen domein: inloggen gaat altijd met je iCloud-gebruikersnaam (het deel vóór
+  @icloud.com) en een app-specifiek wachtwoord, niet met het adres op je eigen domein.
 """
 import email
 import email.policy
@@ -28,10 +33,61 @@ MAX_TEXT = 200_000
 
 
 def settings():
-    env = os.environ.get
-    return {"host": env("EMAIL_HOST", ""), "port": int(env("EMAIL_PORT", "993") or 993), "user": env("EMAIL_USER", ""),
-            "password": env("EMAIL_PASS", ""), "folder": env("EMAIL_FOLDER", "INBOX") or "INBOX",
+    def env(k, d=""):  # spaties van kopiëren en plakken weghalen
+        return (os.environ.get(k) or d).strip()
+    to = [a.strip().lower() for a in re.split(r"[,;\s]+", env("EMAIL_TO")) if "@" in a]
+    return {"host": env("EMAIL_HOST"), "port": int(env("EMAIL_PORT", "993") or 993), "user": env("EMAIL_USER"),
+            "password": env("EMAIL_PASS"), "folder": env("EMAIL_FOLDER", "INBOX") or "INBOX", "to": to,
             "since_days": int(env("EMAIL_SINCE_DAYS", "14") or 14), "max": int(env("EMAIL_MAX_PER_RUN", "40") or 40)}
+
+
+def login_hint(s=None):
+    """Uitleg bij een mislukte login, met de iCloud-valkuil voor eigen domeinen."""
+    s = s or settings()
+    tip = "controleer EMAIL_USER en EMAIL_PASS"
+    if "mail.me.com" in s["host"]:
+        tip += (" (iCloud: EMAIL_USER is de naam vóór @icloud.com, ook als je mail op een eigen domein binnenkomt; "
+                "EMAIL_PASS is een app-specifiek wachtwoord, niet je Apple-wachtwoord)")
+        if "@" in s["user"] and not s["user"].lower().endswith(("@icloud.com", "@me.com", "@mac.com")):
+            tip += f". Nu staat er '{s['user']}': dat is een adres op je eigen domein, daarmee kun je niet inloggen"
+    return tip
+
+
+def server_reason(e):
+    """De korte reden die de mailserver gaf (bijv. AUTHENTICATIONFAILED), zonder iets geheims."""
+    msg = e.args[0] if getattr(e, "args", None) else ""
+    if isinstance(msg, bytes):
+        msg = msg.decode(errors="replace")
+    return str(msg)[:120]
+
+
+def search_keys(to, base, headers=True):
+    """IMAP-zoekopdracht: `base` (bijv. ['SINCE', datum]) EN gericht aan één van de adressen in `to`.
+    OR is in IMAP binair: (a OR b OR c) wordt OR a OR b c."""
+    if not to:
+        return list(base)
+    keys = []
+    for a in to:
+        q = '"' + a.replace('"', "") + '"'
+        keys += [["TO", q], ["CC", q]] + ([["HEADER", "Delivered-To", q]] if headers else [])
+
+    def ors(ks):
+        return ks[0] if len(ks) == 1 else ["OR", *ks[0], *ors(ks[1:])]
+    return [*base, *ors(keys)]
+
+
+def addressed_to(raw, to):
+    """Tweede controle na het ophalen: staat één van de adressen in de kopregels?"""
+    if not to:
+        return True
+    head = raw.split(b"\r\n\r\n", 1)[0].split(b"\n\n", 1)[0].decode("utf-8", errors="replace").lower()
+    fields = []
+    for line in re.split(r"\r?\n(?![ \t])", head):
+        name, _, val = line.partition(":")
+        if name.strip() in ("to", "cc", "delivered-to", "x-original-to", "resent-to", "envelope-to"):
+            fields.append(val)
+    text = " ".join(fields)
+    return any(a in text for a in to)
 
 
 def configured():
@@ -216,8 +272,7 @@ def fetch_new(client_factory=None):
         try:
             M.login(s["user"], s["password"])
         except imaplib.IMAP4.error as e:
-            raise RuntimeError("inloggen bij de mailserver mislukt: controleer EMAIL_USER en EMAIL_PASS "
-                               "(bij iCloud een app-specifiek wachtwoord)") from e
+            raise RuntimeError(f"inloggen bij de mailserver mislukt ({server_reason(e)}): {login_hint(s)}") from e
         typ, data = M.select(_quote(folder), readonly=True)
         if typ != "OK":
             raise RuntimeError(f"map '{folder}' bestaat niet op de mailserver")
@@ -227,16 +282,22 @@ def fetch_new(client_factory=None):
         if state.get("validity") and validity and state["validity"] != validity:
             state = {}  # map is opnieuw opgebouwd: opnieuw beginnen
         last = int(state.get("last_uid", 0))
-        if last:
-            typ, data = M.uid("SEARCH", None, f"UID {last + 1}:*")
-        else:
-            typ, data = M.uid("SEARCH", None, "SINCE", _since(s["since_days"]))
+        base = [f"UID {last + 1}:*"] if last else ["SINCE", _since(s["since_days"])]
+        try:
+            typ, data = M.uid("SEARCH", None, *search_keys(s["to"], base))
+        except imaplib.IMAP4.error:
+            typ, data = "NO", None
+        if typ != "OK" and s["to"]:  # server kent de kopregel-zoekopdracht niet: alleen To en Cc
+            typ, data = M.uid("SEARCH", None, *search_keys(s["to"], base, headers=False))
         uids = sorted(int(x) for x in (data[0].split() if data and data[0] else []) if int(x) > last)
+        out["filter"] = ", ".join(s["to"])
         for uid in uids[: s["max"]]:
             try:
                 typ, parts = M.uid("FETCH", str(uid), "(BODY.PEEK[])")
                 raw = next((p[1] for p in parts if isinstance(p, tuple) and len(p) > 1), None)
-                if raw:
+                if raw and not addressed_to(raw, s["to"]):
+                    out["skipped"] = out.get("skipped", 0) + 1  # niet aan jouw adres: niet opslaan, niet analyseren
+                elif raw:
                     out["documents"] += store_message(folder, uid, raw)
                     out["messages"] += 1
             except db.DBError:
