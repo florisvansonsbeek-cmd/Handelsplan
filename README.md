@@ -22,7 +22,10 @@ Met:
 - **Planregels met meldingen**: elke positie heeft regels (bijv. "SMH onder $500: verklein met een derde"). Raakt de koers zo'n regel, dan krijg je één melding (ntfy, of mail als die werkt). Met *Gedaan* of *Gezien* zet je hem uit; hij staat pas weer scherp als de koers eerst duidelijk terug is geweest, zodat heen-en-weer rond een niveau geen dubbele meldingen geeft.
 - **Dagbriefing van Grok**: elke werkdag om 08:05 en 22:35 een korte briefing, alleen op basis van de cijfers en planregels op de site (geen verzonnen nieuws). De site kiest zelf het nieuwste Grok-model dat je account heeft, ook als `XAI_MODEL` niet (meer) bestaat.
 
-- **Inloggen met één wachtwoord** (`APP_PASSWORD`); zonder inlog is niets te zien. HTTP wordt doorgestuurd naar HTTPS.
+- **Inloggen met één wachtwoord of een pincode** (`APP_PASSWORD`); zonder inlog is niets te zien. HTTP wordt doorgestuurd naar HTTPS.
+  - Bestaat `APP_PASSWORD` uit 4 tot 8 cijfers, dan toont het inlogscherm een pincodeveld dat vanzelf inlogt.
+  - Bescherming: maximaal 5 foute pogingen per 15 minuten per apparaat, en 10 per 24 uur voor alle apparaten samen (`LOGIN_DAILY_LIMIT`). De teller staat in de database en overleeft dus een herstart. Een pincode van 4 cijfers raden duurt zo gemiddeld meer dan een jaar.
+  - Is inloggen dichtgegaan? Apparaten waar je al bent ingelogd werken gewoon (14 dagen). Wil je meteen weer in, wijzig dan `APP_PASSWORD` in Railway; dat zet de teller op nul.
 - **PostgreSQL** (`DATABASE_URL`) voor je plan, verwerkte mails, documenten, koersen, notities en het logboek. De tabellen maakt de site zelf aan.
 - **E-mail via IMAP** (iCloud): elk kwartier nieuwe mails ophalen, alleen lezen. Bijlagen (PDF, Word, Excel, PowerPoint, HTML, tekst, JPG/PNG) worden omgezet naar tekst.
 - **Grok** (`XAI_API_KEY`) haalt per mail en bijlage de handelsinformatie eruit: soort document, samenvatting, bedrijven, tickers, bedragen, datums, belang en acties. Grok doet ook de transcriptanalyse en "Vraag het plan".
@@ -38,7 +41,7 @@ Met:
 1. **Database:** in je project → **Create** → **Database** → **PostgreSQL**. Ga daarna naar je website-dienst → **Variables** → **Add Variable Reference** → `DATABASE_URL` van de Postgres-dienst (staat hij er al, dan is dit klaar).
 2. **Variabelen** (dienst → Variables → Raw Editor):
    ```
-   APP_PASSWORD=een-lang-uniek-wachtwoord
+   APP_PASSWORD=een-lang-uniek-wachtwoord   # of een pincode, bijv. 4 cijfers
    XAI_API_KEY=
    EMAIL_HOST=imap.mail.me.com
    EMAIL_PORT=993

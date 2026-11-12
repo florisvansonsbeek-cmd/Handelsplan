@@ -1,7 +1,9 @@
 """Handelsplan-server voor Railway: inlog met één wachtwoord, PostgreSQL, Grok, e-mail en koersen.
 
 Alle geheimen komen uit environment variables (Railway → Variables):
-  APP_PASSWORD   het wachtwoord om in te loggen (verplicht; zonder dit blijft de site dicht)
+  APP_PASSWORD   het wachtwoord om in te loggen (verplicht; zonder dit blijft de site dicht). Mag een pincode
+                 van 4 tot 8 cijfers zijn: dan toont het inlogscherm een pincodeveld en gelden strengere grenzen
+                 (zie LOGIN_DAILY_LIMIT).
   DATABASE_URL   PostgreSQL
   XAI_API_KEY    Grok
   EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS   iCloud IMAP
@@ -36,7 +38,10 @@ logging.getLogger("httpx").setLevel(logging.WARNING)  # nooit volledige URL's (m
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 log = logging.getLogger("handelsplan")
 BASE = Path(__file__).resolve().parent
-APP_PASSWORD = os.environ.get("APP_PASSWORD", "")
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "").strip()
+PIN_MODE = APP_PASSWORD.isdigit() and 4 <= len(APP_PASSWORD) <= 8   # een pincode in plaats van een wachtwoord
+LOGIN_DAILY_LIMIT = int(os.environ.get("LOGIN_DAILY_LIMIT", "10") or 10)  # foute pogingen per 24 uur, van alle apparaten samen
+LOGIN_IP_LIMIT = 5                                                     # foute pogingen per 15 minuten per apparaat
 INBOX_TOKEN = os.environ.get("INBOX_TOKEN", "")
 FORCE_HTTPS = os.environ.get("FORCE_HTTPS", "1") == "1"
 SECURE_COOKIE = os.environ.get("SECURE_COOKIE", "1") == "1"
@@ -202,21 +207,85 @@ def login_page():
     return (BASE / "static" / "login.html").read_text(encoding="utf-8")
 
 
+_login_lock = threading.Lock()
+_login_mem = {}  # reserve als de database even weg is
+
+
+def _fail_state():
+    """Foute pogingen van de afgelopen 24 uur, van alle apparaten samen. Staat in de database, zodat een herstart
+    de teller niet wist, en hoort bij het huidige wachtwoord: wijzig je APP_PASSWORD, dan begint hij opnieuw."""
+    try:
+        st = db.get_json("login:fails") or {}
+    except db.DBError:
+        st = dict(_login_mem)
+    if st.get("tag") != _pw_tag():
+        st = {"tag": _pw_tag(), "fails": []}
+    now = time.time()
+    st["fails"] = [t for t in st.get("fails", []) if isinstance(t, (int, float)) and now - t < 86400]
+    return st
+
+
+def _save_fail_state(st):
+    _login_mem.clear()
+    _login_mem.update(st)
+    try:
+        db.set_json("login:fails", st)
+    except db.DBError:
+        pass
+
+
 async def _check_password(request: Request):
-    """Geeft een foutantwoord terug, of None als het wachtwoord klopt."""
+    """Geeft een foutantwoord terug, of None als het wachtwoord (of de pincode) klopt.
+
+    Grenzen: 5 foute pogingen per 15 minuten per apparaat, en LOGIN_DAILY_LIMIT (10) per 24 uur voor alle
+    apparaten samen. Een pincode van 4 cijfers raden kost dan gemiddeld meer dan een jaar. Wie al is ingelogd,
+    merkt niets van een blokkade; wil je meteen weer in, wijzig dan APP_PASSWORD in Railway."""
     ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?")
-    keys = ("ip:" + ip, "alle")
-    if _blocked("ip:" + ip) or _blocked("alle", limit=30):
-        return JSONResponse({"error": "Te veel pogingen. Probeer het over 15 minuten opnieuw."}, 429)
+    if _blocked("ip:" + ip, limit=LOGIN_IP_LIMIT):
+        return JSONResponse({"error": "Te veel pogingen vanaf dit apparaat. Probeer het over 15 minuten opnieuw."}, 429)
     if not APP_PASSWORD:
         return JSONResponse({"error": "Inloggen is nog niet ingesteld: zet APP_PASSWORD in Railway → Variables."}, 503)
+    with _login_lock:
+        st = _fail_state()
+    if len(st["fails"]) >= LOGIN_DAILY_LIMIT:
+        until = datetime.fromtimestamp(min(st["fails"]) + 86400, jobs.TZ).strftime("%d-%m %H:%M")
+        return JSONResponse({"error": f"Inloggen is dicht na {LOGIN_DAILY_LIMIT} foute pogingen, tot {until}. Ben je het zelf? "
+                                      "Wijzig APP_PASSWORD in Railway, dan kun je meteen weer in."}, 429)
     form = await _json(request)
-    if not hmac.compare_digest(str(form.get("password", "")).encode(), APP_PASSWORD.encode()):
-        for k in keys:
-            _fails.setdefault(k, []).append(time.time())
-        await asyncio.sleep(0.5)
-        return JSONResponse({"error": "Dat wachtwoord klopt niet."}, 401)
+    given = str(form.get("password", ""))
+    if PIN_MODE:
+        given = given.strip()
+    if not hmac.compare_digest(given.encode(), APP_PASSWORD.encode()):
+        _fails.setdefault("ip:" + ip, []).append(time.time())
+        with _login_lock:
+            st = _fail_state()
+            st["fails"].append(time.time())
+            _save_fail_state(st)
+        n = len(st["fails"])
+        if n == 5:
+            db.event("let op", "inlog", "5 foute inlogpogingen in 24 uur")
+        if n == LOGIN_DAILY_LIMIT:
+            db.event("let op", "inlog", f"inloggen 24 uur dicht na {n} foute pogingen")
+            try:
+                jobs.notify("Handelsplan: inloggen tijdelijk dicht",
+                            f"Er zijn {n} foute inlogpogingen gedaan. Inloggen is 24 uur dicht; apparaten waar je al bent "
+                            "ingelogd werken gewoon. Was jij het niet? Kies een nieuwe pincode in Railway (APP_PASSWORD).")
+            except Exception:  # een melding die mislukt mag het inloggen niet breken
+                pass
+        await asyncio.sleep(1.0)
+        left = LOGIN_DAILY_LIMIT - n
+        msg = "Die pincode klopt niet." if PIN_MODE else "Dat wachtwoord klopt niet."
+        if 0 < left <= 3:
+            msg += f" Nog {left} {'poging' if left == 1 else 'pogingen'} vandaag."
+        elif left <= 0:
+            msg += " Inloggen is nu 24 uur dicht; wijzig APP_PASSWORD in Railway om het meteen weer te openen."
+        return JSONResponse({"error": msg}, 401)
     _fails.pop("ip:" + ip, None)
+    with _login_lock:
+        st = _fail_state()
+        if st["fails"]:
+            st["fails"] = []
+            _save_fail_state(st)
     return None
 
 
@@ -259,7 +328,7 @@ def index(request: Request):
 def health_check():
     """Openbaar (ook zonder inlog): alleen of de server draait, de database bereikbaar is en inloggen is ingesteld."""
     return {"ok": True, "database": db.ping() if db.configured() else False, "login": bool(APP_PASSWORD),
-            "version": health.server_info()["version"]}
+            "pin": len(APP_PASSWORD) if PIN_MODE else 0, "version": health.server_info()["version"]}
 
 
 # ---------------- opslag van de pagina ----------------
