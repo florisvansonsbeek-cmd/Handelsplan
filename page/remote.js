@@ -74,8 +74,18 @@
       const B = document.getElementById("hpcB"), P = document.getElementById("hpcP"), S = document.getElementById("hpcS"), E = document.getElementById("hpcE"), G = document.getElementById("hpcGo");
       B.value = get(KB) || DEFAULT;
       (get(KB) ? P : B).focus();
-      probe(norm(B.value), S);
-      B.addEventListener("change", () => probe(norm(B.value), S));
+      const pin = (h) => {  // pincode in plaats van wachtwoord: cijferveld dat vanzelf verbindt
+        const n = h && h.pin; if (!n || P.dataset.pin == n) return;
+        P.dataset.pin = n; P.inputMode = "numeric"; P.pattern = "[0-9]*"; P.maxLength = n;
+        P.style.cssText = "font:600 1.8rem/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5em;text-align:center";
+        P.closest("label").firstChild.textContent = "Pincode (" + n + " cijfers)";
+        P.addEventListener("input", () => {
+          const v = P.value.replace(/\D/g, "").slice(0, n); if (v !== P.value) P.value = v;
+          if (v.length === n && !G.disabled && B.value) document.getElementById("hpcF").requestSubmit();
+        });
+      };
+      probe(norm(B.value), S).then(pin);
+      B.addEventListener("change", () => probe(norm(B.value), S).then(pin));
       document.getElementById("hpcF").addEventListener("submit", async (ev) => {
         ev.preventDefault();
         E.textContent = ""; G.disabled = true; G.textContent = "Verbinden…";
