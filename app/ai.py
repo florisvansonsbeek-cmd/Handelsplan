@@ -17,8 +17,11 @@ from . import db
 
 XAI_KEY = os.environ.get("XAI_API_KEY", "")
 XAI_BASE = os.environ.get("XAI_BASE_URL", "https://api.x.ai/v1").rstrip("/")
-XAI_MODEL = os.environ.get("XAI_MODEL", "grok-4.7")
-XAI_MODEL_COMPLEX = os.environ.get("XAI_MODEL_COMPLEX", XAI_MODEL)
+# Leeg = de site kiest zelf uit de modellen van je account: snel voor korte taken (mail), snel én
+# redenerend voor analyses (transcripts, briefing). Zet XAI_MODEL / XAI_MODEL_COMPLEX om dat te overrulen.
+XAI_MODEL = os.environ.get("XAI_MODEL", "").strip()
+XAI_MODEL_COMPLEX = os.environ.get("XAI_MODEL_COMPLEX", "").strip() or XAI_MODEL
+XAI_FALLBACK = "grok-4-1-fast-reasoning"   # als de modellijst niet op te halen is
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
 CLAUDE_MODEL_COMPLEX = os.environ.get("CLAUDE_MODEL_COMPLEX", "claude-opus-5-5")
@@ -88,19 +91,23 @@ def _version(mid):
 
 
 def pick_model(ids, wanted, tier="default"):
-    """Kies het ingestelde model als dat bestaat, anders het best passende Grok-model uit de lijst."""
-    if not ids or wanted in ids:
+    """Kies het ingestelde model als dat bestaat, anders het best passende Grok-model uit de lijst.
+    Snelheid gaat voor: een groot redenerend model doet over een lang transcript al gauw meer dan
+    5 minuten, een snel redenerend model een halve minuut tot twee minuten."""
+    if wanted and (not ids or wanted in ids):
         return wanted
+    if not ids:
+        return wanted or XAI_FALLBACK
     skip = ("image", "imagine", "vision", "video", "tts", "audio", "embed", "code")
     cands = [i for i in ids if i.startswith("grok-") and not any(k in i for k in skip)]
     if not cands:
-        return wanted
+        return wanted or XAI_FALLBACK
 
     def score(i):
         fast = "fast" in i
-        nonreason = "non-reasoning" in i
-        pref = (fast, nonreason) if tier == "default" else (not fast, not nonreason)
-        return (_version(i), pref, "latest" in i, -len(i))
+        reasoning = "non-reasoning" not in i
+        pref = (fast, not reasoning) if tier == "default" else (fast and reasoning, reasoning)
+        return (pref, _version(i), "latest" in i, -len(i))
     return max(cands, key=score)
 
 
@@ -127,6 +134,7 @@ def complete(prompt: str, images=None, tier="default", max_tokens=4000, timeout=
         raise AINotConfigured("Geen XAI_API_KEY ingesteld")
     model = resolved_model(tier)
     images = images or []
+    t0 = time.monotonic()
     try:
         if p == "grok":
             content = prompt if not images else (
@@ -142,6 +150,8 @@ def complete(prompt: str, images=None, tier="default", max_tokens=4000, timeout=
             u = data.get("usage") or {}
             db.log_usage("grok", model, {"input_tokens": u.get("prompt_tokens"), "output_tokens": u.get("completion_tokens")})
             truncated = ((data.get("choices") or [{}])[0].get("finish_reason") == "length")
+            log.info("[ai] %s (%s): %.0f s, %s tokens in, %s uit", model, tier, time.monotonic() - t0,
+                     u.get("prompt_tokens"), u.get("completion_tokens"))
         else:
             content = prompt if not images else (
                 [{"type": "image", "source": {"type": "base64", "media_type": m, "data": base64.b64encode(b).decode()}}
@@ -155,6 +165,7 @@ def complete(prompt: str, images=None, tier="default", max_tokens=4000, timeout=
             db.log_usage("claude", model, data.get("usage") or {})
             truncated = data.get("stop_reason") == "max_tokens"
     except httpx.HTTPError as e:
+        log.warning("[ai] %s (%s): %s na %.0f s", model, tier, e.__class__.__name__, time.monotonic() - t0)
         raise AIError(f"{'Grok' if p == 'grok' else 'Claude'} niet bereikbaar: {e.__class__.__name__}") from e
     return text, truncated
 

@@ -86,6 +86,9 @@ def check_ai():
     except ValueError:
         pass
     ids.discard(None)
+    if p == "grok" and not model:  # niets ingesteld: de site kiest zelf
+        quick, deep = ai.pick_model(sorted(ids), "", "default"), ai.pick_model(sorted(ids), "", "complex")
+        return _res("ok", f"Grok verbonden · mail met {quick}, analyses met {deep}", ms, provider=p, model=deep)
     if ids and model not in ids:
         if p == "grok":
             used = ai.pick_model(sorted(ids), model)

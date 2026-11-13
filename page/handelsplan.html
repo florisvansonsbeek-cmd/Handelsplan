@@ -1031,11 +1031,12 @@ if(!TABS.includes(startTab) && !ALIAS[startTab]){ try{ startTab=localStorage.get
 showTab(startTab);
 
 document.addEventListener("click", (ev)=>{
-  const t = ev.target.closest("[data-tab],[data-goto],[data-subtab],[data-pillar],[data-act],[data-ana],[data-undo],[data-done],[data-undone]");
+  const t = ev.target.closest("[data-tab],[data-goto],[data-subtab],[data-pillar],[data-act],[data-ana],[data-review],[data-undo],[data-done],[data-undone]");
   if(!t) return;
   if(t.dataset.subtab){ const [tab,sub]=t.dataset.subtab.split(":"); showSub(tab, sub); return; }
   if(t.dataset.tab || t.dataset.goto){ const scrolled=showTab(t.dataset.tab||t.dataset.goto); if(!scrolled) window.scrollTo({top:0}); return; }
   if(t.dataset.pillar){ S.sel = S.sel===t.dataset.pillar? null : t.dataset.pillar; renderMachine(); return; }
+  if(t.dataset.review){ reviewAnalysis(t.dataset.review); return; }
   if(t.dataset.ana){ const it=S.inbox.find(x=>x.id===t.dataset.ana); if(it) runAnalysis(it.id,{source:it.source,title:it.title,url:it.url,date:it.date}, it.text); return; }
   if(t.dataset.undo){ undo(t.dataset.undo); return; }
   if(t.dataset.done){ const [pid,cid]=t.dataset.done.split("|"); markDone(pid,cid,true); return; }
@@ -2377,7 +2378,7 @@ $("askForm").addEventListener("submit", async (ev)=>{
   ev.preventDefault();
   const q=$("askQ").value.trim(); if(!q||!S.sample||!S.plan) return;
   const out=$("askOut"), st=$("askStatus"), btn=$("askBtn"), stop=$("askStop");
-  S.askCtl=new AbortController(); btn.disabled=true; stop.hidden=false; out.hidden=false; out.textContent="Claude denkt na…"; setStatus(st,"");
+  S.askCtl=new AbortController(); btn.disabled=true; stop.hidden=false; out.hidden=false; out.textContent="De AI denkt na…"; setStatus(st,"");
   stop.onclick=()=>S.askCtl?.abort();
   const prompt = `Je bent de analist achter Floris' persoonlijke handelsplan (educatief, geen beleggingsadvies). Beantwoord zijn vraag in het Nederlands, kort en concreet (max ~180 woorden), op basis van ZIJN plan en het marktbeeld hieronder. Verwijs naar planregels (R1, R2…) en signalen die van toepassing zijn. Zeg het eerlijk als het plan er niets over zegt.\n\nPLAN (JSON):\n${JSON.stringify(planForPrompt(S.plan))}\n\nCIJFERS:\n${marketForPrompt()}\n\nVRAAG: ${q}`;
   try{ await S.sample(prompt,{signal:S.askCtl.signal, cache:false, onText:({text})=>{ out.textContent=text; }}); }
@@ -2413,32 +2414,75 @@ $("inForm").addEventListener("submit", async (ev)=>{
   try{ id=await saveInbox(meta, text); clearForm(); }catch(e){ setStatus(st, dbErrText(e), true); return; }
   runAnalysis(id, meta, text.slice(0,MAX_TEXT));
 });
-async function runAnalysis(inboxId, meta, text){
+function mmss(sec){ sec=Math.max(0, Math.round(sec||0)); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
+function anaStatus(sec){
+  setStatus($("inStatus"), `De AI leest het transcript… ${mmss(sec)}. Dit loopt op de server door: je mag de pagina sluiten, het resultaat komt vanzelf in de inbox.`);
+}
+async function finishAnalysis(inboxId, meta, res){
+  if(!res || typeof res!=="object" || !res.summary) throw {code:"invalid_json"};
+  const analysis=normalizeAnalysis(res);
+  try{ await S.db.doc("inbox/"+inboxId).update({status:"geanalyseerd", analysis, job:null, error:null, analyzedAt:new Date().toISOString()}); }catch(e){}
+  S.pending={inboxId, meta, analysis, items:buildChangeItems(analysis, meta)};
+  renderPending(); setStatus($("inStatus"),"Analyse klaar. Kies bovenaan wat je overneemt.");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+async function failAnalysis(inboxId, e){
+  const st=$("inStatus");
+  if(e?.code==="cancelled"){ setStatus(st,"Gestopt. Het transcript staat in de inbox."); }
+  else { setStatus(st, sampleErrText(e), true); if(HIDE_CODES.includes(e?.code)) S.sample=null; }
+  try{ await S.db.doc("inbox/"+inboxId).update({status:"nieuw", job:null, error: e?.code==="cancelled"? null : sampleErrText(e)}); }catch(x){}
+}
+async function runAnalysis(inboxId, meta, text, retry=0){
   const st=$("inStatus"), btn=$("inAnalyze"), stop=$("inStop");
   if(!S.sample){ setStatus(st,"Analyse met AI is hier niet beschikbaar. Het transcript staat wel in de inbox.",true); return; }
   if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
   showTab("inbox","transcripts");
   S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
-  setStatus(st,"De AI leest het transcript… dit duurt meestal 1 tot 3 minuten. Je kunt dit tabblad open laten staan.");
+  anaStatus(0);
+  let again=false;
   try{
-    const res=await S.sample.json(analysisPrompt(meta, text), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
-    if(!res || typeof res!=="object" || !res.summary) throw {code:"invalid_json"};
-    const analysis=normalizeAnalysis(res);
-    try{ await S.db.doc("inbox/"+inboxId).update({status:"geanalyseerd", analysis}); }catch(e){}
-    S.pending={inboxId, meta, analysis, items:buildChangeItems(analysis, meta)};
-    renderPending(); setStatus(st,"Analyse klaar. Kies bovenaan wat je overneemt.");
-    window.scrollTo({top:0, behavior:"smooth"});
+    const res=await S.sample.json(analysisPrompt(meta, text), {modelTier:"complex", signal:S.anaCtl.signal, cache:false,
+      onJob:(job)=>{ S.db.doc("inbox/"+inboxId).update({status:"analyseren", job, jobAt:new Date().toISOString(), error:null, retry}).catch(()=>{}); },
+      onProgress:({seconds})=>anaStatus(seconds)});
+    await finishAnalysis(inboxId, meta, res);
   }catch(e){
-    if(e?.code==="cancelled") setStatus(st,"Gestopt. Het transcript staat in de inbox.");
-    else { setStatus(st, sampleErrText(e), true); if(HIDE_CODES.includes(e?.code)) S.sample=null; }
+    if((e?.code==="restarted"||e?.code==="lost") && retry<1) again=true;   // server herstartte: één keer vanzelf opnieuw
+    else await failAnalysis(inboxId, e);
   }finally{ S.anaCtl=null; btn.disabled=false; stop.hidden=true; }
+  if(again) return runAnalysis(inboxId, meta, text, retry+1);
+}
+// Liep er een analyse toen je de pagina sloot? Dan hier verder volgen (of opnieuw starten als de server herstartte).
+async function resumeAnalyses(){
+  if(!S.sample?.resumeJson || S.anaCtl || !S.plan) return;
+  const it=arr(S.inbox).find(i=>i.status==="analyseren" && i.job && !S.resumed?.has(i.job));
+  if(!it) return;
+  (S.resumed ||= new Set()).add(it.job);
+  const meta={source:it.source, title:it.title, url:it.url, date:it.date};
+  const btn=$("inAnalyze"), stop=$("inStop");
+  S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
+  anaStatus(0);
+  let again=false;
+  try{
+    const res=await S.sample.resumeJson(it.job, {signal:S.anaCtl.signal, onProgress:({seconds})=>anaStatus(seconds)});
+    await finishAnalysis(it.id, meta, res);
+  }catch(e){
+    if((e?.code==="restarted"||e?.code==="lost") && !(it.retry>=1) && it.text) again=true;
+    else await failAnalysis(it.id, e);
+  }finally{ S.anaCtl=null; btn.disabled=false; stop.hidden=true; }
+  if(again) return runAnalysis(it.id, meta, it.text, (it.retry||0)+1);
+}
+function reviewAnalysis(id){
+  const it=arr(S.inbox).find(x=>x.id===id); if(!it?.analysis) return;
+  const meta={source:it.source, title:it.title, url:it.url, date:it.date};
+  S.pending={inboxId:it.id, meta, analysis:it.analysis, items:buildChangeItems(it.analysis, meta)};
+  renderPending(); window.scrollTo({top:0, behavior:"smooth"});
 }
 async function refreshMacro(){
   const st=$("refreshStatus"), btn=$("refreshBtn");
   if(!S.sample||!S.plan?.macro) return;
   if(S.anaCtl){ setStatus(st,"Er loopt al een analyse.",true); return; }
   S.anaCtl=new AbortController(); if(btn) btn.disabled=true;
-  setStatus(st,"De AI leest de cijfers… dit duurt meestal 1 tot 3 minuten.");
+  setStatus(st,"De AI leest de cijfers… dit duurt meestal minder dan een minuut.");
   try{
     const res=await S.sample.json(macroPrompt(), {modelTier:"complex", signal:S.anaCtl.signal, cache:false});
     if(!res || typeof res!=="object") throw {code:"invalid_json"};
@@ -2564,7 +2608,7 @@ async function applyPending(){
 }
 
 /* ================= inbox list & history ================= */
-const INBOX_STATUS={nieuw:["t-warn","Nieuw"], "transcript nodig":["t-warn","Transcript nodig"], geanalyseerd:["t-neutral","Geanalyseerd"], verwerkt:["t-good","Verwerkt"], bewaard:["t-neutral","Bewaard"]};
+const INBOX_STATUS={nieuw:["t-warn","Nieuw"], "transcript nodig":["t-warn","Transcript nodig"], analyseren:["t-accent","Wordt geanalyseerd…"], geanalyseerd:["t-neutral","Geanalyseerd"], verwerkt:["t-good","Verwerkt"], bewaard:["t-neutral","Bewaard"]};
 function renderInbox(){
   const el=$("inboxList"), list=S.inbox;
   const open=list.filter(i=>i.status==="nieuw"||i.status==="transcript nodig").length;
@@ -2575,7 +2619,9 @@ function renderInbox(){
   el.innerHTML = list.map(i=>{ const s=INBOX_STATUS[i.status]||["t-neutral",i.status||"–"]; const a=i.analysis; return `
     <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}</span>
       ${i.url? `<a href="${esc(i.url)}" target="_blank" rel="noopener" class="small">bron</a>`:""}
-      ${(i.text && i.status!=="verwerkt")? `<button class="btn sm" type="button" data-ana="${esc(i.id)}" ${S.sample?"":"disabled"}>${i.status==="geanalyseerd"||i.status==="bewaard"?"Opnieuw analyseren":"Analyseer"}</button>`:""}</div>
+      ${i.analysis && i.status==="geanalyseerd"? `<button class="btn sm primary" type="button" data-review="${esc(i.id)}">Voorstellen bekijken</button>`:""}
+      ${(i.text && i.status!=="verwerkt" && i.status!=="analyseren")? `<button class="btn sm" type="button" data-ana="${esc(i.id)}" ${S.sample?"":"disabled"}>${i.status==="geanalyseerd"||i.status==="bewaard"?"Opnieuw analyseren":"Analyseer"}</button>`:""}</div>
+      ${i.error && i.status==="nieuw"? `<p class="small" style="color:var(--bad);margin:0">Vorige poging: ${esc(i.error)}</p>`:""}
       ${a?.summary? `<p class="small">${esc(a.summary)}</p>`:""}
       ${i.text? `<details><summary>Tekst bekijken (${nf((i.text.match(/\S+/g)||[]).length)} woorden${i.truncated?", ingekort":""})</summary><div class="pre muted small" style="max-height:320px;overflow:auto;margin-top:6px">${esc(i.text.slice(0,20000))}${i.text.length>20000?"\n…":""}</div></details>`:""}
     </div>`; }).join("");
@@ -3024,7 +3070,8 @@ function sampleErrText(e){
     case "cancelled": return "Analyse gestopt.";
   }
   const m=String(e?.message||"");
-  if(/ReadTimeout|Timeout/i.test(m)) return "De AI gaf binnen 5 minuten geen antwoord. Probeer het opnieuw; een korter stuk tekst gaat sneller.";
+  if(e?.code==="restarted"||e?.code==="lost") return "De server werd herstart tijdens de analyse. Klik op Analyseer om hem opnieuw te starten.";
+  if(/ReadTimeout|Timeout/i.test(m)) return "De AI gaf binnen 15 minuten geen antwoord. Probeer het opnieuw; een korter stuk tekst gaat sneller.";
   if(/sleutel/i.test(m)) return "Grok accepteert de sleutel niet. Controleer XAI_API_KEY in Railway (Uitleg laat zien of AI op groen staat).";
   if(/XAI_API_KEY ontbreekt|Geen XAI_API_KEY/i.test(m)) return "Er is nog geen XAI_API_KEY ingesteld in Railway.";
   if(m) return "De analyse lukte niet: "+m.slice(0,160);
@@ -3052,12 +3099,12 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   db.doc("market/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("market",d)) return; S.market=d; renderAll(); }, onErr);
   db.doc("market/series").onSnapshot(s=>{ const d=s.exists? (s.data().series||{}) : {}; if(!changed("series",d)) return; S.series=d; renderAll(); }, onErr);
   db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);
-  db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); }, onErr);
+  db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); resumeAnalyses(); }, onErr);
   db.doc(CH_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("challenges",d)) return; CH.data=d; CH.loaded=true; renderChallenges(); renderVandaag(); }, onErr);
   db.doc(PF_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; S.pfLoaded=true; if(!changed("portfolio",d)) return; S.portfolio=d; renderPortfolio(); renderVandaag(); renderPlan(); }, onErr);
   db.doc("briefing/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("briefing",d)) return; S.briefing=d; renderVandaag(); }, onErr);
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); renderVandaag(); }, onErr);
-  window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); }).catch(()=>{});
+  window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); resumeAnalyses(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
   $("connBtn").addEventListener("click",()=>{ CONN.open=!CONN.open; renderConn(); if(CONN.open){ window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); if(S.server && Date.now()-CONN.at>20000) loadConn(); } });
   window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("sb-inbox-post").hidden=false; if(S.tab==="inbox") showSub("inbox", localStorage.getItem("hp-sub-inbox")||S.sub.inbox); loadServerStatus(); loadConn(); if(onPost()) loadPost();
