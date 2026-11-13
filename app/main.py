@@ -31,7 +31,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import ai, db, health, jobs, mail, patch, quotes, scheduler, updates
+from . import ai, aijobs, db, health, jobs, mail, patch, quotes, scheduler, updates
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)  # nooit volledige URL's (met sleutels) in de logs
@@ -360,6 +360,31 @@ def list_col(path: str, request: Request, order: str = "", dir: str = "asc", lim
 
 
 # ---------------- AI voor de pagina (transcripts, vragen, marktstatus) ----------------
+@app.post("/api/ai/jobs")
+async def ai_job_start(request: Request):
+    """Start een AI-taak op de achtergrond (voor lange transcripts). De pagina vraagt de uitkomst op met GET."""
+    require_login(request)
+    body = await _json(request)
+    prompt = str(body.get("prompt", ""))[:250_000]
+    if not prompt.strip():
+        raise HTTPException(400, "Lege opdracht")
+    tier = "complex" if body.get("tier") == "complex" else "default"
+    if not ai.provider():
+        raise ai.AINotConfigured("Geen XAI_API_KEY ingesteld")
+    return {"id": aijobs.start(prompt, tier, 6000)}
+
+
+@app.get("/api/ai/jobs/{jid}")
+def ai_job_status(jid: str, request: Request):
+    require_login(request)
+    j = aijobs.get(jid[:40])
+    if not j:
+        raise HTTPException(404, "Deze analyse is niet (meer) bekend.")
+    out = {k: j.get(k) for k in ("id", "status", "text", "truncated", "error", "code", "seconds", "model", "tier")}
+    out["elapsed"] = round(time.time() - float(j.get("startedAt") or time.time()))
+    return out
+
+
 @app.post("/api/ai")
 async def ai_endpoint(request: Request):
     require_login(request)

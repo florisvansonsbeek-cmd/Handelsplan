@@ -59,13 +59,57 @@
   }
   const db = { doc: docRef, collection: (p) => query(p, "", "asc", 100) };
 
-  async function sample(input, opts = {}) {
-    const prompt = typeof input === "string" ? input : input.map((m) => m.content).join("\n\n");
+  const wait = (ms) => new Promise((ok) => setTimeout(ok, ms));
+  // Lange AI-verzoeken lopen als taak op de server: starten, en dan om de paar seconden vragen of hij klaar is.
+  // Geen verzoek staat dus minutenlang open (Railway kapt dat na 5 minuten af), en de taak loopt door als je de pagina sluit.
+  async function startJob(prompt, tier, signal) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      let r;
+      try {
+        r = await fetch(U("/api/ai/jobs"), { method: "POST", headers: H({ "Content-Type": "application/json" }), credentials: CRED,
+          body: JSON.stringify({ prompt, tier }), signal });
+      } catch (e) {
+        if (e && e.name === "AbortError") throw { code: "cancelled" };
+        await wait(4000); continue;               // server herstart net: even later opnieuw
+      }
+      if (r.status === 404) return null;          // oudere server zonder taken
+      if (r.status === 401) { unauth(); throw { code: "session_expired" }; }
+      let j = {}; try { j = await r.json(); } catch (e) {}
+      if (r.ok && j.id) return j.id;
+      if (r.status === 429) throw { code: "rate_limited", message: j.detail || "" };
+      if ([502, 503, 504].includes(r.status) && !j.detail) { await wait(4000); continue; }
+      throw { code: "upstream_error", status: r.status, message: j.detail || "" };
+    }
+    throw { code: "upstream_error", status: 0, message: "" };
+  }
+  async function pollJob(id, opts = {}) {
+    const t0 = Date.now(); let misses = 0;
+    for (;;) {
+      if (opts.signal && opts.signal.aborted) throw { code: "cancelled" };
+      await wait(2500);
+      let r;
+      try { r = await fetch(U("/api/ai/jobs/" + encodeURIComponent(id)), { headers: H(), credentials: CRED, signal: opts.signal }); }
+      catch (e) {
+        if (e && e.name === "AbortError") throw { code: "cancelled" };
+        if (++misses > 60) throw { code: "upstream_error", status: 0, message: "" };   // ruim twee minuten geen server
+        continue;
+      }
+      if (r.status === 401) { unauth(); throw { code: "session_expired" }; }
+      if (r.status === 404) throw { code: "lost", message: "De analyse is niet meer bekend bij de server." };
+      if (!r.ok) { if (++misses > 60) throw { code: "upstream_error", status: r.status, message: "" }; continue; }
+      misses = 0;
+      const j = await r.json();
+      opts.onProgress && opts.onProgress({ seconds: j.elapsed != null ? j.elapsed : Math.round((Date.now() - t0) / 1000), status: j.status });
+      if (j.status === "bezig") continue;
+      if (j.status === "fout") throw { code: j.code || "upstream_error", message: j.error || "" };
+      opts.onText && opts.onText({ text: j.text || "", delta: j.text || "" });
+      return { text: j.text || "", truncated: !!j.truncated, modelTierApplied: j.tier || opts.modelTier || "default", model: j.model, seconds: j.seconds };
+    }
+  }
+  async function sampleDirect(prompt, opts) {   // oude manier, voor een server zonder taken
     const send = () => fetch(U("/api/ai"), { method: "POST", headers: H({ "Content-Type": "application/json" }), credentials: CRED,
       body: JSON.stringify({ prompt, tier: opts.modelTier || "default" }), signal: opts.signal });
-    const wait = (ms) => new Promise((ok) => setTimeout(ok, ms));
     let r, detail = "", status = 0;
-    // Herstart de server midden in een analyse (bijv. na een wijziging in Railway), dan één keer opnieuw.
     for (let attempt = 0; attempt < 2; attempt++) {
       try { r = await send(); }
       catch (e) {
@@ -86,8 +130,14 @@
     opts.onText && opts.onText({ text: data.text, delta: data.text });
     return { text: data.text, truncated: !!data.truncated, modelTierApplied: opts.modelTier || "default" };
   }
-  sample.json = async (input, opts) => {
-    const { text } = await sample(input, opts);
+  async function sample(input, opts = {}) {
+    const prompt = typeof input === "string" ? input : input.map((m) => m.content).join("\n\n");
+    const id = await startJob(prompt, opts.modelTier || "default", opts.signal);
+    if (!id) return sampleDirect(prompt, opts);
+    opts.onJob && opts.onJob(id);
+    return pollJob(id, opts);
+  }
+  const parseLoose = (text) => {
     const tryParse = (s) => { try { return JSON.parse(s); } catch { return undefined; } };
     let v = tryParse(text.trim());
     if (v === undefined) { const m = text.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) v = tryParse(m[1]); }
@@ -95,6 +145,10 @@
     if (v === undefined) throw { code: "invalid_json", text };
     return v;
   };
+  // Een eerder gestarte taak verder volgen, bijvoorbeeld na het herladen van de pagina.
+  sample.resume = (id, opts = {}) => pollJob(id, opts);
+  sample.resumeJson = async (id, opts = {}) => parseLoose((await pollJob(id, opts)).text);
+  sample.json = async (input, opts) => parseLoose((await sample(input, opts)).text);
   sample.limits = async () => ({ maxPromptBytes: 262144 });
 
   const downloads = {
