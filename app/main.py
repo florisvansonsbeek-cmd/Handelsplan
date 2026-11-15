@@ -31,7 +31,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import ai, aijobs, db, health, jobs, mail, patch, quotes, scheduler, updates
+from . import ai, aijobs, db, health, jobs, loginguard, mail, patch, quotes, scheduler, updates
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)  # nooit volledige URL's (met sleutels) in de logs
@@ -40,8 +40,7 @@ log = logging.getLogger("handelsplan")
 BASE = Path(__file__).resolve().parent
 APP_PASSWORD = os.environ.get("APP_PASSWORD", "").strip()
 PIN_MODE = APP_PASSWORD.isdigit() and 4 <= len(APP_PASSWORD) <= 8   # een pincode in plaats van een wachtwoord
-LOGIN_DAILY_LIMIT = int(os.environ.get("LOGIN_DAILY_LIMIT", "10") or 10)  # foute pogingen per 24 uur, van alle apparaten samen
-LOGIN_IP_LIMIT = 5                                                     # foute pogingen per 15 minuten per apparaat
+LOGIN_DAILY_LIMIT = int(os.environ.get("LOGIN_DAILY_LIMIT", "10") or 10)  # foute pogingen per 24 uur van onbekende apparaten samen
 INBOX_TOKEN = os.environ.get("INBOX_TOKEN", "")
 FORCE_HTTPS = os.environ.get("FORCE_HTTPS", "1") == "1"
 SECURE_COOKIE = os.environ.get("SECURE_COOKIE", "1") == "1"
@@ -157,16 +156,6 @@ async def ai_failed(_request, exc):
 
 
 # ---------------- inloggen met alleen een wachtwoord ----------------
-_fails: dict[str, list[float]] = {}
-
-
-def _blocked(*keys, limit=8):
-    now = time.time()
-    for k in keys:
-        _fails[k] = [t for t in _fails.get(k, []) if now - t < 900]
-    return any(len(_fails[k]) >= limit for k in keys)
-
-
 def _signer():
     return URLSafeTimedSerializer(SECRET, salt="handelsplan-token")
 
@@ -207,107 +196,92 @@ def login_page():
     return (BASE / "static" / "login.html").read_text(encoding="utf-8")
 
 
-_login_lock = threading.Lock()
-_login_mem = {}  # reserve als de database even weg is
+GUARD = loginguard.configure(SECRET, _pw_tag(), LOGIN_DAILY_LIMIT, jobs.TZ)
 
 
-def _fail_state():
-    """Foute pogingen van de afgelopen 24 uur, van alle apparaten samen. Staat in de database, zodat een herstart
-    de teller niet wist, en hoort bij het huidige wachtwoord: wijzig je APP_PASSWORD, dan begint hij opnieuw."""
-    try:
-        st = db.get_json("login:fails") or {}
-    except db.DBError:
-        st = dict(_login_mem)
-    if st.get("tag") != _pw_tag():
-        st = {"tag": _pw_tag(), "fails": []}
-    now = time.time()
-    st["fails"] = [t for t in st.get("fails", []) if isinstance(t, (int, float)) and now - t < 86400]
-    return st
+def _set_device_cookie(resp: Response, dev_id=None):
+    """Onthoudt deze browser als bekend apparaat (zie loginguard): een bot met een foute pincode sluit je dan niet buiten."""
+    resp.set_cookie(loginguard.COOKIE, GUARD.new_device(dev_id), max_age=loginguard.DEVICE_DAYS * 86400,
+                    httponly=True, secure=SECURE_COOKIE, samesite="strict", path="/")
 
 
-def _save_fail_state(st):
-    _login_mem.clear()
-    _login_mem.update(st)
-    try:
-        db.set_json("login:fails", st)
-    except db.DBError:
-        pass
+async def _check_password(request: Request, device_token=None):
+    """Controleert het wachtwoord (of de pincode). Geeft (foutantwoord of None, apparaat-id of None).
 
-
-async def _check_password(request: Request):
-    """Geeft een foutantwoord terug, of None als het wachtwoord (of de pincode) klopt.
-
-    Grenzen: 5 foute pogingen per 15 minuten per apparaat, en LOGIN_DAILY_LIMIT (10) per 24 uur voor alle
-    apparaten samen. Een pincode van 4 cijfers raden kost dan gemiddeld meer dan een jaar. Wie al is ingelogd,
-    merkt niets van een blokkade; wil je meteen weer in, wijzig dan APP_PASSWORD in Railway."""
-    ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?")
-    if _blocked("ip:" + ip, limit=LOGIN_IP_LIMIT):
-        return JSONResponse({"error": "Te veel pogingen vanaf dit apparaat. Probeer het over 15 minuten opnieuw."}, 429)
-    if not APP_PASSWORD:
-        return JSONResponse({"error": "Inloggen is nog niet ingesteld: zet APP_PASSWORD in Railway → Variables."}, 503)
-    with _login_lock:
-        st = _fail_state()
-    if len(st["fails"]) >= LOGIN_DAILY_LIMIT:
-        until = datetime.fromtimestamp(min(st["fails"]) + 86400, jobs.TZ).strftime("%d-%m %H:%M")
-        return JSONResponse({"error": f"Inloggen is dicht na {LOGIN_DAILY_LIMIT} foute pogingen, tot {until}. Ben je het zelf? "
-                                      "Wijzig APP_PASSWORD in Railway, dan kun je meteen weer in."}, 429)
+    Grenzen staan in loginguard: een bekend apparaat (eerder ingelogd) heeft alleen zijn eigen grens, onbekende
+    apparaten hebben een grens per netwerk en samen. Zo kan een bot die steeds een foute pincode probeert jou niet
+    buitensluiten, en kost raden van een pincode van 4 cijfers gemiddeld jaren."""
+    ip = loginguard.client_ip(request)
     form = await _json(request)
+    if device_token is None:
+        device_token = form.get("device")
+    dev = GUARD.device_id(device_token)
+    blocked = GUARD.blocked(ip, dev)
+    if blocked:
+        return JSONResponse({"error": blocked[1]}, blocked[0]), dev
+    if not APP_PASSWORD:
+        return JSONResponse({"error": "Inloggen is nog niet ingesteld: zet APP_PASSWORD in Railway → Variables."}, 503), dev
     given = str(form.get("password", ""))
     if PIN_MODE:
         given = given.strip()
     if not hmac.compare_digest(given.encode(), APP_PASSWORD.encode()):
-        _fails.setdefault("ip:" + ip, []).append(time.time())
-        with _login_lock:
-            st = _fail_state()
-            st["fails"].append(time.time())
-            _save_fail_state(st)
-        n = len(st["fails"])
-        if n == 5:
-            db.event("let op", "inlog", "5 foute inlogpogingen in 24 uur")
-        if n == LOGIN_DAILY_LIMIT:
-            db.event("let op", "inlog", f"inloggen 24 uur dicht na {n} foute pogingen")
+        info = GUARD.failed(ip, dev)
+        src = loginguard.mask(ip)
+        if info["closed"] == "nieuw":
+            db.event("let op", "inlog", f"inloggen dicht voor nieuwe apparaten na {info['unknown24h']} foute pogingen "
+                                        f"(laatste vanaf {src}); bekende apparaten kunnen gewoon in")
             try:
-                jobs.notify("Handelsplan: inloggen tijdelijk dicht",
-                            f"Er zijn {n} foute inlogpogingen gedaan. Inloggen is 24 uur dicht; apparaten waar je al bent "
-                            "ingelogd werken gewoon. Was jij het niet? Kies een nieuwe pincode in Railway (APP_PASSWORD).")
+                jobs.notify("Handelsplan: inloggen dicht voor nieuwe apparaten",
+                            f"Er zijn {info['unknown24h']} foute inlogpogingen gedaan, de laatste vanaf {src}. Nieuwe apparaten "
+                            "kunnen 24 uur niet inloggen; apparaten waarop je eerder inlogde werken gewoon.")
             except Exception:  # een melding die mislukt mag het inloggen niet breken
                 pass
+        elif info["closed"] == "netwerk":
+            db.event("let op", "inlog", f"netwerk {src} 24 uur geblokkeerd na {loginguard.NET_LIMIT} foute pogingen")
+        elif info["closed"] == "apparaat":
+            db.event("let op", "inlog", f"bekend apparaat geblokkeerd na {loginguard.DEVICE_LIMIT} foute pogingen")
+        elif not dev and info["unknown24h"] == 5:
+            db.event("let op", "inlog", f"5 foute inlogpogingen van onbekende apparaten in 24 uur (laatste vanaf {src})")
         await asyncio.sleep(1.0)
-        left = LOGIN_DAILY_LIMIT - n
+        left = info["left"]
         msg = "Die pincode klopt niet." if PIN_MODE else "Dat wachtwoord klopt niet."
         if 0 < left <= 3:
             msg += f" Nog {left} {'poging' if left == 1 else 'pogingen'} vandaag."
         elif left <= 0:
-            msg += " Inloggen is nu 24 uur dicht; wijzig APP_PASSWORD in Railway om het meteen weer te openen."
-        return JSONResponse({"error": msg}, 401)
-    _fails.pop("ip:" + ip, None)
-    with _login_lock:
-        st = _fail_state()
-        if st["fails"]:
-            st["fails"] = []
-            _save_fail_state(st)
-    return None
+            msg += " Inloggen is nu een dag dicht voor dit apparaat; wijzig APP_PASSWORD in Railway om het meteen weer te openen."
+        return JSONResponse({"error": msg}, 401), dev
+    GUARD.succeeded(ip, dev)
+    return None, dev
 
 
 @app.post("/api/token")
 async def token(request: Request):
-    """Inloggen vanuit de losse html: geeft een inlogsleutel die TOKEN_DAYS dagen geldig is."""
-    bad = await _check_password(request)
+    """Inloggen vanuit de losse html: geeft een inlogsleutel die TOKEN_DAYS dagen geldig is, plus een apparaatbewijs."""
+    bad, dev = await _check_password(request)
     if bad:
         return bad
     db.event("info", "inlog", "ingelogd vanuit de losse html")
-    return {"token": _signer().dumps({"pw": _pw_tag(), "v": 1}), "days": TOKEN_DAYS}
+    return {"token": _signer().dumps({"pw": _pw_tag(), "v": 1}), "days": TOKEN_DAYS, "device": GUARD.new_device(dev)}
+
+
+@app.get("/api/device")
+def device(request: Request):
+    """Apparaatbewijs voor een losse html die al is ingelogd (van vóór deze versie)."""
+    require_login(request)
+    return {"device": GUARD.new_device()}
 
 
 @app.post("/login")
 async def login(request: Request):
-    bad = await _check_password(request)
+    bad, dev = await _check_password(request, request.cookies.get(loginguard.COOKIE, ""))
     if bad:
         return bad
     request.session.clear()
     request.session["ok"] = True
     request.session["at"] = int(time.time())
-    return {"ok": True}
+    resp = JSONResponse({"ok": True})
+    _set_device_cookie(resp, dev)
+    return resp
 
 
 @app.post("/logout")
@@ -321,7 +295,10 @@ def logout(request: Request):
 def index(request: Request):
     if not request.session.get("ok"):
         return RedirectResponse("/login", 303)
-    return FileResponse(BASE / "pages" / "index.html", headers={"Cache-Control": "no-store"})
+    resp = FileResponse(BASE / "pages" / "index.html", headers={"Cache-Control": "no-store"})
+    if not GUARD.device_id(request.cookies.get(loginguard.COOKIE, "")):
+        _set_device_cookie(resp)  # wie al ingelogd is, wordt vanaf nu als bekend apparaat onthouden
+    return resp
 
 
 @app.get("/health")

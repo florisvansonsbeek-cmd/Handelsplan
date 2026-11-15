@@ -4,16 +4,21 @@ Je handelsplan op Railway, in vier tabs plus Uitleg:
 
 | Tab | Wat erin staat |
 |-----|----------------|
-| **Vandaag** | Wat je nu doet (geraakte planregels), de cijfers die je regels sturen, briefing en agenda |
-| **Plan** | Per positie: wat je hebt, je regels als ladder en waarom; daaronder portefeuille, scenario's en Eightcap-challenges (uitklapbaar) |
+| **Vandaag** | Het verhaal (wat speelt er, wat betekent het, wat doe je), per tab in het kort, de vooruitblik met het effect op elke belegging, en Tino en Gammon naast de AI |
+| **Plan** | De cijfers die je regels sturen (wanneer doe je iets?), per positie wat je hebt en je regels als ladder; daaronder portefeuille, scenario's en Eightcap-challenges (uitklapbaar) |
 | **Markt** | Overzicht, Signalen, Cyclus en Cijfers (subtabs) |
 | **Inbox** | Transcripts, Post (verwerkte mail) en Historie (subtabs) |
 
-Informatie heeft een label: **Doen** (alleen hierop handel je), **Volgen** (de paar cijfers en momenten die je regels sturen) en **Achtergrond** (begrijpen waarom). Oude links zoals `#historie` of `#cyclus` werken nog.
+Bovenaan Plan, Markt en Inbox staat een strook **In het kort** met hetzelfde verhaal als op Vandaag. Informatie heeft een label: **Doen** (alleen hierop handel je), **Volgen** (de paar cijfers en momenten die je regels sturen) en **Achtergrond** (begrijpen waarom). Een nieuw bezoek begint altijd op Vandaag; oude links zoals `#historie`, `#cyclus` of `#kompas` werken nog.
 
 Met:
 
-- **Vandaag** (startpagina): in één oogopslag of een planregel is geraakt en wat dat in euro's betekent, je portefeuille, en het **kompas**: alleen de cijfers die je planregels sturen (bijv. SMH, bitcoin, S&P 500 vanaf de top, reële rente), met de volgende regel en de afstand ernaartoe. Daarnaast de briefing van Grok, de komende momenten en wat er veranderde sinds je vorige bezoek.
+- **Vandaag** (startpagina) vertelt één verhaal:
+  - **Het verhaal**: de kop van de dag, *wat er speelt*, *wat het betekent* voor je posities en *wat je doet* (alleen geraakte planregels, met de knop Gedaan/Gezien en het bedrag uit je portefeuille).
+  - **In het kort per onderdeel**: een kaart voor Plan, Markt en Inbox met het belangrijkste en een knop erheen.
+  - **Wat kun je verwachten**: het meest waarschijnlijke pad, de kans per scenario, de momenten die het beeld kunnen kantelen (Nvidia, Fed, banen) en per belegging de richting voor de komende weken, de verwachting over je scenario's, waarom, wat het kan kantelen en je regel nu.
+  - **Zijnoot: Tino en Gammon naast de AI**: of TradersReality (Tino) en Rebel Capitalist (George Gammon) het eens, deels eens of oneens zijn met de analyse, en waarin. Zolang er geen transcript van een bron is verwerkt, staat er eerlijk "nog onbekend".
+  - Daarnaast je portefeuille en wat er veranderde sinds je vorige bezoek.
 - **Plan**: een kaart per positie met wat je nu doet, wat je hebt (aantal, waarde, weging tegenover je doel) en je regels als ladder met de huidige koers ertussen. De **portefeuille** vul je in onder Plan → Portefeuille; de site rekent waarde, winst, weging en de bedragen van je planregels uit (bijv. "SMH een derde kleiner = ca. € 2.984"). Alles blijft in je eigen database.
 - **Automatische marktdata zonder sleutels**: Yahoo Finance (koersen elk kwartier op werkdagen), FRED van de St. Louis Fed (rente, inflatie, banen, liquiditeit, twee keer per dag) en CoinGecko (bitcoin; reserve voor goud, zilver en de euro). Een cijfer wordt nooit overschreven door een oudere waarneming, en bij elk cijfer staat hoe oud het is.
   - Yahoo en de FRED-site weigeren gewone scripts vanaf servers; de site haalt ze daarom op met de verbindingsvingerafdruk van Chrome (`curl_cffi`, zoals yfinance).
@@ -21,12 +26,14 @@ Met:
   - Betrouwbaarder voor FRED: vraag een gratis sleutel aan op fred.stlouisfed.org (My Account → API Keys) en zet die als `FRED_API_KEY` in Railway.
 - **Planregels met meldingen**: elke positie heeft regels (bijv. "SMH onder $500: verklein met een derde"). Raakt de koers zo'n regel, dan krijg je één melding (ntfy, of mail als die werkt). Met *Gedaan* of *Gezien* zet je hem uit; hij staat pas weer scherp als de koers eerst duidelijk terug is geweest, zodat heen-en-weer rond een niveau geen dubbele meldingen geeft.
 - **Transcripts analyseren** (Inbox → Transcripts): plak een transcript en klik op Analyseer. De analyse draait als taak op de server en de pagina vraagt elke paar seconden de stand op, met een teller erbij. Je mag de pagina sluiten: bij terugkomst haalt hij het resultaat op, en *Voorstellen bekijken* blijft beschikbaar bij het item. Herstart de server tijdens een analyse, dan start die vanzelf opnieuw.
-- **Dagbriefing van Grok**: elke werkdag om 08:05 en 22:35 een korte briefing, alleen op basis van de cijfers en planregels op de site (geen verzonnen nieuws). De site kiest zelf uit de Grok-modellen van je account: een snel model voor mail en een snel redenerend model voor analyses (bijv. grok-4-1-fast-reasoning). Een groot redenerend model deed over een lang transcript meer dan 5 minuten. Met `XAI_MODEL` en `XAI_MODEL_COMPLEX` kies je zelf.
+- **Dagbriefing van Grok**: elke werkdag om 08:05 en 22:35 een korte briefing, alleen op basis van de cijfers, planregels, scenario's en brillen op de site (geen verzonnen nieuws). Grok schrijft daarin ook het verhaal voor Vandaag, de vooruitblik per belegging en de vergelijking van Tino en Gammon met de AI. Verwerk je een transcript van Tino of Gammon, dan maakt de analyse die vergelijking meteen opnieuw. De site kiest zelf uit de Grok-modellen van je account: een snel model voor mail en een snel redenerend model voor analyses (bijv. grok-4-1-fast-reasoning). Een groot redenerend model deed over een lang transcript meer dan 5 minuten. Met `XAI_MODEL` en `XAI_MODEL_COMPLEX` kies je zelf.
 
 - **Inloggen met één wachtwoord of een pincode** (`APP_PASSWORD`); zonder inlog is niets te zien. HTTP wordt doorgestuurd naar HTTPS.
   - Bestaat `APP_PASSWORD` uit 4 tot 8 cijfers, dan toont het inlogscherm een pincodeveld dat vanzelf inlogt.
-  - Bescherming: maximaal 5 foute pogingen per 15 minuten per apparaat, en 10 per 24 uur voor alle apparaten samen (`LOGIN_DAILY_LIMIT`). De teller staat in de database en overleeft dus een herstart. Een pincode van 4 cijfers raden duurt zo gemiddeld meer dan een jaar.
-  - Is inloggen dichtgegaan? Apparaten waar je al bent ingelogd werken gewoon (14 dagen). Wil je meteen weer in, wijzig dan `APP_PASSWORD` in Railway; dat zet de teller op nul.
+  - **Bekende apparaten**: een browser of losse html waarop je één keer goed inlogt, krijgt een ondertekend apparaatbewijs (400 dagen geldig). Een bot die steeds een foute pincode probeert, kan je daardoor niet meer buitensluiten.
+  - Grenzen voor onbekende apparaten: 5 foute pogingen per 15 minuten per adres, 4 per 24 uur per netwerk en 10 per 24 uur samen (`LOGIN_DAILY_LIMIT`). Een bekend apparaat heeft alleen zijn eigen grens (10 per 24 uur). De tellers staan in de database en overleven een herstart; een pincode van 4 cijfers raden duurt zo jaren.
+  - In het verbindingspaneel (knop *Railway* bovenaan) staat onder **Inloggen** hoeveel foute pogingen er waren en vanaf welk netwerk.
+  - Is inloggen dicht voor nieuwe apparaten? Je bekende apparaten werken gewoon. Wil je meteen op een nieuw apparaat, wijzig dan `APP_PASSWORD` in Railway; dat zet alle tellers op nul.
 - **PostgreSQL** (`DATABASE_URL`) voor je plan, verwerkte mails, documenten, koersen, notities en het logboek. De tabellen maakt de site zelf aan.
 - **E-mail via IMAP** (iCloud): elk kwartier nieuwe mails ophalen, alleen lezen. Bijlagen (PDF, Word, Excel, PowerPoint, HTML, tekst, JPG/PNG) worden omgezet naar tekst.
 - **Grok** (`XAI_API_KEY`) haalt per mail en bijlage de handelsinformatie eruit: soort document, samenvatting, bedrijven, tickers, bedragen, datums, belang en acties. Grok doet ook de transcriptanalyse en "Vraag het plan".
@@ -94,7 +101,8 @@ In de losse versie: **Uitleg → Back-up downloaden**. Op je Railway-site: **Uit
 | `app/quotes.py` | Koersen van je volglijst (Finnhub, anders Yahoo; CoinGecko voor crypto) |
 | `app/sources.py` | Databronnen zonder sleutel: FRED-csv, Yahoo Finance-grafieken, CoinGecko |
 | `app/planstatus.py` | Planregels per positie toetsen (zelfde logica als de site), met *gedaan* en weer scherp zetten |
-| `app/briefing.py` | De dagbriefing van Grok |
+| `app/briefing.py` | De dagbriefing van Grok, met het verhaal, de vooruitblik en de vergelijking met de bronnen voor Vandaag |
+| `app/loginguard.py` | Bescherming van het inloggen: bekende apparaten en grenzen per adres, netwerk en samen |
 | `app/updates.py`, `seed/updates/` | Inhoudelijke updates van plan en cijfers; elke update wordt één keer toegepast bij het starten, met een stap in Historie om terug te zetten |
 | `app/health.py` | Verbindingstest per koppeling (`/api/connections`) |
 | `app/scheduler.py`, `app/jobs.py` | Planner: mail en koersen elk kwartier, marktkoersen elk kwartier op werkdagen (07–23 u), macrocijfers om 07:20 en 23:20, briefing om 08:05 en 22:35 |
