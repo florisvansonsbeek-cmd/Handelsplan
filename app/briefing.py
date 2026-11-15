@@ -36,8 +36,12 @@ Antwoord met ALLEEN dit JSON-object:
    "doen":"1 zin: wat hij volgens zijn planregels doet; alleen GERAAKTE regels, anders vasthouden aan het plan"}},
  "vooruitblik":{{"periode":"de periode, bijv. 'tot het Fed-besluit van 9 december'",
    "pad":"max 2 zinnen: het meest waarschijnlijke pad volgens de scenario's en de kalender",
+   "zeker":["max 3 dingen die de komende weken ZEER WAARSCHIJNLIJK zijn, met de kans als die hieronder staat"],
    "kantelpunten":["max 3: datum of niveau + wat het beeld kan doen kantelen"],
-   "posities":{{{vb_ids}}}}},
+   "posities":{{{vb_ids}}},
+   "lang":{{"periode":"de langere termijn, bijv. '3 tot 12 maanden'",
+     "pad":"max 2 zinnen: het waarschijnlijkste pad op de langere termijn volgens de scenario's, met kans en het grootste risico",
+     "posities":{{{lang_ids}}}}}}},
  "bronnen":{{"kern":"1 zin: waar de AI en de bronnen het over eens en oneens zijn",
    "tr":{{"oordeel":"eens|deels|oneens|onbekend","verschil":"1 à 2 zinnen: hoe Tino (TradersReality) ernaar kijkt t.o.v. de AI-analyse"}},
    "rebel":{{"oordeel":"eens|deels|oneens|onbekend","verschil":"1 à 2 zinnen: hoe George Gammon (Rebel Capitalist) ernaar kijkt t.o.v. de AI-analyse"}}}}}}
@@ -139,9 +143,11 @@ def build_prompt(plan, market, prev):
     vb_ids = ",".join(f'"{p.get("id")}":{{"richting":"getal van -2 (sterk negatief) tot 2 (sterk positief)",'
                       f'"tekst":"1 zin: wat je de komende weken voor {_short(p)} mag verwachten",'
                       f'"kantel":"het niveau of moment dat dit verandert"}}' for p in positions)
+    lang_ids = ",".join(f'"{p.get("id")}":"1 zin: wat je op de langere termijn (maanden) voor {_short(p)} mag verwachten"'
+                        for p in positions)
     reg = plan.get("regime") or {}
     return PROMPT.format(
-        pos_ids=pos_ids, vb_ids=vb_ids, nu=f"{DAYS[jobs.now_nl().weekday()]} {jobs.now_nl():%d-%m-%Y %H:%M}",
+        pos_ids=pos_ids, vb_ids=vb_ids, lang_ids=lang_ids, nu=f"{DAYS[jobs.now_nl().weekday()]} {jobs.now_nl():%d-%m-%Y %H:%M}",
         regime=f"{reg.get('name', '')}: {reg.get('thesis', '')}"[:900],
         marktbeeld="\n".join(mb), cijfers="\n".join(lines) or "- (geen cijfers)",
         signalen="\n".join(sig) or "- geen rode of oranje signalen",
@@ -183,11 +189,17 @@ def clean(res, plan):
     vp = vb.get("posities") if isinstance(vb.get("posities"), dict) else {}
     vpos = {i: {"richting": _dir(vp[i].get("richting")), "tekst": _txt(vp[i].get("tekst"), 260), "kantel": _txt(vp[i].get("kantel"), 200)}
             for i in ids if isinstance(vp.get(i), dict) and vp[i].get("tekst")}
-    if vb.get("pad") or vpos:
+    lg = vb.get("lang") if isinstance(vb.get("lang"), dict) else {}
+    lp = lg.get("posities") if isinstance(lg.get("posities"), dict) else {}
+    lpos = {i: _txt(lp[i].get("tekst") if isinstance(lp.get(i), dict) else lp.get(i), 260) for i in ids if lp.get(i)}
+    lst = lambda v, n: [_txt(x, n) for x in v if str(x).strip()][:3] if isinstance(v, list) else []
+    if vb.get("pad") or vpos or lg.get("pad"):
         out["vooruitblik"] = {"periode": _txt(vb.get("periode"), 80), "pad": _txt(vb.get("pad"), 420),
-                              "kantelpunten": [_txt(x, 200) for x in (vb.get("kantelpunten") or []) if str(x).strip()][:3]
-                              if isinstance(vb.get("kantelpunten"), list) else [],
+                              "zeker": lst(vb.get("zeker"), 200), "kantelpunten": lst(vb.get("kantelpunten"), 200),
                               "posities": vpos}
+        if lg.get("pad") or lpos:
+            out["vooruitblik"]["lang"] = {"periode": _txt(lg.get("periode"), 80), "pad": _txt(lg.get("pad"), 420),
+                                          "posities": {k: v for k, v in lpos.items() if v}}
     br = res.get("bronnen") if isinstance(res.get("bronnen"), dict) else {}
     src = {}
     for k in ("tr", "rebel"):

@@ -1,0 +1,57 @@
+{
+  "id": "2026-11-15b",
+  "at": "2026-11-15T22:45:00+01:00",
+  "asOf": "2026-11-13",
+  "source": "Update door Claude",
+  "title": "Vooruitblik op korte en lange termijn, en wanneer bijkopen",
+  "summary": "Per tab staat nu wat de komende weken zeer waarschijnlijk is, wat je op langere termijn mag verwachten en wanneer bijkopen volgens je plan handig is. De planregels zelf zijn niet veranderd.",
+  "changelog": [
+    "Vooruitblik: korte termijn (tot het Fed-besluit van 9 december) en langere termijn (3 tot 12 maanden), met per positie wat je mag verwachten",
+    "Per positie een uitleg wanneer bijkopen volgens je plan handig is (VWCE, SMH, Circle, goud, bitcoin)"
+  ],
+  "plan": {
+    "replace": {
+      "outlook": {
+        "updatedAt": "2026-11-15T22:45:00+01:00",
+        "short": {
+          "periode": "Komende weken, tot het Fed-besluit van 9 december",
+          "pad": "De Fed verhoogt op 9 december vrijwel zeker met 0,25%-punt en de rente blijft rond of boven 5%. Chips blijven onrustig tot en met de cijfers van Nvidia (17 nov); de brede markt houdt stand zolang banen en krediet overeind blijven.",
+          "zeker": [
+            "De Fed verhoogt op 9 december (~85% ingeprijsd voor 0,25%-punt; 10–15% kans op 0,5%-punt)",
+            "De rente blijft hoog: de 10-jaars rond 5% zolang de inflatie te hoog is",
+            "De cijfers van Nvidia (17 nov) bepalen of de chipcorrectie een bodem vindt"
+          ]
+        },
+        "long": {
+          "periode": "3 tot 12 maanden (tot eind 2027)",
+          "pad": "Waarschijnlijkst loopt de AI-correctie uit zonder recessie (35%) of blijft de inflatie hangen terwijl de Fed verhoogt (30%). In beide gevallen herstellen aandelen pas echt als de Fed stopt met verhogen. Grootste risico: een Fed die doorschiet en een groeischok veroorzaakt (10%).",
+          "posities": {
+            "vwce": "Zijwaarts tot licht lager zolang de rente boven 5% staat, daarna herstel. Correcties zijn je koopmomenten (−10% en −20%).",
+            "smh": "Het gevoeligst: kwetsbaar zolang AI-uitgaven en Nvidia onder vuur liggen; herstel pas als de rente daalt en de vraag naar chips bevestigd wordt.",
+            "crcl": "Gemengd: een hogere rente helpt de inkomsten, maar zonder groei van USDC en een beter cryptoklimaat blijft de koers laag.",
+            "gold": "Last van de hoge rente zolang de Fed verhoogt, maar bij een groeischok of een Fed die moet terugkrabbelen is goud de winnaar.",
+            "btc": "Zwak zolang de dollar en de rente stijgen; bij een draai van de Fed vaak als eerste omhoog. Alleen kleine stappen, zonder hefboom."
+          }
+        }
+      }
+    },
+    "positionsPatch": {
+      "vwce": {
+        "buyNote": "Je vaste maandelijkse inleg loopt altijd door. Extra bijkopen doe je bij een correctie: −10% en −20% vanaf het record, telkens een derde van je cash, zolang de Sahm-regel onder 0,5 blijft.",
+        "dca": true
+      },
+      "smh": {
+        "buyNote": "Niet bijkopen zolang je verkleinregels gelden, en zeker niet vóór de cijfers van Nvidia (17 nov). Pas boven $600 (weekslot) ga je in stappen terug naar je normale weging."
+      },
+      "crcl": {
+        "buyNote": "Onder $70 niet bijkopen. Pas weer bijkopen als $70–74 is heroverd; boven $100 mag je opbouwen naar je doelweging."
+      },
+      "gold": {
+        "buyNote": "Onder $4.000 niet bijkopen. Bijkopen in tranches (een derde van je cash per keer) als de reële rente onder 2% zakt of goud boven $4.450 sluit."
+      },
+      "btc": {
+        "buyNote": "Onder $75.000 mag een kleine tranche (10% van je cash), zonder hefboom. Onder $65.000 stop je met bijkopen tot het stabiliseert; boven $90.000 (weekslot) mag weer een kleine tranche."
+      }
+    }
+  }
+}
