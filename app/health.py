@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 
 import httpx
 
-from . import ai, db, mail, quotes
+from . import ai, db, loginguard, mail, quotes
 
 TTL = 300           # seconden dat een externe test geldig blijft
 FORCE_GAP = 20      # minimaal zoveel seconden tussen twee handmatige tests
@@ -191,9 +191,30 @@ def check_finnhub():
     return _res("ok", "Finnhub verbonden", ms)
 
 
-CHECKS = {"database": check_database, "ai": check_ai, "mail": check_mail, "data": check_data, "finnhub": check_finnhub}
+def check_login():
+    """Foute inlogpogingen van de afgelopen 24 uur (uit de database, geen externe test)."""
+    g = loginguard.GUARD
+    if not os.environ.get("APP_PASSWORD", "").strip():
+        return _res("fout", "APP_PASSWORD ontbreekt in Railway: niemand kan inloggen.")
+    if g is None:
+        return _res("uit", "Inlogbeveiliging nog niet gestart.")
+    s = g.summary()
+    n, src = s["fails24h"], s.get("topNet") or s.get("lastFrom") or "onbekend"
+    if s["closed"]:
+        return _res("let-op", f"Dicht voor nieuwe apparaten: {n} foute pogingen in 24 uur, vooral vanaf {src}. "
+                    "Apparaten waarop je eerder inlogde kunnen gewoon in.", **s)
+    if n >= 3:
+        return _res("let-op", f"{n} foute pogingen van onbekende apparaten in 24 uur, vooral vanaf {src} "
+                    f"({s.get('topNetFails', n)}×). Je eigen apparaten houden toegang.", **s)
+    if s["deviceFails"] >= 3:
+        return _res("let-op", f"{s['deviceFails']} foute pogingen op een bekend apparaat in 24 uur.", **s)
+    return _res("ok", "Geen verdachte pogingen" + (f" ({n} fout in 24 uur)" if n else ""), **s)
+
+
+CHECKS = {"database": check_database, "ai": check_ai, "mail": check_mail, "data": check_data, "finnhub": check_finnhub,
+          "login": check_login}
 REQUIRED = ("database", "ai", "mail", "data")
-NAMES = {"database": "Database", "ai": "AI", "mail": "E-mail", "data": "Marktdata", "finnhub": "Finnhub"}
+NAMES = {"database": "Database", "ai": "AI", "mail": "E-mail", "data": "Marktdata", "finnhub": "Finnhub", "login": "Inloggen"}
 
 
 # ---------------- samenvoegen ----------------
@@ -221,7 +242,7 @@ def _log_changes(results):
     for k, r in results.items():
         before = _prev.get(k)
         _prev[k] = r["state"]
-        if before is None or before == r["state"]:
+        if k == "login" or before is None or before == r["state"]:  # inloggen meldt zichzelf al in het logboek
             continue
         if r["state"] in ("fout", "let-op"):
             db.event("let op", "verbinding", f"{NAMES[k]}: {r['detail']}")
@@ -236,7 +257,7 @@ def connections(force=False):
     if force:
         _last_force[0] = now
     with _lock:
-        todo = [k for k in CHECKS if k in ("database", "data") or force or k not in _cache or now - _cache[k][0] > TTL]
+        todo = [k for k in CHECKS if k in ("database", "data", "login") or force or k not in _cache or now - _cache[k][0] > TTL]
     with ThreadPoolExecutor(max_workers=len(todo) or 1) as ex:
         futs = {k: ex.submit(CHECKS[k]) for k in todo}
         fresh = {}

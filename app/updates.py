@@ -59,10 +59,15 @@ def _apply_plan(u):
         for pos in plan.get("positions", []):
             if pos.get("id") == pid:
                 pos.update(copy.deepcopy(fields))
-    for pid, fields in (p.get("scenarioPatch") or {}).items():
-        for sc in plan.get("scenarios", []):
-            if sc.get("id") == pid:
-                sc.update(copy.deepcopy(fields))
+    sp = p.get("scenarioPatch") or {}
+    # 'ifProb': alleen toepassen als de kansen nog zo staan als verwacht (allemaal of geen), zodat kansen die jij
+    # intussen zelf hebt aangepast niet worden overschreven en het totaal 100% blijft.
+    cur = {sc.get("id"): sc.get("prob") for sc in plan.get("scenarios", [])}
+    if all(cur.get(pid) == f["ifProb"] for pid, f in sp.items() if "ifProb" in f):
+        for pid, fields in sp.items():
+            for sc in plan.get("scenarios", []):
+                if sc.get("id") == pid:
+                    sc.update({k: copy.deepcopy(v) for k, v in fields.items() if k != "ifProb"})
     for i, c in enumerate(p.get("calendarSet") or []):
         cal = plan.setdefault("calendar", [])
         hit = next((x for x in cal if x.get("date") == c.get("date") and x.get("event", "")[:12] == c.get("match", c.get("event", ""))[:12]), None)
@@ -78,6 +83,8 @@ def _apply_plan(u):
                 macro["cycle"].update(copy.deepcopy(v))
             else:
                 macro[k] = copy.deepcopy(v)
+    for lid, fields in (p.get("lensPatch") or {}).items():
+        _patch_lens(plan, lid, copy.deepcopy(fields))
     plan.setdefault("claims", [])
     for c in p.get("claimsUpdate", []):
         for x in plan["claims"]:
@@ -100,6 +107,35 @@ def _apply_plan(u):
         "title": u.get("title") or "", "inboxId": "", "changelog": u.get("changelog") or [],
         "summary": u.get("summary") or "", "planBefore": before})
     return version
+
+
+def _when(iso):
+    try:
+        t = datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
+
+
+def _patch_lens(plan, lid, fields):
+    """Werkt een bril (TradersReality, Rebel Capitalist) bij, maar nooit over een visie die jij uit hun eigen
+    transcript haalde: is de bril sinds 'skipIfTranscriptSince' uit een transcript bijgewerkt, dan blijft hij staan."""
+    lenses = (plan.get("macro") or {}).get("lenses") or []
+    ln = next((x for x in lenses if x.get("id") == lid), None)
+    if ln is None:
+        return False
+    since = _when(fields.pop("skipIfTranscriptSince", "") or "")
+    own = str(ln.get("basis", "")).startswith("Bijgewerkt uit")
+    at = _when(ln.get("updatedAt") or "")
+    if own and (since is None or (at and at >= since)):
+        return False
+    checks = fields.pop("checks", None) or []
+    ln.update(fields)
+    for c in checks:
+        hit = next((x for x in ln.get("checks", []) if x.get("id") == c.get("id")), None)
+        if hit:
+            hit.update({k: v for k, v in c.items() if k in ("answer", "status")})
+    return True
 
 
 def _apply_watchlist(u):

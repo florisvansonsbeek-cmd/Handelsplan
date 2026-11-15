@@ -1,0 +1,458 @@
+{
+  "id": "2026-11-15",
+  "at": "2026-11-15T21:00:00+01:00",
+  "asOf": "2026-11-13",
+  "source": "Update door Claude",
+  "title": "Update 15 nov: hete inflatie, rente boven 5% en Nvidia zonder topman",
+  "summary": "Het plan is bijgewerkt na de week van 9 tot 13 november: de inflatie bleef te hoog, de 10-jaarsrente sprong naar 5,15% en een Fed-verhoging op 9 december is vrijwel zeker. Nvidia-topman Jensen Huang stapte op; SMH zakte weer onder $500. Goud viel onder $4.000 en bitcoin onder $70.000. De brede markt hield stand (S&P 500 +2,5%). Nieuw: de vooruitblik per belegging en de vergelijking met Tino en George Gammon op Vandaag.",
+  "changelog": [
+    "Scenario's: stagflatie-grind 25% → 30%, zachte landing 20% → 15% (hete inflatie, Fed verhoogt)",
+    "Marktbeeld: nieuwe kop, zes kernpunten, effect per positie en regimekompas (inflatie hoger)",
+    "Posities: nieuwe tekst voor VWCE, SMH, Circle, goud en bitcoin; regels zelf ongewijzigd",
+    "Kalender: Nvidia 17 nov, Fed-notulen 18 nov, hoorzitting Senaat 3 dec (gevraagd), banen 4 dec, Fed 9 dec, CPI 10 dec",
+    "Bril Rebel Capitalist: George Gammons video van 14 nov (via een samenvatting; plak het transcript voor zijn eigen woorden)",
+    "Bril TradersReality: startversie bijgewerkt naar je huidige posities; nog geen transcript van Tino"
+  ],
+  "market": {
+    "set": {
+      "spx": {
+        "value": 7561.67,
+        "change": "week +2,5% (beste sinds augustus) · 13 nov −0,4%",
+        "asOf": "13 nov, slot",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "ndx": {
+        "value": 25136.27,
+        "change": "13 nov −0,9% · einde van vier dalende weken",
+        "asOf": "13 nov, slot",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "vix": {
+        "value": 19.39,
+        "change": "was 25,6 op 6 nov",
+        "asOf": "13 nov, slot",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "us10y": {
+        "value": 5.15,
+        "change": "was 4,86% op 6 nov · na hete CPI",
+        "asOf": "13 nov",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "us2y": {
+        "value": 4.87,
+        "change": "was 4,51% op 6 nov",
+        "asOf": "13 nov",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "brent": {
+        "value": 95.84,
+        "change": "week ≈ −2,5% · IEA ziet overschot in Q4",
+        "asOf": "13 nov",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "wti": {
+        "value": 88.56,
+        "change": "week ≈ −2,5%",
+        "asOf": "13 nov",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "gold": {
+        "value": 3876,
+        "change": "onder $4.000 sinds 11 nov · laagste in een jaar",
+        "asOf": "13 nov",
+        "src": "Nieuws (slot 13 nov)"
+      },
+      "btc": {
+        "value": 68341,
+        "change": "onder $70.000 en het 200-weeksgemiddelde · maand −16%",
+        "asOf": "13 nov",
+        "src": "Nieuws (13 nov)"
+      },
+      "smh": {
+        "value": 486.75,
+        "change": "13 nov −3,0% · 12 nov nog $501,73",
+        "asOf": "13 nov, slot",
+        "src": "StockAnalysis"
+      },
+      "crcl": {
+        "value": 62.2,
+        "change": "13 nov −2,5%",
+        "asOf": "13 nov, slot",
+        "src": "StockAnalysis"
+      }
+    },
+    "updatedAt": "2026-11-15T21:00:00+01:00",
+    "updatedBy": "Update door Claude",
+    "note": "Momentopnames uit nieuwsbronnen van 13 november; cijfers die de server zelf live ophaalt worden niet overschreven."
+  },
+  "plan": {
+    "replace": {
+      "regime": {
+        "name": "Renteschok in een AI-correctie",
+        "phase": "Late cyclus · correctie in tech",
+        "riskLevel": "verhoogd",
+        "thesis": "De inflatie bleef in oktober te hoog (CPI +0,4%, kern +0,3% voor de derde maand op rij; producentenprijzen +6,5% op jaarbasis). Daardoor verhoogt de Fed op 9 december vrijwel zeker en sprong de 10-jaarsrente naar 5,15%. In de AI-hoek kwam er een klap bij: Nvidia-topman Jensen Huang stapte op 12 november op en Nvidia verloor bijna 13% in een week. Toch hield de brede markt stand (S&P 500 +2,5%, 3,3% onder het record): het geld schuift van chips naar energie en industrie. Goud en bitcoin leden onder de hogere rente en een sterkere dollar. Dit is nog steeds een correctie in dure tech, geen crisis: banen en krediet houden stand.",
+        "masterVariable": {
+          "name": "De rente (10-jaars boven 5%) en de AI-chips",
+          "why": "Een rente boven 5% drukt bijna alles wat je hebt: VWCE, SMH, goud en bitcoin. Alleen Circle verdient aan een hogere rente. Daarnaast bepaalt Nvidia (17 nov) of de chipcorrectie een bodem vindt of dieper gaat."
+        },
+        "changesSinceJuly": [
+          "Fed: +25 bp in september (3,75–4,00%), pauze op 28 okt; een verhoging op 9 december is vrijwel zeker (~85% voor 0,25%-punt).",
+          "Rente: de 10-jaars van 4,86% (6 nov) naar 5,15% (13 nov) na de hete inflatie van oktober.",
+          "AI-handel: chips 30–35% onder de top van juni; Nvidia-topman Jensen Huang stapte op (12 nov).",
+          "Olie: van boven $110 (oorlog) naar ~$96 Brent op vredeshoop en een verwacht overschot.",
+          "Goud onder $4.000 en bitcoin onder $70.000 door de hogere rente en een sterkere dollar.",
+          "Politiek: de Democraten winnen Huis en Senaat (3 nov), vanaf januari."
+        ]
+      },
+      "actionsNow": [
+        "SMH sloot vrijdag op $486,75, weer onder $500. Heb je de eerste derde nog niet verkocht, dan telt die regel nu. Niet bijkopen vóór de cijfers van Nvidia (di 17 nov, 22:20).",
+        "Bitcoin rond $68.000: je regel staat een kleine tranche toe (onder $75.000, hooguit 10% van je cash, zonder hefboom). Onder $65.000 stop je met bijkopen.",
+        "Goud onder $4.000 en Circle onder $70: niet bijkopen, wel houden.",
+        "VWCE: vaste inleg door. De eerste extra tranche komt pas bij −10% vanaf het record (S&P 500 rond 7.040); nu −3,3%.",
+        "Komende toetsen: Nvidia (17 nov), de Fed-notulen (18 nov), het banenrapport (4 dec) en het Fed-besluit (9 dec)."
+      ],
+      "portfolioCheck": {
+        "headline": "De rente is nu je grootste gemeenschappelijke risico",
+        "points": [
+          "Een 10-jaarsrente boven 5% drukt VWCE, SMH, goud en bitcoin tegelijk. Alleen Circle profiteert van een hogere rente.",
+          "SMH is je meest kwetsbare positie: Nvidia zonder vaste topman vlak voor de cijfers van 17 november.",
+          "Goud deed deze keer niet wat een buffer doet: het zakte mee met de stijgende rente. Dat is typisch voor een renteschok.",
+          "Circle en bitcoin hangen samen aan crypto; bitcoin brak onder $70.000 en het 200-weeksgemiddelde.",
+          "Houd cash apart: de bijkoopregels voor VWCE (bij −10% en −20%) en de kleine bitcointranche vragen om geld dat klaarstaat."
+        ]
+      },
+      "simple": {
+        "headline": "Volg je regels: SMH een derde kleiner (onder $500), bitcoin hooguit een kleine tranche, goud en Circle niet bijkopen. Wacht op Nvidia (17 nov) en de Fed (9 dec).",
+        "rules": [
+          "Doe alleen iets als een niveau wordt geraakt. Nieuws alleen is geen reden.",
+          "Koop bij in kleine stappen (tranches), nooit alles tegelijk en nooit met geleend geld.",
+          "Houd geld apart voor de tranches. Zonder cash kun je de dip niet kopen."
+        ]
+      }
+    },
+    "scenarioPatch": {
+      "s1": {
+        "prob": 30,
+        "ifProb": 25
+      },
+      "s4": {
+        "prob": 15,
+        "ifProb": 20
+      }
+    },
+    "positionsPatch": {
+      "vwce": {
+        "now": "De S&P 500 had de beste week sinds augustus (+2,5%) en staat 3,3% onder het record van 6 oktober. Het geld schuift van AI-chips naar energie en industrie, en daar profiteert een brede wereldindex van. De hogere rente (10-jaars 5,15%) is wel een rem. Je eerste extra tranche komt pas bij −10% (S&P 500 rond 7.040)."
+      },
+      "smh": {
+        "doNow": "Een derde verkleinen volgens je regel (als je dat nog niet deed). Niet bijkopen tot na Nvidia (17 nov); de volgende stap is onder $440.",
+        "now": "SMH heroverde op 12 november kort de $500 ($501,73), maar zakte op 13 november weer naar $486,75. De aanleiding: Nvidia-topman Jensen Huang stapte op 12 november op na een onderzoek naar zijn banden met een Singaporese chipkoper; financieel directeur Colette Kress is interim-topman. Nvidia verloor bijna 13% in een week, Broadcom en AMD zakten mee. De cijfers van Nvidia komen gewoon op dinsdag 17 november (22:20 Nederlandse tijd); analisten rekenen op ongeveer $109 mld omzet."
+      },
+      "crcl": {
+        "now": "Circle sloot op $62,20 (13 nov), ruim onder je $70-grens: niet bijkopen. Een Fed die verhoogt helpt de rente-inkomsten op de reserves achter USDC, maar crypto is zwak (bitcoin onder $70.000) en analisten verlaagden na de cijfers van 4 november hun koersdoelen ($81–101). Verkleinen pas onder $53."
+      },
+      "gold": {
+        "now": "Goud zakte na de hete inflatiecijfers onder $4.000 (11 nov) en sloot de week rond $3.876, het laagste punt in een jaar. Een rente boven 5% en een sterkere dollar (index boven 103) maken het aanhouden van goud duurder. Analisten zien steun rond $3.870 en $3.740. Je regel: niet bijkopen onder $4.000, wel houden als buffer."
+      },
+      "btc": {
+        "now": "Bitcoin zakte op 13 november onder $70.000 (laagste $67.652) en onder het 200-weeksgemiddelde rond $68.000; in een maand −16%. Er werd voor ruim $1,3 mld aan hefboomposities gedwongen gesloten. Je regel staat onder $75.000 een kleine tranche toe (hooguit 10% van je cash, zonder hefboom); onder $65.000 koop je niet verder bij."
+      }
+    },
+    "calendarSet": [
+      {
+        "date": "2026-11-10",
+        "time": "14:30",
+        "match": "CPI-inflatie",
+        "event": "CPI-inflatie VS (oktober): +0,4%, kern +0,3%",
+        "why": "Hoger dan verwacht (0,3% en 0,2%); de Fed verhoogt daardoor vrijwel zeker in december.",
+        "affects": [
+          "vwce",
+          "smh",
+          "crcl",
+          "gold",
+          "btc"
+        ]
+      },
+      {
+        "date": "2026-11-12",
+        "time": "",
+        "event": "Nvidia: Jensen Huang stapt op",
+        "why": "CFO Colette Kress is interim-topman; Nvidia −12,8% in de week. De cijfers van 17 nov gaan door.",
+        "affects": [
+          "smh",
+          "vwce"
+        ]
+      },
+      {
+        "date": "2026-11-13",
+        "time": "14:30",
+        "match": "Producentenpr",
+        "event": "Producentenprijzen VS (oktober): +0,3%, +6,5% op jaarbasis",
+        "why": "Iets onder verwachting per maand, maar de hoogste jaarstijging sinds 2022.",
+        "affects": [
+          "vwce",
+          "gold"
+        ]
+      },
+      {
+        "date": "2026-11-17",
+        "time": "22:20",
+        "match": "Cijfers Nvidi",
+        "event": "Cijfers Nvidia (Q3), de eerste zonder Huang",
+        "why": "De grootste toets voor SMH: analisten rekenen op ~$109 mld omzet. Let vooral op de verwachting voor het volgende kwartaal en wat de interim-topman zegt.",
+        "affects": [
+          "smh",
+          "vwce"
+        ]
+      },
+      {
+        "date": "2026-11-18",
+        "time": "20:00",
+        "match": "Notulen van d",
+        "event": "Notulen van de Fed (oktobervergadering)",
+        "why": "Hoeveel leden willen in december verhogen, en zou 0,5%-punt ook kunnen?",
+        "affects": [
+          "crcl",
+          "gold",
+          "btc",
+          "vwce"
+        ]
+      },
+      {
+        "date": "2026-12-03",
+        "time": "",
+        "event": "Hoorzitting Senaat over Nvidia (gevraagd)",
+        "why": "De bankencommissie van de Senaat vroeg Huang te getuigen; meer politieke druk op de chipsector.",
+        "affects": [
+          "smh"
+        ]
+      },
+      {
+        "date": "2026-12-04",
+        "time": "14:30",
+        "match": "Banen VS nove",
+        "event": "Banen VS november",
+        "why": "Het laatste banenrapport vóór het Fed-besluit. Zwakke banen plus een verhogende Fed is het pad naar een groeischok.",
+        "affects": [
+          "vwce",
+          "crcl",
+          "gold"
+        ]
+      },
+      {
+        "date": "2026-12-09",
+        "time": "20:00",
+        "match": "Fed-rentebesl",
+        "event": "Fed-rentebesluit december",
+        "why": "Een verhoging van 0,25%-punt is voor ~85% ingeprijsd, 0,5%-punt voor 10–15%. Goed voor Circle, lastig voor SMH, goud en bitcoin.",
+        "affects": [
+          "vwce",
+          "smh",
+          "crcl",
+          "gold",
+          "btc"
+        ]
+      },
+      {
+        "date": "2026-12-10",
+        "time": "14:30",
+        "event": "CPI-inflatie VS (november)",
+        "why": "Bevestigt of weerlegt dat de inflatie hardnekkig blijft.",
+        "affects": [
+          "vwce",
+          "smh",
+          "crcl",
+          "gold",
+          "btc"
+        ]
+      }
+    ],
+    "macro": {
+      "updatedAt": "2026-11-15T21:00:00+01:00",
+      "source": "Update door Claude (nieuws tot en met 13 nov)",
+      "riskMode": "defensief",
+      "regime": "Renteschok in een AI-correctie",
+      "headline": "Hete inflatie en een Nvidia-crisis, maar de brede markt houdt stand",
+      "summary": "De inflatie bleef in oktober te hoog (CPI +0,4%, kern +0,3%), waardoor de Fed op 9 december vrijwel zeker verhoogt; de 10-jaarsrente sprong naar 5,15%. In de chips sloeg de onrust toe: Nvidia-topman Jensen Huang stapte op 12 november op en Nvidia verloor bijna 13% in een week. Toch had de S&P 500 zijn beste week sinds augustus (+2,5%), gedragen door energie en industrie. Goud (onder $4.000) en bitcoin (onder $70.000) leden onder de hogere rente en een sterkere dollar.",
+      "compass": {
+        "growth": 0.15,
+        "inflation": 0.45,
+        "heading": {
+          "growth": -0.15,
+          "inflation": 0.05
+        },
+        "why": "De groei houdt stand (banen sterk), maar de inflatie blijft te hoog (CPI +0,4% in oktober, producentenprijzen +6,5% op jaarbasis). Het kompas staat op de grens van reflatie en stagflatie; de pijl wijst naar stagflatie zolang de Fed blijft verhogen."
+      },
+      "keyPoints": [
+        {
+          "tone": "bad",
+          "title": "Nvidia zonder topman",
+          "text": "Jensen Huang stapte op 12 november op na een onderzoek naar zijn banden met een Singaporese chipkoper; CFO Colette Kress is interim-topman. Nvidia −12,8% in een week. De cijfers komen gewoon op 17 november."
+        },
+        {
+          "tone": "warn",
+          "title": "Inflatie blijft heet",
+          "text": "CPI oktober +0,4% (verwacht 0,3%), kerninflatie +0,3% voor de derde maand op rij. Producentenprijzen +6,5% op jaarbasis, de hoogste stijging sinds 2022."
+        },
+        {
+          "tone": "bad",
+          "title": "Rente boven 5%",
+          "text": "10-jaars 5,15% (was 4,86% een week eerder), 2-jaars 4,87%. De markt rekent op een Fed-verhoging op 9 december (~85%), met een kleine kans op 0,5%-punt."
+        },
+        {
+          "tone": "good",
+          "title": "Brede markt houdt stand",
+          "text": "S&P 500 +2,5% deze week, de beste week sinds augustus, en 3,3% onder het record. Energie en industrie liepen voorop; de VIX zakte naar 19."
+        },
+        {
+          "tone": "bad",
+          "title": "Bitcoin breekt",
+          "text": "Onder $70.000 voor het eerst sinds augustus en onder het 200-weeksgemiddelde (~$68.000). Ruim $1,3 mld aan hefboomposities werd gedwongen gesloten."
+        },
+        {
+          "tone": "warn",
+          "title": "Goud onder $4.000",
+          "text": "Laagste punt in een jaar (~$3.876) door de hogere rente en een sterkere dollar (index boven 103). Analisten zien steun rond $3.870 en $3.740."
+        }
+      ],
+      "positionImpact": {
+        "vwce": {
+          "dir": -1,
+          "why": "De brede markt houdt stand, maar een rente boven 5% en de AI-onrust remmen een tech-zware wereldindex."
+        },
+        "smh": {
+          "dir": -2,
+          "why": "Nvidia zonder vaste topman vlak voor de cijfers van 17 november; chips blijven het zwakke punt."
+        },
+        "crcl": {
+          "dir": 0,
+          "why": "Fed-verhogingen helpen de rente-inkomsten, maar crypto is zwak en USDC groeit niet."
+        },
+        "gold": {
+          "dir": -1,
+          "why": "Een rente boven 5% en een sterkere dollar drukken goud onder $4.000; de buffer werkt even niet."
+        },
+        "btc": {
+          "dir": -2,
+          "why": "Onder $70.000 en het 200-weeksgemiddelde; uitstroom en gedwongen verkopen."
+        }
+      },
+      "cycle": {
+        "updatedAt": "2026-11-15T21:00:00+01:00",
+        "verdict": "De AI-correctie gaat door; de rente is nu de grootste druk",
+        "nowAsOf": "15 nov 2026, na de week van de inflatiecijfers",
+        "nowText": "Een week van tegenstellingen: de brede markt herstelde (S&P 500 +2,5%), maar chips en bitcoin zakten verder en de rente sprong boven 5%. De komende vier weken beslissen: Nvidia (17 nov), de Fed-notulen (18 nov), het banenrapport (4 dec) en het Fed-besluit (9 dec).",
+        "news": [
+          {
+            "t": "Nvidia-topman Huang stapt op (12 nov)",
+            "why": "Onderzoek naar zijn banden met een Singaporese chipkoper; Nvidia −12,8% in een week. Cijfers op 17 nov gaan door."
+          },
+          {
+            "t": "Inflatie oktober te hoog",
+            "why": "CPI +0,4%, kern +0,3%; producentenprijzen +6,5% op jaarbasis. Een Fed-verhoging in december is vrijwel zeker."
+          },
+          {
+            "t": "Rente naar 5,15%",
+            "why": "De 10-jaars steeg in een week bijna 0,3 procentpunt; goud en bitcoin zakten mee."
+          },
+          {
+            "t": "Beste beursweek sinds augustus",
+            "why": "S&P 500 +2,5%, gedragen door energie en industrie: geld schuift binnen de markt, het vlucht er niet uit."
+          }
+        ],
+        "nextPhase": "Van 'correctie in tech' naar 'bearmarkt' gaat het als de S&P 500 meer dan 10% onder het record zakt (nu −3,3%), de junk-spread boven 4–5% komt of Nvidia op 17 november de verwachtingen verlaagt. Het pad naar een crisis loopt via een Fed die blijft verhogen terwijl de economie al afkoelt: let op de banen (4 dec) en de Sahm-regel. Tot dan: je planregels volgen, niet in paniek verkopen."
+      }
+    },
+    "lensPatch": {
+      "rebel": {
+        "skipIfTranscriptSince": "2026-11-08T00:00:00+01:00",
+        "take": "Gammon verwacht dat de Fed op 9 december met 0,25%-punt verhoogt, verpakt in harde taal om haar geloofwaardigheid te redden. Volgens hem bestrijdt de Fed een aanbodschok (energie, Hormuz) met een vraagrem: dat werkt slecht en vergroot de kans dat ze doorschiet naar een zware recessie. Op korte termijn drukt dat aandelen én goud, terwijl de dollar en de korte rente stijgen.",
+        "basis": "Samenvatting door Claude van zijn video ‘You Won’t Believe The Fed’s New Plan’ (14 nov 2026), via een samenvatting op internet, niet uit een eigen transcript. Plak het transcript voor zijn eigen woorden.",
+        "updatedAt": "2026-11-15T21:00:00+01:00",
+        "vsAI": {
+          "oordeel": "deels",
+          "verschil": "Eens over de Fed-verhoging in december en de druk op aandelen en goud. Het verschil zit in het einde: Gammon ziet een Fed die doorschiet naar een zware recessie, terwijl het plan dat (groeischok en kredietbreuk) maar 10% kans geeft en een AI-correctie met een overeind blijvende economie als hoofdscenario ziet.",
+          "at": "2026-11-15T21:00:00+01:00"
+        },
+        "checks": [
+          {
+            "id": "fed",
+            "status": "stress",
+            "answer": "Een verhoging op 9 december is vrijwel zeker (~85% voor 0,25%-punt, 10–15% voor 0,5%). Gammon noemt het reputatiemanagement: de Fed wil laten zien dat ze de inflatie serieus neemt."
+          },
+          {
+            "id": "bonds",
+            "status": "stress",
+            "answer": "De 10-jaarsrente sprong na de hete inflatie naar 5,15% en de 2-jaars naar 4,87%; de 30-jaars staat rond 5,46%."
+          },
+          {
+            "id": "dollar",
+            "status": "gespannen",
+            "answer": "De dollarindex steeg boven 103. Een sterkere dollar drukt goud, bitcoin en opkomende markten."
+          }
+        ]
+      },
+      "tr": {
+        "skipIfTranscriptSince": "2026-10-01T00:00:00+02:00",
+        "take": "Startversie, niet Tino's eigen woorden: hun methode kijkt naar geldstromen en niveaus. Nu trekt het geld uit de AI-chips naar energie en industrie, terwijl de brede index overeind blijft. Gebroken niveaus: SMH onder $500, bitcoin onder het 200-weeksgemiddelde (~$68.000) en goud onder $4.000. Volgens de methode koop je pas bij als zo'n niveau mét volume wordt heroverd.",
+        "basis": "Startversie door Claude op basis van hun publieke methode (Hybrid System, PVSRA-volumekaarsen) en de cijfers van 13 nov. Nog geen eigen transcript van Tino verwerkt.",
+        "updatedAt": "2026-11-15T21:00:00+01:00"
+      }
+    },
+    "claimsAdd": [
+      {
+        "text": "De Fed verhoogt op 9 december met 0,25%-punt, met harde taal erbij.",
+        "source": "Rebel Capitalist (George Gammon), video 14 nov",
+        "date": "2026-11-14",
+        "status": "open",
+        "note": "Voorspelling. Markt prijst ~85% voor 0,25%-punt."
+      },
+      {
+        "text": "Door een aanbodschok met renteverhogingen te bestrijden, schiet de Fed door naar een zware recessie.",
+        "source": "Rebel Capitalist (George Gammon), video 14 nov",
+        "date": "2026-11-14",
+        "status": "open",
+        "note": "Voorspelling. Toets aan de banen (4 dec), de Sahm-regel en de junk-spread."
+      }
+    ],
+    "claimsUpdate": [
+      {
+        "text": "De Fed pauzeert op 28 oktober en verhoogt in december.",
+        "status": "open",
+        "note": "Pauze bevestigd (10–2). Na de hete inflatie van oktober is een verhoging op 9 december voor ~85% ingeprijsd."
+      }
+    ],
+    "sourcesAdd": [
+      {
+        "label": "StockAnalysis: CPI oktober 2026 (+0,4%, kern +0,3%)",
+        "url": "https://stockanalysis.com/news/us-cpi-rises-october-2026/"
+      },
+      {
+        "label": "InvestmentNews: kansen op een Fed-verhoging na de CPI",
+        "url": "https://www.investmentnews.com/equities/october-cpi-comes-in-hot-raising-odds-of-a-bigger-than-expected-rate-hike/268961"
+      },
+      {
+        "label": "TheStreet: beurs 13 nov, Nvidia en PPI",
+        "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-nov-13-2026"
+      },
+      {
+        "label": "Nvidia: persbericht over de wisseling van topman (8-K, 12 nov)",
+        "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"
+      },
+      {
+        "label": "CoinDesk: bitcoin onder het 200-weeksgemiddelde (13 nov)",
+        "url": "https://www.coindesk.com/tech/2026/11/13/live-news-bitcoin-drops-below-200-week-moving-average-as-dollar-strength-pressures-risk-assets"
+      },
+      {
+        "label": "Kitco: goud onder $4.000 (11 nov)",
+        "url": "https://www.kitco.com/news/article/2026-11-11/gold-prices-fall-below-4000-analysts-warn-further-losses-toward-3900"
+      },
+      {
+        "label": "Rebel Capitalist: You Won't Believe The Fed's New Plan (14 nov)",
+        "url": "https://www.youtube.com/watch?v=xeutxZ47Ujg"
+      }
+    ]
+  }
+}

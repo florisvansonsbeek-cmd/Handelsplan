@@ -3,7 +3,7 @@
 // het serveradres en een inlogsleutel (geldig 30 dagen, vervalt als je APP_PASSWORD wijzigt).
 (function () {
   "use strict";
-  const KB = "hp2027:server", KT = "hp2027:token";
+  const KB = "hp2027:server", KT = "hp2027:token", KD = "hp2027:device";
   const DEFAULT = "https://plan.vsonsbeek.nl";
   const mem = {};
   const get = (k) => { try { return localStorage.getItem(k) || mem[k] || ""; } catch (e) { return mem[k] || ""; } };
@@ -96,12 +96,13 @@
           if (!h) { E.textContent = "Geen verbinding met de server."; return; }
           let r;
           try {
-            r = await fetch(base + "/api/token", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "omit", body: JSON.stringify({ password: P.value }) });
+            // device: bewijs dat deze html al eens goed inlogde; dan sluit een bot met foute pogingen je niet buiten
+            r = await fetch(base + "/api/token", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "omit", body: JSON.stringify({ password: P.value, device: get(KD) || undefined }) });
           } catch (e) { E.textContent = "De server antwoordt niet op inloggen. Staat de nieuwste versie op Railway?"; return; }
           let j = {}; try { j = await r.json(); } catch (e) { /* geen json */ }
           if (r.status === 404) { E.textContent = "Deze serverversie kent de losse html nog niet. Zet eerst de nieuwe Dockerfile op GitHub."; return; }
           if (!r.ok || !j.token) { E.textContent = j.error || "Inloggen mislukt."; P.value = ""; P.focus(); return; }
-          put(KB, base); put(KT, j.token);
+          put(KB, base); put(KT, j.token); if (j.device) put(KD, j.device);
           box.remove();
           if (after) after(); else release();
         } finally { G.disabled = false; G.textContent = "Verbinden"; }
@@ -119,4 +120,12 @@
     change: () => { put(KT, ""); show("Kies het adres van je Railway-site en log in.", () => location.reload()); },
   };
   if (get(KB) && get(KT)) release(); else show();
+  // Al ingelogd van vóór de apparaatbewijzen? Haal er één op, zodat je bij een volgende inlog altijd binnenkomt.
+  ready.then(async () => {
+    if (get(KD) || !get(KB) || !get(KT)) return;
+    try {
+      const r = await fetch(get(KB) + "/api/device", { headers: { Authorization: "Bearer " + get(KT) }, credentials: "omit", cache: "no-store" });
+      if (r.ok) { const j = await r.json(); if (j.device) put(KD, j.device); }
+    } catch (e) { /* later opnieuw */ }
+  });
 })();

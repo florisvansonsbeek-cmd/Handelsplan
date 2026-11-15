@@ -743,6 +743,96 @@ details.pc-more > summary::-webkit-details-marker{display:none}
 details.pc-more > summary::before{content:"+ "}
 details.pc-more[open] > summary::before{content:"− "}
 details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap:12px;font-size:.9rem}
+/* ---------- Vandaag: het verhaal ---------- */
+.story h1{font-size:clamp(1.6rem,3.5vw,2.35rem)}
+.story .pills{display:flex;gap:8px;flex-wrap:wrap}
+.story3{display:grid;margin:0;border-top:1px solid var(--line-2)}
+.story3 > div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 18px;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.story3 dt{font:500 .68rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.story3 dd{margin:0;font-size:1rem;line-height:1.55;min-width:0}
+.story3 .do dd{display:flex;flex-direction:column;gap:10px}
+.story3 .do dd > span{font-weight:600}
+@media (max-width:640px){.story3 > div{grid-template-columns:minmax(0,1fr)}.story3 dt{padding-top:0}}
+.story-foot{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+details.story-more{border-top:1px solid var(--line-2);padding-top:10px}
+details.story-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem}
+/* in het kort */
+.sumgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+@media (max-width:980px){.sumgrid{grid-template-columns:minmax(0,1fr)}}
+.sumc{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sumc.good{border-top-color:var(--good)} .sumc.warn{border-top-color:var(--warn)} .sumc.bad{border-top-color:var(--bad)}
+.sumc .sechead{align-items:center}
+.sumc h3{font-size:1.15rem}
+.sumc-line{font-weight:600;line-height:1.4}
+.sumc-f{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.86rem;color:var(--muted)}
+.sumc-f li{padding-left:14px;position:relative;overflow-wrap:anywhere}
+.sumc-f li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--faint)}
+.sumc .btn{align-self:flex-start;margin-top:auto}
+.sumstrip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.sumstrip.good{border-left-color:var(--good)} .sumstrip.warn{border-left-color:var(--warn)} .sumstrip.bad{border-left-color:var(--bad)}
+.sumstrip .ss-main{display:flex;flex-direction:column;gap:3px;flex:1 1 320px;min-width:0}
+.sumstrip .ss-main b{font-weight:600}
+.sumstrip .ss-main span{font-size:.86rem;color:var(--muted);overflow-wrap:anywhere}
+.sumstrip .ss-main small{font-size:.8rem;color:var(--faint)}
+/* vooruitblik */
+.ol-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--gap)}
+@media (max-width:900px){.ol-top{grid-template-columns:minmax(0,1fr)}}
+.ol-pad{font-size:1.02rem;line-height:1.55}
+.scb{display:grid;gap:7px}
+.scb-r{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(70px,1fr) 40px;gap:10px;align-items:center;font-size:.86rem}
+.scb-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scb-t{height:8px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.scb-t i{display:block;height:100%;border-radius:4px}
+.scb-r .num{text-align:right;color:var(--muted)}
+.ol{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(170px,.9fr) minmax(0,1.9fr) minmax(0,1.5fr) auto;column-gap:16px}
+.ol > .h{font:500 .66rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding:4px 0 6px;border-bottom:1px solid var(--line)}
+.ol-r{display:contents}
+.ol-r > div{padding:12px 0;border-bottom:1px solid var(--line-2);min-width:0;font-size:.9rem}
+.ol-n{display:flex;flex-direction:column;gap:2px}
+.ol-n b{font-weight:600}
+.ol-x{display:flex;flex-direction:column;gap:5px;justify-content:center}
+.ol-x > .small{font-size:.8rem}
+.ol-x .neg{color:var(--bad)} .ol-x .pos{color:var(--good)} .ol-x .flat{color:var(--muted)}
+.ol-k small{display:block;color:var(--muted);font-size:.8rem;margin-top:3px}
+.ol-s{display:flex;align-items:center;justify-content:flex-end}
+.ol-s .pill{white-space:normal;text-align:right}
+.xbar{position:relative;display:block;width:100%;max-width:150px;height:10px;border-radius:5px;background:var(--surface-3)}
+.xbar i{position:absolute;display:block}
+.xbar .rng{top:3px;height:4px;border-radius:2px;background:var(--line)}
+.xbar .val{top:0;height:10px;border-radius:3px}
+.xbar .val.neg{background:var(--bad)} .xbar .val.pos{background:var(--good)} .xbar .val.flat{background:var(--faint)}
+.xbar .mid{left:calc(50% - 1px);top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.4;border-radius:1px;z-index:1}
+@media (max-width:860px){
+  .ol{grid-template-columns:minmax(0,1fr) auto}
+  .ol > .h{display:none}
+  .ol-r > div{border-bottom:0;padding:4px 0}
+  .ol-n{padding-top:14px!important;border-top:1px solid var(--line-2)}
+  .ol-x{grid-column:2;grid-row:auto;padding-top:14px!important;border-top:1px solid var(--line-2);align-items:flex-end}
+  .ol-x .xbar{width:120px}
+  .ol-w,.ol-k,.ol-s{grid-column:1/-1}
+  .ol-w[data-l]::before,.ol-k[data-l]::before{content:attr(data-l);display:block;font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+  .ol-s{justify-content:flex-start;padding-bottom:10px!important}
+}
+/* zijnoot: bronnen naast de AI */
+.srcgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:980px){.srcgrid{grid-template-columns:minmax(0,1fr)}}
+.vd{display:grid;gap:var(--gap);grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:auto 1fr auto auto auto;
+  grid-template-areas:"a b" "a c" "d d" "e e" "f f"}
+.vd > *{min-width:0}
+.vd-a{grid-area:a;display:flex}.vd-a > .vd-main{flex:1}
+.vd-b{grid-area:b;display:flex;flex-direction:column}.vd-c{grid-area:c;align-self:start}.vd-c > .box{border-radius:16px}
+.vd-d{grid-area:d}.vd-e{grid-area:e}.vd-f{grid-area:f}
+@media (max-width:900px){.vd{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"a" "b" "d" "e" "f" "c"}}
+.olx-now{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.src{background:var(--surface-2);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.src.ai{background:var(--accent-soft)}
+.src-h{display:flex;justify-content:space-between;align-items:center;gap:6px 10px;flex-wrap:wrap}
+.src-h b{font-weight:600}
+.src-d{font-size:.92rem;line-height:1.5}
+.src-kern{border-left:3px solid var(--accent);padding:2px 0 2px 12px;font-size:.92rem}
+details.src-more > summary{cursor:pointer;color:var(--muted);font-size:.82rem}
+details.src-more[open] > summary{margin-bottom:6px}
+.src .linkbtn{align-self:flex-start}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 <!--BODY-->
@@ -772,12 +862,14 @@ details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap
 
   <!-- VANDAAG -->
   <section class="panel" id="p-vandaag" role="tabpanel" aria-labelledby="tb-vandaag">
-    <div id="vd-body"><div class="empty"><b>Vandaag laden…</b><span>Je acties, cijfers en de briefing verschijnen zodra de opslag antwoordt.</span></div></div>
+    <div id="vd-body"><div class="empty"><b>Vandaag laden…</b><span>Het verhaal, je acties en de vooruitblik verschijnen zodra de opslag antwoordt.</span></div></div>
   </section>
 
   <!-- PLAN: je plan per positie, je portefeuille, scenario's en challenges -->
   <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="tb-plan" hidden>
+    <div id="pl-sum"></div>
     <div id="pl-top"></div>
+    <div id="pl-kp"></div>
     <div id="pl-pos"></div>
     <details class="box fold" id="fold-pf">
       <summary><span class="lyr l2">Je geld</span><h2>Portefeuille</h2><span class="fs" id="pfSum">aantallen, inleg, doel en cash</span></summary>
@@ -803,7 +895,7 @@ details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap
 
   <!-- MARKT: overzicht, signalen, cyclus en alle cijfers -->
   <section class="panel" id="p-markt" role="tabpanel" aria-labelledby="tb-markt" hidden>
-    <div class="layer-note"><span class="lyr l3">Achtergrond</span><span>Hier lees je <b>waarom</b> je plan zo staat. Dagelijks hoef je dit niet te volgen: je planregels op <b>Vandaag</b> rekenen al met deze cijfers.</span></div>
+    <div id="mk-sum"></div>
     <div class="subnav" role="tablist" aria-label="Markt">
       <button type="button" role="tab" id="sb-markt-overzicht" data-subtab="markt:overzicht">Overzicht</button>
       <button type="button" role="tab" id="sb-markt-signalen" data-subtab="markt:signalen">Signalen</button>
@@ -830,6 +922,7 @@ details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap
 
   <!-- INBOX: transcripts, post en historie -->
   <section class="panel" id="p-inbox" role="tabpanel" aria-labelledby="tb-inbox" hidden>
+    <div id="in-sum"></div>
     <div class="subnav" role="tablist" aria-label="Inbox">
       <button type="button" role="tab" id="sb-inbox-transcripts" data-subtab="inbox:transcripts">Transcripts</button>
       <button type="button" role="tab" id="sb-inbox-post" data-subtab="inbox:post" hidden>Post</button>
@@ -865,7 +958,7 @@ details.pc-more .posbody{padding:10px 0 0;display:flex;flex-direction:column;gap
           <ul class="actions">
             <li><span>De AI (Grok) leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
             <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
-            <li><span>Is de bron TradersReality of Rebel Capitalist, dan wordt hun <b>bril</b> bijgewerkt met hún visie (Markt → Cijfers).</span></li>
+            <li><span>Is de bron TradersReality (Tino) of Rebel Capitalist (George Gammon), dan wordt hun <b>bril</b> bijgewerkt met hún visie. Op <b>Vandaag</b> zie je daarna waar ze het met de AI eens of oneens zijn.</span></li>
             <li><span>Je krijgt voorstellen voor scenario's, posities, triggers, kalender en marktbeeld. Jij vinkt aan wat je overneemt; alles is terug te draaien.</span></li>
           </ul>
           <p class="muted small">Een analyse duurt meestal 30–90 seconden.</p>
@@ -914,7 +1007,8 @@ const TABS = ["vandaag","plan","markt","inbox","uitleg"];
 // Onderdelen binnen een tab. Oude namen (bijv. "historie", "cyclus") blijven werken als link.
 const SUBS = {markt:["overzicht","signalen","cyclus","cijfers"], inbox:["transcripts","post","historie"]};
 const ALIAS = {portefeuille:["plan","pf"], challenges:["plan","ch"], scenarios:["plan","sc"], cyclus:["markt","cyclus"], signalen:["markt","signalen"],
-  cijfers:["markt","cijfers"], overzicht:["markt","overzicht"], post:["inbox","post"], historie:["inbox","historie"], transcripts:["inbox","transcripts"]};
+  cijfers:["markt","cijfers"], overzicht:["markt","overzicht"], post:["inbox","post"], historie:["inbox","historie"], transcripts:["inbox","transcripts"],
+  kompas:["plan","kp"], verhaal:["vandaag"], vooruitblik:["vandaag"]};
 const SIGNED = new Set(["nfp3m","netLiqChg","kospiDay","curve"]);
 const LENS_SOURCE = {tr:"TradersReality", rebel:"Rebel Capitalist"};
 const SOURCE_LENS = {"TradersReality":"tr", "Rebel Capitalist":"rebel"};
@@ -1008,8 +1102,9 @@ function showSub(tab, sub){
   if(tab==="inbox" && sub==="post" && typeof loadPost==="function") loadPost();
 }
 function openFold(id){
-  const d=$(id==="sc"? "scDet" : "fold-"+id); if(!d) return false;
-  d.open=true; setTimeout(()=>d.scrollIntoView({behavior:"smooth", block:"start"}), 60); return true;
+  const d=$(id==="sc"? "scDet" : id==="kp"? "pl-kp" : "fold-"+id); if(!d) return false;
+  if(d.tagName==="DETAILS") d.open=true;
+  setTimeout(()=>d.scrollIntoView({behavior:"smooth", block:"start"}), 60); return true;
 }
 function showTab(name, sub){
   if(ALIAS[name]) [name, sub] = ALIAS[name];
@@ -1018,7 +1113,7 @@ function showTab(name, sub){
   TABS.forEach(t=>{ $("p-"+t).hidden = t!==name; $("tb-"+t).setAttribute("aria-selected", String(t===name)); });
   let scrolled=false;
   if(SUBS[name]) showSub(name, sub||S.sub[name]);
-  try{ localStorage.setItem("hp-tab4", name); }catch(e){}
+  try{ sessionStorage.setItem("hp-tab5", name); }catch(e){}  // een nieuw bezoek begint altijd bij het verhaal (Vandaag)
   if(name==="vandaag" && typeof renderVandaag==="function") renderVandaag();
   if(name==="plan" && typeof renderPortfolio==="function") renderPortfolio();
   if(name==="plan" && sub) scrolled=openFold(sub);
@@ -1027,7 +1122,7 @@ function showTab(name, sub){
 try{ SUBS.markt.forEach(()=>0); const m=localStorage.getItem("hp-sub-markt"), i=localStorage.getItem("hp-sub-inbox");
   if(SUBS.markt.includes(m)) S.sub.markt=m; if(SUBS.inbox.includes(i)) S.sub.inbox=i; }catch(e){}
 let startTab=(location.hash||"").replace("#","");
-if(!TABS.includes(startTab) && !ALIAS[startTab]){ try{ startTab=localStorage.getItem("hp-tab4")||"vandaag"; }catch(e){ startTab="vandaag"; } }
+if(!TABS.includes(startTab) && !ALIAS[startTab]){ try{ startTab=sessionStorage.getItem("hp-tab5")||"vandaag"; }catch(e){ startTab="vandaag"; } }
 showTab(startTab);
 
 document.addEventListener("click", (ev)=>{
@@ -1692,15 +1787,16 @@ window.addEventListener("scroll", ()=>{ if(tipFor) hideTip(); }, {passive:true})
 /* ================= PLAN ================= */
 function renderPlan(){
   const p=S.plan;
-  if(!p){ ["pl-top","pl-pos","pl-sc","pl-check"].forEach(id=>$(id).innerHTML=""); return; }
+  if(!p){ ["pl-top","pl-kp","pl-pos","pl-sc","pl-check"].forEach(id=>$(id).innerHTML=""); return; }
   const sc=arr(p.scenarios), m=p.macro, rg=p.regime||{};
   const RISKTXT={verhoogd:"verhoogd risico", hoog:"hoog risico", normaal:"normaal risico", laag:"laag risico"};
   $("pl-top").innerHTML = `<div class="box stack plan-intro">
     <div class="sechead"><div><span class="lyr l1">Je plan</span><h2 style="margin-top:6px">${esc(rg.name||m?.regime||"Je plan in het kort")}</h2></div><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))}</span></div>
     ${rg.phase||rg.riskLevel? `<div class="pills">${rg.phase? `<span class="pill t-accent plain">${esc(rg.phase)}</span>`:""}${rg.riskLevel? `<span class="pill ${rg.riskLevel==="laag"?"t-good":rg.riskLevel==="normaal"?"t-neutral":"t-warn"}">${esc(RISKTXT[rg.riskLevel]||rg.riskLevel)}</span>`:""}</div>`:""}
     ${arr(p.simple?.rules).length? `<div><span class="eyebrow">Drie vaste regels</span><ol class="rules" style="margin-top:6px">${p.simple.rules.map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
-    <p class="muted small" style="margin:0">Per positie hieronder zie je wat je hebt, welke regel nu telt en bij welk niveau je iets doet. Alles rekent mee met de koersen; je hoeft alleen te handelen als een regel geraakt wordt.</p>
+    <p class="muted small" style="margin:0">Hieronder eerst de cijfers die je regels sturen, daarna per positie wat je hebt, welke regel nu telt en bij welk niveau je iets doet. Alles rekent mee met de koersen; je hoeft alleen te handelen als een regel geraakt wordt.</p>
   </div>`;
+  $("pl-kp").innerHTML = kompasHTML(p);
   renderPositions();
   const top=sc.slice().sort((a,b)=>(b.prob||0)-(a.prob||0))[0];
   $("pl-sc").innerHTML = `<details class="box fold" ${S.openSc?"open":""} id="scDet"><summary><span class="lyr l3">Achtergrond</span><h2>Scenario's</h2><span class="fs">${top? `Meest waarschijnlijk: ${esc(top.name)} (${esc(top.prob)}%)` : ""}</span>
@@ -1772,33 +1868,6 @@ async function markDone(posId, cid, on){
   p.done=p.done||{}; if(on) p.done[cid]=todayISO(); else delete p.done[cid];
   try{ await S.db.doc("plan/current").update({positions}); notice(on? "Genoteerd. Deze regel telt pas weer mee als de koers eerst duidelijk terug is geweest." : "De regel is weer actief."); }
   catch(e){ notice(dbErrText(e), true); }
-}
-function todoHTML(p){
-  const ps=arr(p.positions); if(!ps.length) return "";
-  const st=ps.map(x=>({x, s:posStatus(x)}));
-  const acts=st.filter(r=>r.s.next?.hit), nears=st.filter(r=>!r.s.next?.hit && r.s.next?.near);
-  const tone= acts.some(r=>r.s.tone==="bad")? "bad" : (acts.length||nears.length)? "warn" : "";
-  const verdict = acts.length? `<b>Actie:</b> ${acts.map(r=>`${esc(r.x.short||r.x.name)}: ${esc(r.s.label.toLowerCase())}`).join(" · ")}.`
-    : nears.length? `<b>Geen actie, wel opletten:</b> ${nears.map(r=>`${esc(r.x.short||r.x.name)} nadert ${esc(fmtLvl(r.s.next.c.key, r.s.next.c.level))}`).join(" · ")}.`
-    : `<b>Geen actie nodig.</b> Houd je aan je vaste inleg en kijk pas weer bij de momenten hieronder.`;
-  const today=todayISO(), soon=arr(p.calendar).filter(c=>String(c.date)>=today).slice(0,4);
-  const nextTxt=(r)=>{ const n=r.s.next; if(!n) return `<span class="nx">Geen niveau om op te letten.</span>${doneTxt(r)}`;
-    const c=n.c, lv=fmtLvl(c.key,c.level), now=itemText(item(c.key));
-    return n.hit? `<span class="nx"><b>${esc(c.label)}</b> · nu ${esc(now)}${c.note? " · "+esc(c.note):""}</span>${amountTxt(r.x, c)}<span><button class="btn sm donebtn" type="button" data-done="${esc(r.x.id)}|${esc(n.cid)}" ${S.db&&S.canWrite?"":"disabled"}>${doneLabel(c)}</button></span>${doneTxt(r)}`
-      : `<span class="nx">Volgende stap bij <b>${esc(lv)}</b>: ${esc(c.action.toLowerCase())}</span><span class="nx">nu ${esc(now)} · nog ${esc(fmtLvl(c.key, Math.abs(c.level-n.v)).replace(/^−/,""))} ${c.op==="lt"? "omlaag" : "omhoog"}</span>${doneTxt(r)}`; };
-  return `<div class="box stack" id="todo">
-    <div class="sechead"><h2>Wat moet ik doen?</h2><span class="eyebrow">Plan v${esc(p.meta?.version||1)} · ${esc(fmtDT(p.meta?.updatedAt))} · rekent mee met de koersen</span></div>
-    <div class="todo-v ${tone}">${verdict}${p.simple?.headline? `<br><span class="small">${esc(p.simple.headline)}</span>`:""}</div>
-    <div class="todo" role="table" aria-label="Per positie wat je doet">
-      <div class="h" role="columnheader">Positie</div><div class="h" role="columnheader">Nu</div><div class="h" role="columnheader">Wat je doet</div><div class="h" role="columnheader">Wanneer je iets doet</div>
-      ${st.map(r=>`<div class="nm" role="cell"><b>${esc(r.x.short||r.x.name)}</b><span class="faint small">${esc(itemText(item(r.x.priceKey||r.x.id)))}</span></div>
-        <div class="st" role="cell"><span class="pill ${TODO_TONE[r.s.tone][0]}">${esc(r.s.label)}</span></div>
-        <div class="wd" role="cell">${esc(r.s.why)}</div>
-        <div class="nxc" role="cell">${nextTxt(r)}</div>`).join("")}
-    </div>
-    ${soon.length? `<div><span class="eyebrow">Komende momenten</span><div class="soon" style="margin-top:6px">${soon.map(c=>`<div><span class="faint small">${esc(fmtDate(c.date,{weekday:"short",day:"numeric",month:"short"}))}${c.time? " · "+esc(c.time):""}</span><b>${esc(c.event)}</b><span class="muted">${esc(c.why||"")}</span></div>`).join("")}</div></div>`:""}
-    ${arr(p.simple?.rules).length? `<div><span class="eyebrow">Drie vaste regels</span><ol class="rules" style="margin-top:6px">${p.simple.rules.map(r=>`<li><span>${esc(r)}</span></li>`).join("")}</ol></div>`:""}
-  </div>`;
 }
 function ladderHTML(x){
   const groups=new Map();
@@ -1906,7 +1975,7 @@ function gauge(t, v){
 /* ================= UITLEG ================= */
 /* ---------- verbinding met Railway ---------- */
 const CONN={data:null, err:null, busy:false, at:0, open:false, auto:false};
-const CONN_SVC=[["database","Database","PostgreSQL op Railway"],["ai","AI","Briefing, mail en bijlagen"],["mail","E-mail","Leest je mail via IMAP"],["data","Marktdata","Koersen en macrocijfers, automatisch"],["finnhub","Koersen","Finnhub (optioneel)"]];
+const CONN_SVC=[["database","Database","PostgreSQL op Railway"],["ai","AI","Briefing, mail en bijlagen"],["mail","E-mail","Leest je mail via IMAP"],["data","Marktdata","Koersen en macrocijfers, automatisch"],["finnhub","Koersen","Finnhub (optioneel)"],["login","Inloggen","Pincode en je bekende apparaten"]];
 const CONN_ST={ok:["t-good","Verbonden"],"let-op":["t-warn","Let op"],fout:["t-bad","Fout"],uit:["t-neutral","Niet ingesteld"]};
 async function loadConn(force=false){
   if(!S.server) return;
@@ -1917,6 +1986,7 @@ async function loadConn(force=false){
   const bad = CONN.err || CONN.data?.overall==="fout";
   if(bad && !CONN.auto){ CONN.auto=true; CONN.open=true; }
   renderConn(); renderUitleg();
+  const bk=JSON.stringify(CONN.data?.services?.ai?.backlog||null); if(bk!==CONN.backlogKey){ CONN.backlogKey=bk; renderSummaries(); if(S.tab==="vandaag") renderVandaag(); }
 }
 function connSummary(){
   if(S.local) return ["lokaal","Lokaal · niet op Railway"];
@@ -1933,6 +2003,7 @@ function connAct(k,v){
   if(k==="mail"){ const r=v.lastRun; if(r) if(r.ok || v.state==="ok") out.push(r.ok? "laatst opgehaald "+ago(r.at) : "laatste ronde mislukt: "+String(r.error||"zie logs").replace(/^\w+Error: /,"")); if(v.lastMail) out.push("laatste nieuwe mail "+ago(v.lastMail)); }
   if(k==="finnhub"){ if(v.quotesAt) out.push("koersen "+ago(v.quotesAt)); arr(v.quoteErrors).slice(0,1).forEach(e=>out.push(e)); }
   if(k==="data"){ if(v.lastRun) out.push("laatste ronde "+ago(v.lastRun)); arr(v.errors).slice(0,2).forEach(e=>out.push(e)); }
+  if(k==="login" && v.lastAt){ out.push("laatste foute poging "+ago(v.lastAt)+(v.lastFrom? " vanaf "+v.lastFrom : "")+(v.lastKnown? " (bekend apparaat)" : "")); }
   return out;
 }
 function renderConn(){
@@ -2031,12 +2102,12 @@ function renderUitleg(){
     <div class="grid g-2e">
       <div class="stack" style="gap:10px">
         <div><span class="lyr l1">Doen</span> <span class="small">Een planregel is geraakt: dit is het enige waarop je handelt. Staat op <b>Vandaag</b> en bovenaan elke positie in <b>Plan</b>, met het bedrag uit je portefeuille.</span></div>
-        <div><span class="lyr l2">Volgen</span> <span class="small">De paar cijfers die je regels sturen en hoe ver ze nog van het volgende niveau af zijn, plus de komende momenten (CPI, Nvidia, Fed).</span></div>
+        <div><span class="lyr l2">Volgen</span> <span class="small">De paar cijfers die je regels sturen en hoe ver ze nog van het volgende niveau af zijn (Plan → Wanneer doe je iets?), plus de momenten die het beeld kunnen kantelen (Vandaag → Wat kun je verwachten).</span></div>
         <div><span class="lyr l3">Achtergrond</span> <span class="small">Briefing, signalen, scenario's, cyclus en alle cijfers. Handig om te begrijpen waarom het plan zo staat, maar geen reden om te handelen.</span></div>
       </div>
       <div class="tbl"><table class="src-tbl"><tbody>
-        <tr><td><b>Vandaag</b></td><td>Wat je nu doet, de cijfers die tellen, briefing en agenda.</td></tr>
-        <tr><td><b>Plan</b></td><td>Per positie: wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
+        <tr><td><b>Vandaag</b></td><td>Het verhaal (wat speelt er, wat betekent het, wat doe je), per tabblad in het kort, wat je de komende weken mag verwachten per belegging, en Tino en Gammon naast de AI.</td></tr>
+        <tr><td><b>Plan</b></td><td>Wanneer doe je iets (de cijfers die je regels sturen), dan per positie wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
         <tr><td><b>Markt</b></td><td>Overzicht, signalen, cyclus en alle cijfers met hun bron.</td></tr>
         <tr><td><b>Inbox</b></td><td>Transcripts analyseren, verwerkte mail (Post) en de historie van je plan.</td></tr>
       </tbody></table></div>
@@ -2332,7 +2403,7 @@ REGELS
 - Houding per positie alleen wijzigen met een reden die naar een signaal of planregel verwijst (opbouwen, aanhouden, voorzichtig, afbouwen).
 - Triggers met handmatige waarde bijwerken mag alleen voor: ${ids.macroTriggers.join(", ")}, met een recenter cijfer uit het transcript.
 - Bij een Wolf of Washington-melding: toets aan de planregels (leeftijd melding, positiegrootte, liquiditeit) en noem in keyPoints of het past bij zijn posities.
-${lens? `- BRIL: de bron is ${meta.source}. Vul changes.macro.lens in met HUN visie uit dit transcript (niet de jouwe): {"id":"${lensId}","take":"hun conclusie in 2-3 zinnen","checks":[{"id":"bestaande-id","answer":"…","status":"rustig|gespannen|stress|info"}],"newChecks":[{"q":"…","answer":"…","status":"…"}]}. Bestaande check-ids: ${arr(lens.checks).map(c=>c.id).join(", ")}. Zegt het transcript niets over een check, laat die dan weg.` : `- changes.macro.lens = null (deze bron heeft geen eigen bril).`}
+${lens? `- BRIL: de bron is ${meta.source}. Vul changes.macro.lens in met HUN visie uit dit transcript (niet de jouwe): {"id":"${lensId}","take":"hun conclusie in 2-3 zinnen","checks":[{"id":"bestaande-id","answer":"…","status":"rustig|gespannen|stress|info"}],"newChecks":[{"q":"…","answer":"…","status":"…"}],"vsPlan":{"oordeel":"eens|deels|oneens","verschil":"1-2 zinnen: waar hun visie afwijkt van de AI-analyse in het huidige plan (regime, scenario's, effect per positie), of waar ze die juist versterkt"}}. Bestaande check-ids: ${arr(lens.checks).map(c=>c.id).join(", ")}. Zegt het transcript niets over een check, laat die dan weg.` : `- changes.macro.lens = null (deze bron heeft geen eigen bril).`}
 ${MACRO_RULES}
 - Schrijf in het Nederlands, kort en concreet. Lege lijsten zijn prima.
 
@@ -2532,7 +2603,8 @@ function buildChangeItems(a, meta){
       const lens=arr(pm.lenses).find(l=>l.id===lensId);
       if(lens) items.push({kind:"lens", on:true, label:"Bril "+lens.name, from:"", to:"bijgewerkt vanuit "+meta.source, detail:String(ln.take||""), data:{id:lensId, take:ln.take?String(ln.take):null,
         checks:arr(ln.checks).filter(x=>x&&x.id).map(x=>({id:String(x.id), answer:x.answer?String(x.answer):null, status:LV[x.status]?x.status:null})),
-        newChecks:arr(ln.newChecks).filter(x=>x&&x.q).slice(0,3).map(x=>({id:"n"+Math.random().toString(36).slice(2,7), q:String(x.q), answer:String(x.answer||""), status:LV[x.status]?x.status:"info"}))}});
+        newChecks:arr(ln.newChecks).filter(x=>x&&x.q).slice(0,3).map(x=>({id:"n"+Math.random().toString(36).slice(2,7), q:String(x.q), answer:String(x.answer||""), status:LV[x.status]?x.status:"info"})),
+        vs: ln.vsPlan && typeof ln.vsPlan==="object" && ln.vsPlan.verschil? {oordeel:VERDICT[ln.vsPlan.oordeel]? String(ln.vsPlan.oordeel) : "deels", verschil:String(ln.vsPlan.verschil).slice(0,360)} : null}});
     }
     const cy=m.cycle, pcy=pm.cycle;
     if(cy && pcy && typeof cy==="object"){
@@ -2589,7 +2661,7 @@ async function applyPending(){
       if(it.kind==="impact"){ p.macro.positionImpact={...(p.macro.positionImpact||{}), ...d}; log.push("Effect op posities bijgewerkt"); }
       if(it.kind==="lens"){ const l=p.macro.lenses.find(q=>q.id===d.id); if(l){ if(d.take) l.take=d.take;
         d.checks.forEach(c=>{ const ck=l.checks.find(q=>q.id===c.id); if(ck){ if(c.answer) ck.answer=c.answer; if(c.status) ck.status=c.status; } });
-        l.checks=l.checks.concat(d.newChecks).slice(0,9); l.updatedAt=now; l.basis=`Bijgewerkt uit ${P.meta.source}${P.meta.title? ": “"+P.meta.title+"”":""} (${fmtDate(P.meta.date)})`; log.push(`Bril ${l.name} bijgewerkt`); } }
+        l.checks=l.checks.concat(d.newChecks).slice(0,9); l.updatedAt=now; l.vsAI=d.vs? {...d.vs, at:now} : null; l.basis=`Bijgewerkt uit ${P.meta.source}${P.meta.title? ": “"+P.meta.title+"”":""} (${fmtDate(P.meta.date)})`; log.push(`Bril ${l.name} bijgewerkt`); } }
       if(it.kind==="cycle" && p.macro.cycle){ const cc=p.macro.cycle; if(d.verdict) cc.verdict=d.verdict; if(d.summary) cc.summary=d.summary;
         d.cycles.forEach(x=>{ const o=arr(cc.cycles).find(q=>q.id===x.id); if(o){ if(x.pos!=null) o.pos=x.pos; if(x.why) o.why=x.why; } });
         d.tips.forEach(x=>{ const t=arr(cc.tipping).find(q=>q.id===x.id); if(t){ if(x.status) t.status=x.status; if(x.now) t.now=x.now; } });
@@ -2865,8 +2937,7 @@ async function savePortfolio(ev){
   document.activeElement?.blur?.(); renderPortfolio(); renderVandaag();
 }
 
-/* ================= VANDAAG ================= */
-const KPI_KEYS=[["spxDD","S&P 500 t.o.v. record"],["vix","VIX (angst)"],["us10y","10-jaarsrente VS"],["realYield10","Reële rente"],["brent","Brent-olie"],["gold","Goud"],["btc","Bitcoin"],["eurusd","EUR/USD"]];
+/* ================= VANDAAG: het verhaal, per onderdeel in het kort, de vooruitblik en de bronnen ================= */
 const SNAP_KEY="hp-snap-v1";
 let PREV_SNAP=null; try{ PREV_SNAP=JSON.parse(localStorage.getItem(SNAP_KEY)||"null"); }catch(e){ PREV_SNAP=null; }
 const DAYS_NL=["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
@@ -2877,11 +2948,6 @@ function marketState(){
     const open=!["Sat","Sun"].includes(wd) && mins>=570 && mins<960;
     return {open, text: open? "Wall Street is open" : "Wall Street is dicht"};
   }catch(e){ return {open:false, text:""}; }
-}
-function kpiTile([k,l]){
-  const it=item(k), t=arr(S.plan?.triggers).find(x=>x.marketKey===k);
-  const lv=t? trigLevel(t, typeof it?.value==="number"? it.value : null) : null;
-  return `<div class="kpi ${lv||""}"><span class="l">${esc(l)}</span><span class="v">${esc(itemText(it))}</span><span class="c">${esc(it?.change||"")}</span><span class="a">${esc(it?.at? ago(it.at) : (it?.asOf||""))}</span></div>`;
 }
 function snapNow(){
   if(!S.plan || !S.market) return null;
@@ -2899,22 +2965,12 @@ function changesList(){
   arr(S.plan.positions).forEach(x=>{ const a=P.pos?.[x.id], b=N.pos[x.id]; if(a && b && a!==b){ const s=posStatus(x); out.push({tone:s.tone==="base"?"good":s.tone, t:`${x.short||x.name}: ${a} → ${b}`}); } });
   arr(S.plan.triggers).forEach(t=>{ const a=P.trig?.[t.id], b=N.trig[t.id]; if(a && b && a!==b && LV[a] && LV[b]){ const up=LV[b].rank>LV[a].rank; out.push({tone:b==="stress"?"bad":up?"warn":"good", t:`${t.label}: ${LV[a].label.toLowerCase()} → ${LV[b].label.toLowerCase()}`}); } });
   Object.entries(N.px).forEach(([k,v])=>{ const o=P.px?.[k]; if(typeof v==="number" && typeof o==="number" && o){ const pct=(v/o-1)*100; if(Math.abs(pct)>=2) out.push({tone:"info", t:`${item(k)?.label||k}: ${pct>0?"+":""}${nf(pct,1)}% sinds je vorige bezoek (nu ${itemText(item(k))})`}); } });
-  if(N.v>P.v) out.push({tone:"info", t:`Je plan is bijgewerkt naar versie ${N.v}. Zie Historie voor wat er veranderde.`});
-  if(N.brief && N.brief!==P.brief) out.push({tone:"info", t:"Er is een nieuwe briefing van Grok."});
+  if(N.v>P.v) out.push({tone:"info", t:`Je plan is bijgewerkt naar versie ${N.v}. Zie Inbox → Historie voor wat er veranderde.`});
+  if(N.brief && N.brief!==P.brief) out.push({tone:"info", t:"Er is een nieuwe briefing van Grok: het verhaal hierboven is bijgewerkt."});
   const rank={bad:0,warn:1,good:2,info:3}; out.sort((a,b)=>(rank[a.tone]??4)-(rank[b.tone]??4));
   return out;
 }
 function briefOrder(pp){ const ids=arr(S.plan?.positions).map(x=>x.id).filter(id=>pp[id]); return [...ids, ...Object.keys(pp).filter(id=>!ids.includes(id))]; }
-function briefHTML(){
-  const b=S.briefing, btn=S.server? `<button class="btn sm" type="button" id="briefBtn">Nieuwe briefing</button>` : "";
-  const RP={laag:["t-good","Risico laag"], gemiddeld:["t-warn","Risico gemiddeld"], hoog:["t-bad","Risico hoog"]};
-  if(!b) return `<div class="box stack brief"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Briefing</h2></div>${btn}</div><div class="empty small"><b>Nog geen briefing</b><span>${S.server? "Grok schrijft elke werkdag om 08:05 en 22:35 een korte briefing uit je cijfers en planregels. Je kunt er ook nu een laten maken." : "De briefing komt van je server op Railway."}</span></div><span class="status" id="briefStatus" role="status"></span></div>`;
-  return `<div class="box stack brief"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Briefing</h2></div><span class="btnrow">${RP[b.risico]? `<span class="pill ${RP[b.risico][0]}">${RP[b.risico][1]}</span>`:""}${btn}</span></div>
-    <div class="kop">${esc(b.kop||"")}</div><p>${esc(b.samenvatting||"")}</p>${b.veranderd? `<p class="small"><b>Veranderd:</b> ${esc(b.veranderd)}</p>`:""}
-    ${Object.keys(b.posities||{}).length? `<div class="posl">${briefOrder(b.posities).map(id=>`<div><b>${esc(POS_SHORT[id]||id)}:</b> ${esc(b.posities[id])}</div>`).join("")}</div>`:""}
-    ${arr(b.letop).length? `<div><span class="eyebrow">Let op</span><ul class="small">${b.letop.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
-    <span class="faint small">Geschreven door Grok ${esc(ago(b.at))}${b.model? " · "+esc(b.model):""} · alleen op basis van de cijfers op deze site</span><span class="status" id="briefStatus" role="status"></span></div>`;
-}
 function firstVisitHTML(){
   const h=arr(S.history).find(x=>arr(x.changelog).length);
   const intro=`<p class="muted small" style="margin:0">Eerste bezoek op dit apparaat. Vanaf je volgende bezoek zie je hier wat er veranderde: signalen, acties, grote koersbewegingen en planversies.</p>`;
@@ -2923,7 +2979,7 @@ function firstVisitHTML(){
     <ul class="chgl">${arr(h.changelog).slice(0,6).map(x=>`<li class="info"><i></i><span>${esc(x)}</span></li>`).join("")}</ul>
     <button class="btn sm" type="button" data-goto="historie" style="align-self:flex-start">Alle wijzigingen</button>`;
 }
-/* ---------- kompas: welke cijfers je plan echt gebruikt ---------- */
+/* ---------- kompas: welke cijfers je plan echt gebruikt (staat op Plan) ---------- */
 function kompas(p){
   const rows=new Map(), rank={bad:3,warn:2,good:1};
   arr(p?.positions).forEach(x=>arr(x.checks).forEach((c,i)=>{
@@ -2968,7 +3024,7 @@ function kompasHTML(p){
       <div class="kp-next">${nxt}</div>
       <div class="kp-dist">${dist}</div></div>`; };
   return `<div class="box stack">
-    <div class="sechead"><div><span class="lyr l2">Volgen</span><h2 style="margin-top:6px">De cijfers die je plan sturen</h2></div><span class="muted small">Alleen deze ${rows.length} bepalen of je iets doet. De rest is achtergrond.</span></div>
+    <div class="sechead"><div><span class="lyr l1">Doen</span> <span class="lyr l2">Volgen</span><h2 style="margin-top:6px">Wanneer doe je iets?</h2></div><span class="muted small">Alleen deze ${rows.length} cijfers bepalen of je iets doet. De rest is achtergrond.</span></div>
     <div class="kp" role="table" aria-label="Cijfers die je planregels sturen">
       <div class="h" role="columnheader">Cijfer</div><div class="h" role="columnheader">Nu</div><div class="h" role="columnheader">Volgende regel</div><div class="h r" role="columnheader">Afstand</div>
       ${rows.map(row).join("")}
@@ -2976,52 +3032,243 @@ function kompasHTML(p){
     <div class="kp-foot"><span class="lyr l3">Achtergrond</span><span>Signalen: ${red? `<b style="color:var(--bad)">${red} rood</b>` : "0 rood"}, ${orange} oranje. Ze kleuren het marktbeeld, maar je doet alleen iets als een regel hierboven geraakt wordt.</span><button class="btn sm" type="button" data-goto="signalen">Bekijk signalen</button></div>
   </div>`;
 }
+
+/* ---------- het verhaal: één bron voor Vandaag en voor 'In het kort' bovenaan elk tabblad ---------- */
+const VERDICT={eens:["t-good","Eens met de AI"], deels:["t-warn","Deels eens"], oneens:["t-bad","Oneens met de AI"], onbekend:["t-neutral","Nog onbekend"]};
+const LENS_PERSON={tr:{name:"Tino", org:"TradersReality"}, rebel:{name:"George Gammon", org:"Rebel Capitalist"}};
+const TONE_PILL={good:"t-good", warn:"t-warn", bad:"t-bad"};
+const RISK_BRIEF={laag:["t-good","Risico laag"], gemiddeld:["t-warn","Risico gemiddeld"], hoog:["t-bad","Risico hoog"]};
+function briefFresh(hours=72){ const t=S.briefing?.at? new Date(S.briefing.at).getTime() : NaN; return isFinite(t) && (Date.now()-t)/36e5 < hours; }
+function sentences(t, n){ const s=String(t||"").trim(); return s? s.split(/(?<=[.!?])\s+/).slice(0,n).join(" ") : ""; }
+function endDot(t){ const s=String(t||"").trim(); return !s || /[.!?…]$/.test(s)? s : s+"."; }
+function listNl(a){ return a.length<2? (a[0]||"") : a.slice(0,-1).join(", ")+" en "+a[a.length-1]; }
+function posNm(r){ return r.x.short||r.x.name; }
+function planState(p){ const st=arr(p?.positions).map(x=>({x, s:posStatus(x)})); return {st, acts:st.filter(r=>r.s.next?.hit), nears:st.filter(r=>!r.s.next?.hit && r.s.next?.near)}; }
+function topScenario(p){ return arr(p?.scenarios).slice().sort((a,b)=>(+b.prob||0)-(+a.prob||0))[0]||null; }
+function scenarioView(p, id){
+  const sc=arr(p?.scenarios).filter(s=>(+s.prob||0)>0 && typeof s.impact?.[id]==="number"); if(!sc.length) return null;
+  const tot=sc.reduce((a,s)=>a+(+s.prob),0);
+  const w=sc.reduce((a,s)=>a+(+s.prob)*s.impact[id],0)/tot;
+  const likely=sc.filter(s=>+s.prob>=10), vals=(likely.length? likely : sc).map(s=>s.impact[id]);
+  const pick=(better)=>sc.reduce((a,s)=> better(s.impact[id], a.impact[id])? s : a);
+  return {w, lo:Math.min(...vals), hi:Math.max(...vals), best:pick((x,y)=>x>y), worst:pick((x,y)=>x<y)};
+}
+function expWord(w){ return w<=-1.25? "negatief" : w<=-0.4? "licht negatief" : w<0.4? "neutraal" : w<1.25? "licht positief" : "positief"; }
+function expTone(w){ return w<=-0.4? "neg" : w>=0.4? "pos" : "flat"; }
+function doenText(acts, nears){
+  if(!acts.length) return nears.length? `Geen actie nodig. Wel dichtbij: ${nears.map(r=>`${posNm(r)} bij ${fmtLvl(r.s.next.c.key, r.s.next.c.level)}`).join(", ")}.`
+    : "Geen actie: geen enkele planregel is geraakt. Vaste inleg door en kijk weer bij de momenten hieronder.";
+  const g={bad:[], good:[], warn:[]}; acts.forEach(r=>(g[r.s.next.c.tone]||g.warn).push(r));
+  const f=rs=>rs.map(r=>`${posNm(r)} ${r.s.next.c.action.toLowerCase()}`).join("; ");
+  return [g.bad.length? `Doen: ${f(g.bad)}.` : "", g.good.length? `Mag: ${f(g.good)}.` : "", g.warn.length? `Let op: ${f(g.warn)}.` : "",
+    nears.length? `Dichtbij: ${nears.map(r=>`${posNm(r)} bij ${fmtLvl(r.s.next.c.key, r.s.next.c.level)}`).join(", ")}.` : ""].filter(Boolean).join(" ");
+}
+function storyData(p){
+  const b=S.briefing, fresh=briefFresh(), m=p.macro||{}, rg=p.regime||{}, V=fresh? (b.verhaal||null) : null;
+  const {st, acts, nears}=planState(p);
+  const kop=(fresh && b.kop) || m.headline || rg.name || "Je plan in het kort";
+  const wat=V?.wat || sentences(m.summary||rg.thesis, 2);
+  let betekenis=V?.betekenis||"";
+  if(!betekenis){ const pi=m.positionImpact||{}; const g=f=>st.filter(r=>pi[r.x.id] && f(+pi[r.x.id].dir||0)).map(posNm);
+    const up=g(d=>d>0), dn=g(d=>d<0), fl=g(d=>d===0);
+    betekenis=[dn.length? `Wind tegen voor ${listNl(dn)}.` : "", up.length? `Wind mee voor ${listNl(up)}.` : "", fl.length? `${listNl(fl)}: weinig effect.` : ""].filter(Boolean).join(" "); }
+  return {kop, wat, betekenis, doen:doenText(acts, nears), acts, nears, st, fresh, b};
+}
+function lensFromTranscript(l){ return /^Bijgewerkt uit/i.test(l?.basis||""); }
+function lensKind(l){ return lensFromTranscript(l)? "transcript" : /^Startversie/i.test(l?.basis||"")? "startversie" : "samenvatting"; }
+
+/* ---------- in het kort per onderdeel ---------- */
+function sumPlan(p){
+  const {st, acts, nears}=planState(p);
+  const tone=acts.some(r=>r.s.tone==="bad")? "bad" : (acts.length||nears.length)? "warn" : "good";
+  const pill=acts.length? (acts.length===1? "1 regel geraakt" : acts.length+" regels geraakt") : nears.length? "Opletten" : "Geen actie";
+  const must=acts.filter(r=>r.s.next.c.tone==="bad");
+  const line= must.length? "Doen: "+must.map(r=>`${posNm(r)} ${r.s.next.c.action.toLowerCase()}`).join(" · ")
+    : acts.length? acts.map(r=>`${posNm(r)}: ${r.s.next.c.action.toLowerCase()}`).join(" · ")
+    : nears.length? nears.map(r=>`${posNm(r)} nadert ${fmtLvl(r.s.next.c.key, r.s.next.c.level)}`).join(" · ")
+    : "Geen planregel geraakt: vaste inleg door.";
+  const facts=[st.map(r=>`${posNm(r)} ${r.s.label.toLowerCase()}`).join(" · ")];
+  const nx=kompas(p).filter(r=>r.focus && !r.focus.hit && r.focus.rel!=null).sort((a,b)=>a.focus.rel-b.focus.rel)[0];
+  if(nx){ const c=nx.focus.c; facts.push(`Eerstvolgende niveau: ${POS_SHORT[nx.focus.x.id]||nx.focus.x.name} bij ${fmtLvl(nx.key,c.level)} (nog ${nf(nx.focus.rel,1)}%): ${c.action.toLowerCase()}`); }
+  const C=pfCompute(), top=topScenario(p);
+  if(C.filled) facts.push(`Portefeuille ${eur(C.total)}${C.pnlPct!=null? ` (${C.pnlPct>0?"+":""}${nf(C.pnlPct,1)}%)` : ""}${C.cashW!=null? " · cash "+nf(C.cashW,0)+"%" : ""}`);
+  else if(top) facts.push(`Hoofdscenario: ${top.name} (${top.prob}%)`);
+  return {tab:"plan", title:"Plan", tone, pill, line, facts, go:"Naar je plan"};
+}
+function sumMarkt(p){
+  const m=p.macro||{}, rk=RISK[m.riskMode];
+  const lv=arr(p.triggers).map(t=>trigLevel(t, trigValue(t).v)), red=lv.filter(x=>x==="stress").length, orange=lv.filter(x=>x==="gespannen").length, green=lv.filter(x=>x==="rustig").length;
+  const tone= m.riskMode==="risk-off"? "bad" : m.riskMode==="defensief"? "warn" : m.riskMode==="risk-on"? "good" : "";
+  const nums=[["spxDD","S&P 500 t.o.v. record"],["us10y","10-jaars"],["vix","VIX"],["brent","Brent"]].map(([k,l])=>{ const it=item(k); return it && typeof it.value==="number"? `${l} ${itemText(it)}` : ""; }).filter(Boolean);
+  const facts=[`Signalen: ${red} rood, ${orange} oranje, ${green} groen`];
+  if(m.cycle?.verdict) facts.push(`Cyclus: ${m.cycle.verdict}`);
+  if(nums.length) facts.push(nums.slice(0,3).join(" · "));
+  return {tab:"markt", title:"Markt", tone, pill: rk? rk.label+(m.regime? " · "+m.regime : "") : (m.regime||"Marktbeeld"), line: m.headline||p.regime?.name||"", facts, go:"Naar de markt"};
+}
+function sumInbox(){
+  const list=arr(S.inbox), open=list.filter(i=>i.status==="nieuw"||i.status==="transcript nodig"), busy=list.filter(i=>i.status==="analyseren"), review=list.filter(i=>i.status==="geanalyseerd");
+  const tone= review.length||open.length? "warn" : "";
+  const pill= review.length? `${review.length} voorstel${review.length>1?"len":""} klaar` : open.length? `${open.length} nieuw` : busy.length? "Analyse loopt" : "Alles verwerkt";
+  const line= review.length? `Voorstellen uit ${review[0].source||"de inbox"} wachten op jou: ${review[0].title||"zonder titel"}`
+    : open.length? `${open.length} ${open.length>1? "items wachten" : "item wacht"} op analyse`
+    : busy.length? "Een analyse loopt op de achtergrond; je kunt de pagina gerust sluiten."
+    : "Niets dat op je wacht.";
+  const facts=[], L=arr(S.plan?.macro?.lenses);
+  const lf=["tr","rebel"].map(id=>{ const l=L.find(x=>x.id===id); if(!l) return ""; const k=lensKind(l);
+    return `${LENS_PERSON[id].name} ${k==="transcript"? "bijgewerkt "+fmtDate(l.updatedAt) : k==="samenvatting"? "samenvatting van "+fmtDate(l.updatedAt) : "nog zonder transcript"}`; }).filter(Boolean);
+  if(lf.length) facts.push("Bronnen: "+lf.join(" · "));
+  const last=list.find(i=>i.status==="verwerkt"); if(last) facts.push(`Laatst verwerkt: ${last.source||""}${last.title? " · "+last.title : ""}`);
+  const bl=CONN.data?.services?.ai?.backlog; if(S.server && bl){ const w=(bl.nieuw||0)+(bl.wacht||0); facts.push(w? `Post: ${w} document${w>1?"en wachten":" wacht"} op analyse` : "Post: alles geanalyseerd"); }
+  if(!facts.length) facts.push("Plak een transcript van Tino, Gammon of je eigen notities: de AI stelt wijzigingen voor, jij beslist.");
+  return {tab:"inbox", title:"Inbox", tone, pill, line, facts, go:"Naar de inbox"};
+}
+function sumCard(s){ return `<article class="sumc ${s.tone||""}"><div class="sechead"><h3>${esc(s.title)}</h3><span class="pill ${TONE_PILL[s.tone]||"t-neutral"}">${esc(s.pill)}</span></div>
+  <p class="sumc-line">${esc(s.line)}</p>${s.facts.length? `<ul class="sumc-f">${s.facts.slice(0,3).map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+  <button class="btn sm" type="button" data-goto="${esc(s.tab)}">${esc(s.go)} →</button></article>`; }
+function sumStrip(s, note=""){ return `<div class="sumstrip ${s.tone||""}" role="note" aria-label="In het kort"><span class="lyr l1">In het kort</span>
+  <div class="ss-main"><b>${esc(s.line)}</b>${s.facts.length? `<span>${s.facts.slice(0,3).map(esc).join(" · ")}</span>`:""}${note? `<small>${note}</small>`:""}</div>
+  <span class="pill ${TONE_PILL[s.tone]||"t-neutral"}">${esc(s.pill)}</span></div>`; }
+function renderSummaries(){
+  const p=S.plan, set=(id,h)=>{ const el=$(id); if(el && el.innerHTML!==h) el.innerHTML=h; };
+  if(!p){ ["pl-sum","mk-sum","in-sum"].forEach(id=>set(id,"")); return; }
+  set("pl-sum", sumStrip(sumPlan(p)));
+  set("mk-sum", sumStrip(sumMarkt(p), "Hier lees je <b>waarom</b> je plan zo staat. Dagelijks volgen hoeft niet: je planregels rekenen al met deze cijfers."));
+  set("in-sum", sumStrip(sumInbox()));
+}
+
+/* ---------- vooruitblik: wat te verwachten, en wat het met je beleggingen doet ---------- */
+function expBar(v){
+  if(!v) return `<span class="xbar empty" aria-hidden="true"><i class="mid"></i></span>`;
+  const X=x=>clamp((x+2)/4*100,0,100), w=clamp(v.w,-2,2), a=Math.min(X(0),X(w)), b=Math.max(X(0),X(w));
+  return `<span class="xbar" role="img" aria-label="Verwachting ${esc(expWord(v.w))}: gewogen ${esc(nf(v.w,1))} op een schaal van −2 tot +2; scenario's van ${esc(v.lo)} tot ${esc(v.hi)}">
+    <i class="rng" style="left:${X(v.lo).toFixed(1)}%;width:${(X(v.hi)-X(v.lo)).toFixed(1)}%"></i><i class="mid"></i>
+    <i class="val ${expTone(v.w)}" style="left:${a.toFixed(1)}%;width:${Math.max(2,b-a).toFixed(1)}%"></i></span>`;
+}
+function outlookHTML(p){
+  const fresh=briefFresh(), V=fresh? (S.briefing.vooruitblik||null) : null, m=p.macro||{};
+  const sc=arr(p.scenarios).slice().sort((a,b)=>(+b.prob||0)-(+a.prob||0)), top=sc[0];
+  const up=arr(p.calendar).filter(c=>{ const d=daysFrom(c.date); return d>=0 && d<=35; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const periode=V?.periode || (up.length? "Tot "+fmtDate(up[up.length-1].date,{day:"numeric",month:"long"}) : "De komende weken");
+  const pad=V?.pad || (top? `Het meest waarschijnlijke pad volgens je plan: ${top.name.toLowerCase()} (${top.prob}%). ${sentences(top.desc,1)}` : "");
+  const C=pfCompute();
+  const bars = sc.length? `<div class="scb" role="list" aria-label="Kans per scenario">${sc.map(s=>`<div class="scb-r" role="listitem"><span class="scb-n">${esc(s.name)}</span><span class="scb-t"><i style="width:${clamp(+s.prob||0,0,100)}%;background:${SC_COLORS[s.id]||"var(--faint)"}"></i></span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div>` : "";
+  const rows=arr(p.positions).map(x=>{
+    const v=scenarioView(p, x.id), s=posStatus(x), n=s.next, pi=m.positionImpact?.[x.id]||{}, vp=V?.posities?.[x.id], it=item(x.priceKey||x.id)||{};
+    const row=C.rows.find(r=>r.id===x.id), ev=up.find(c=>arr(c.affects).includes(x.id));
+    const kantel= vp?.kantel || (n && !n.hit? `Bij ${fmtLvl(n.c.key,n.c.level)}: ${n.c.action.toLowerCase()}` : n?.hit? `Geraakt: ${n.c.label}` : "");
+    const why= vp?.tekst || pi.why || (v? `Beste scenario: ${v.best.name}; slechtste: ${v.worst.name}.` : "");
+    const wtxt= row && row.qty>0 && row.w!=null? ` · ${nf(row.w,0)}% van je geld` : "";
+    const near= vp && vp.richting!=null? +vp.richting : (pi.dir!=null? +pi.dir : null);
+    return `<div class="ol-r">
+      <div class="ol-n"><b>${esc(x.short||x.name)}</b><span class="faint small">${esc(itemText(it))}${esc(wtxt)}</span></div>
+      <div class="ol-x">${near!=null? `<span class="olx-now">${dirMark(near)}<span>komende weken</span></span>` : ""}${expBar(v)}<span class="small ${v? expTone(v.w) : ""}">${v? "scenario's: "+esc(expWord(v.w)) : "–"}</span></div>
+      <div class="ol-w" data-l="Waarom">${esc(why)}</div>
+      <div class="ol-k" data-l="Kan kantelen bij">${esc(kantel)}${ev? `<small>${esc(fmtDate(ev.date,{weekday:"short",day:"numeric",month:"short"}))}: ${esc(ev.event)}</small>` : ""}</div>
+      <div class="ol-s"><span class="pill ${TODO_TONE[s.tone][0]}">${esc(s.label)}</span></div></div>`; }).join("");
+  return `<div class="box stack outlook">
+    <div class="sechead"><div><span class="lyr l2">Vooruitblik</span><h2 style="margin-top:6px">Wat kun je verwachten</h2></div><span class="muted small">${esc(periode)}</span></div>
+    <div class="ol-top">
+      <div class="stack" style="gap:10px"><p class="ol-pad">${esc(pad)}</p>${bars}
+        <p class="faint small" style="margin:0">Kansen uit je scenario's (Plan → Scenario's).${V? " Het pad is de lezing van Grok, "+esc(ago(S.briefing.at))+"." : ""}</p>
+        ${arr(V?.kantelpunten).length? `<div><span class="eyebrow">Wat het beeld kan kantelen, volgens Grok</span><ul class="actions small">${V.kantelpunten.map(k=>`<li><span>${esc(k)}</span></li>`).join("")}</ul></div>` : ""}</div>
+      <div class="stack" style="gap:8px"><span class="eyebrow">Momenten die het beeld kunnen kantelen</span>
+        ${up.length? `<ul class="cal">${up.slice(0,5).map(calItem).join("")}</ul>` : `<p class="muted small">Geen momenten gepland in de komende vijf weken.</p>`}</div>
+    </div>
+    <div><span class="eyebrow">Effect op je beleggingen</span>
+    <div class="ol" role="table" aria-label="Effect op je beleggingen" style="margin-top:6px">
+      <div class="h" role="columnheader">Belegging</div><div class="h" role="columnheader">Verwachting</div><div class="h" role="columnheader">Waarom</div><div class="h" role="columnheader">Wat het kan kantelen</div><div class="h" role="columnheader">Je regel nu</div>
+      ${rows}
+    </div></div>
+    <p class="faint small" style="margin:0">De pijl is de richting voor de komende weken${V? " volgens Grok" : " volgens je marktbeeld"}. De balk is de verwachting over je scenario's (kans × effect, van sterk negatief −2 tot sterk positief +2); het lichte deel is de spreiding over de scenario's met minstens 10% kans. Verschillen ze, dan zit er spanning tussen korte en lange termijn. Een verwachting is geen voorspelling: je handelt alleen op je planregels.</p>
+  </div>`;
+}
+
+/* ---------- zijnoot: Tino en Gammon naast de AI ---------- */
+function sourcesHTML(p){
+  const m=p.macro||{}, L=arr(m.lenses), b=S.briefing, B=briefFresh(24*10)? (b.bronnen||null) : null, top=topScenario(p), rk=RISK[m.riskMode];
+  if(!L.some(l=>LENS_PERSON[l.id])) return "";
+  const card=(id)=>{ const l=L.find(x=>x.id===id); if(!l) return ""; const who=LENS_PERSON[id], kind=lensKind(l), tx=kind!=="startversie";
+    const c1= l.vsAI?.verschil? {...l.vsAI, at:l.vsAI.at||l.updatedAt} : null;
+    const c2= B?.[id]?.verschil && (!B.lensAt?.[id] || B.lensAt[id]===l.updatedAt)? {...B[id], at:b.at} : null;
+    let cmp=[c1,c2].filter(Boolean).sort((x,y)=>new Date(y.at)-new Date(x.at))[0]||null;
+    if(cmp?.oordeel==="onbekend" || !tx) cmp=null;  // zonder zijn eigen visie valt er niets te vergelijken
+    const v=VERDICT[cmp?.oordeel]||VERDICT.onbekend;
+    const note= tx? "Nog niet vergeleken met de AI; dat gebeurt bij de volgende briefing." : `Nog geen transcript van ${who.name} verwerkt. Wat je hieronder openklapt is een startversie, niet zijn eigen woorden.`;
+    return `<article class="src"><div class="src-h"><div><b>${esc(who.name)}</b> <span class="muted small">${esc(who.org)}</span></div><span class="pill ${v[0]}">${esc(v[1])}</span></div>
+      <p class="src-d${cmp? "" : " muted"}">${esc(cmp? cmp.verschil : note)}</p>
+      <details class="src-more" data-src="${esc(id)}" ${S.openSrc?.[id]? "open":""}><summary>${kind==="transcript"? "Zijn visie uit een transcript" : kind==="samenvatting"? "Zijn visie (samenvatting)" : "Startversie"} · ${esc(fmtDate(l.updatedAt))}</summary><p class="small">${esc(l.take||"")}</p><p class="faint small" style="margin-top:6px">${esc(l.basis||"")}</p></details>
+      <button class="linkbtn" type="button" data-act="paste" data-source="${esc(LENS_SOURCE[id]||"Overig")}">Plak een transcript van ${esc(who.name)}</button></article>`; };
+  return `<div class="box stack srcbox"><div class="sechead"><div><span class="lyr l3">Zijnoot</span><h2 style="margin-top:6px">Tino en Gammon naast de AI</h2></div><span class="muted small">Waar twee bronnen die je volgt het eens en oneens zijn met de analyse</span></div>
+    ${B?.kern && Object.entries(B.lensAt||{}).every(([id,at])=>L.find(x=>x.id===id)?.updatedAt===at)? `<p class="src-kern">${esc(B.kern)}</p>` : ""}
+    <div class="srcgrid"><article class="src ai"><div class="src-h"><div><b>De AI-analyse</b> <span class="muted small">je plan + Grok</span></div>${rk? `<span class="pill ${rk.tone}">${esc(rk.label)}</span>`:""}</div>
+      <p class="src-d">${esc(endDot(m.headline||p.regime?.name||""))}${top? ` Hoofdscenario: ${esc(top.name)} (${esc(top.prob)}%).` : ""}</p>
+      <p class="faint small" style="margin:0">Waar de bronnen tegenover staan: het marktbeeld en de scenario's van je plan, bijgewerkt door Grok en de updates.</p></article>
+      ${card("tr")}${card("rebel")}</div></div>`;
+}
+
+/* ---------- de pagina ---------- */
+function storyHTML(p){
+  const D=storyData(p), m=p.macro||{}, rk=RISK[m.riskMode], ms=marketState(), d=new Date(), b=D.b;
+  const actRows=[...D.acts, ...D.nears].map(r=>{ const n=r.s.next, c=n.c, now=itemText(item(c.key));
+    return `<div class="vd-act ${n.hit? (c.tone||"warn") : "warn"}"><div class="hd"><b>${esc(posNm(r))}</b><span class="pill ${TODO_TONE[n.hit? (c.tone||"warn") : "warn"][0]}">${esc(n.hit? c.action : "Let op: nadert "+fmtLvl(c.key,c.level))}</span></div>
+      ${n.hit? `<button class="btn sm donebtn" type="button" data-done="${esc(r.x.id)}|${esc(n.cid)}" ${S.db&&S.canWrite?"":"disabled"}>${doneLabel(c)}</button>` : `<span></span>`}
+      <div class="tx">${esc(n.hit? (c.then||r.s.why) : `Bij ${fmtLvl(c.key,c.level)}: ${c.action.toLowerCase()}.`)}<small>${esc(c.label)} · nu ${esc(now)}${c.note? " · "+esc(c.note):""}</small>${amountTxt(r.x, c).replace(/class="nx"/g,'class="small" style="display:block;margin-top:3px"')}</div></div>`; }).join("");
+  const posChips=D.st.map(r=>`<span class="${r.s.next?.hit? (r.s.tone||"warn") : r.s.next?.near? "warn" : ""}"><i></i>${esc(posNm(r))}: ${esc(r.s.label)}</span>`).join("");
+  const regime=m.regime||p.regime?.name;
+  const pills=[regime? `<span class="pill t-accent plain">Regime: ${esc(regime)}</span>` : "", rk? `<span class="pill ${rk.tone}">${esc(rk.label)}</span>` : "",
+    D.fresh && RISK_BRIEF[b.risico]? `<span class="pill ${RISK_BRIEF[b.risico][0]}">${RISK_BRIEF[b.risico][1]}</span>` : ""].join("");
+  const by= D.fresh? `Verhaal door Grok, ${esc(ago(b.at))}${b.model? " · "+esc(b.model) : ""} · alleen uit de cijfers op deze site`
+    : S.briefing? `De laatste briefing is van ${esc(ago(S.briefing.at))}; het verhaal komt nu uit je plan (v${esc(p.meta?.version||1)}).`
+    : `Het verhaal komt uit je plan (v${esc(p.meta?.version||1)}).${S.server? " Grok schrijft elke werkdag om 08:05 en 22:35 een nieuwe versie." : ""}`;
+  const rowsDl=[["Wat er speelt", D.wat], ["Wat het betekent", D.betekenis]].filter(x=>x[1]).map(([t,v])=>`<div><dt>${t}</dt><dd>${esc(v)}</dd></div>`).join("");
+  const bb=S.briefing;
+  const more= bb? `<details class="story-more" id="briefMore" ${S.openBrief?"open":""}><summary>Hele briefing van Grok · ${esc(fmtDT(bb.at))}</summary><div class="brief stack" style="gap:10px;margin-top:8px">
+      ${bb.samenvatting? `<p>${esc(bb.samenvatting)}</p>`:""}${bb.veranderd? `<p class="small"><b>Veranderd:</b> ${esc(bb.veranderd)}</p>`:""}
+      ${Object.keys(bb.posities||{}).length? `<div class="posl">${briefOrder(bb.posities).map(id=>`<div><b>${esc(POS_SHORT[id]||id)}:</b> ${esc(bb.posities[id])}</div>`).join("")}</div>`:""}
+      ${arr(bb.letop).length? `<div><span class="eyebrow">Let op</span><ul class="small">${bb.letop.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}</div></details>` : "";
+  return `<div class="vd-main story">
+    <div class="vd-state"><span class="lyr l1">Het verhaal</span><span class="eyebrow">${esc(DAYS_NL[d.getDay()])} ${esc(fmtDate(todayISO(),{day:"numeric",month:"long"}))}</span>${ms.text? `<span class="mstate ${ms.open?"open":""}"><i></i>${esc(ms.text)}</span>`:""}<span class="eyebrow">Plan v${esc(p.meta?.version||1)}</span></div>
+    <h1>${esc(D.kop)}</h1>
+    ${pills? `<div class="pills">${pills}</div>`:""}
+    <dl class="story3">${rowsDl}<div class="do"><dt>Wat je doet</dt><dd><span>${esc(D.doen)}</span>${actRows? `<div class="vd-acts">${actRows}</div>` : ""}</dd></div></dl>
+    <div class="vd-pos" aria-label="Status per positie">${posChips}</div>
+    <div class="story-foot"><span class="faint small">${by}</span>${S.server? `<button class="btn sm" type="button" id="briefBtn">Nieuwe briefing</button>`:""}</div>
+    <span class="status" id="briefStatus" role="status"></span>
+    ${more}
+  </div>`;
+}
 function renderVandaag(){
   const el=$("vd-body"); if(!el) return;
   if(document.activeElement?.closest?.("#vd-body") && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
   const p=S.plan;
-  if(!p){ el.innerHTML = S.offline? `<div class="empty"><b>Opslag niet bereikbaar</b><span>Open je site via Railway.</span></div>` : `<div class="empty"><b>Vandaag laden…</b><span>Je acties, cijfers en de briefing verschijnen zodra de opslag antwoordt.</span></div>`; return; }
-  const st=arr(p.positions).map(x=>({x, s:posStatus(x)}));
-  const acts=st.filter(r=>r.s.next?.hit), nears=st.filter(r=>!r.s.next?.hit && r.s.next?.near);
-  const ms=marketState(), d=new Date();
-  const h1 = acts.length? (acts.length===1? "Eén actie volgens je plan" : acts.length+" acties volgens je plan") : nears.length? "Geen actie, wel opletten" : "Geen actie nodig";
-  const lede = S.briefing?.kop || p.simple?.headline || "";
-  const actRows = [...acts, ...nears].map(r=>{ const n=r.s.next, c=n.c, now=itemText(item(c.key));
-    return `<div class="vd-act ${n.hit? (c.tone||"warn") : "warn"}"><div class="hd"><b>${esc(r.x.short||r.x.name)}</b><span class="pill ${TODO_TONE[n.hit? (c.tone||"warn") : "warn"][0]}">${esc(n.hit? c.action : "Let op: nadert "+fmtLvl(c.key,c.level))}</span></div>
-      ${n.hit? `<button class="btn sm donebtn" type="button" data-done="${esc(r.x.id)}|${esc(n.cid)}" ${S.db&&S.canWrite?"":"disabled"}>${doneLabel(c)}</button>` : `<span></span>`}
-      <div class="tx">${esc(n.hit? (c.then||r.s.why) : `Bij ${fmtLvl(c.key,c.level)}: ${c.action.toLowerCase()}.`)}<small>${esc(c.label)} · nu ${esc(now)}${c.note? " · "+esc(c.note):""}</small>${amountTxt(r.x, c).replace(/class="nx"/g,'class="small" style="display:block;margin-top:3px"')}</div></div>`; }).join("");
-  const posChips = st.map(r=>`<span class="${r.s.next?.hit? (r.s.tone||"warn") : r.s.next?.near? "warn" : ""}"><i></i>${esc(r.x.short||r.x.name)}: ${esc(r.s.label)}</span>`).join("");
-  const C=pfCompute();
+  if(!p){ el.innerHTML = S.offline? `<div class="empty"><b>Opslag niet bereikbaar</b><span>Open je site via Railway.</span></div>` : `<div class="empty"><b>Vandaag laden…</b><span>Het verhaal, je acties en de vooruitblik verschijnen zodra de opslag antwoordt.</span></div>`; return; }
+  const C=pfCompute(), chd=CH.data, cht=chd? chTotals(arr(chd.items)) : null;
+  const chLine= cht&&cht.n? `<div class="sechead" style="border-top:1px solid var(--line);padding-top:10px"><span><b style="font-weight:600">Challenges</b> <span class="muted small">netto</span> <b class="num" style="color:${cht.net>=0?"var(--good)":"var(--bad)"}">${esc(chMoney(cht.net,true))}</b></span><button class="btn sm" type="button" data-goto="challenges">Bekijk</button></div>` : "";
   const side = C.filled? `<div class="vd-side"><div class="sechead"><span class="eyebrow">Je portefeuille</span><button class="btn sm" type="button" data-goto="portefeuille">Bekijk</button></div>
       <div class="pf-total">${esc(eur(C.total))}</div>
-      <div class="pf-sub"><span>Winst/verlies <b class="${C.pnl>0?"":""}">${esc(eur(C.pnl,true))}</b>${C.pnlPct!=null? " ("+esc((C.pnlPct>0?"+":"")+nf(C.pnlPct,1))+"%)":""}</span><span>Cash <b>${C.cashW!=null? esc(nf(C.cashW,1))+"%" : "–"}</b></span></div>
+      <div class="pf-sub"><span>Winst/verlies <b>${esc(eur(C.pnl,true))}</b>${C.pnlPct!=null? " ("+esc((C.pnlPct>0?"+":"")+nf(C.pnlPct,1))+"%)":""}</span><span>Cash <b>${C.cashW!=null? esc(nf(C.cashW,1))+"%" : "–"}</b></span></div>
       <div class="pf-rows">${C.rows.filter(r=>r.qty>0).sort((a,b)=>(b.value||0)-(a.value||0)).map(r=>`<div class="pf-row"><span>${esc(POS_SHORT[r.id]||r.id)}</span>${wbar(r.w, r.h.target, r.h.max)}<span class="num">${r.w!=null? esc(nf(r.w,0))+"%" : "–"}</span></div>`).join("")}</div>
-      ${pfAdvice(C).filter(a=>a.tone==="bad").slice(0,2).map(a=>`<div class="small" style="color:var(--bad)">${esc(a.t)}</div>`).join("")}</div>`
-    : `<div class="vd-side"><span class="eyebrow">Je portefeuille</span><p style="margin:0">Vul in wat je hebt, dan zie je hier je vermogen, je verdeling en wat elke planregel in euro's betekent.</p><button class="btn primary" type="button" data-goto="portefeuille">Portefeuille invullen</button></div>`;
+      ${pfAdvice(C).filter(a=>a.tone==="bad").slice(0,2).map(a=>`<div class="small" style="color:var(--bad)">${esc(a.t)}</div>`).join("")}${chLine}</div>`
+    : `<div class="vd-side"><span class="eyebrow">Je portefeuille</span><p style="margin:0">Vul in wat je hebt, dan zie je hier je vermogen, je verdeling en wat elke planregel in euro's betekent.</p><button class="btn primary" type="button" data-goto="portefeuille">Portefeuille invullen</button>${chLine}</div>`;
   const ch=changesList();
   const changes = !snapNow()? "" : `<div class="box stack"><div class="sechead"><div><span class="lyr l3">Context</span><h2 style="margin-top:6px">Sinds je vorige bezoek</h2></div><span class="muted small">${PREV_SNAP?.at? esc(ago(PREV_SNAP.at)) : ""}</span></div>
     ${ch===null? firstVisitHTML()
       : ch.length? `<ul class="chgl">${ch.slice(0,10).map(c=>`<li class="${c.tone}"><i></i><span>${esc(c.t)}</span></li>`).join("")}</ul>` : `<p class="muted small" style="margin:0">Niets belangrijks veranderd.</p>`}</div>`;
-  const up=arr(p.calendar).filter(c=>daysFrom(c.date)>=0).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
-  const chd=CH.data, cht=chd? chTotals(arr(chd.items)) : null;
-  const cal = `<div class="box stack"><div class="sechead"><div><span class="lyr l2">Volgen</span><h2 style="margin-top:6px">Komende momenten</h2></div><span class="muted small">Nederlandse tijd</span></div>${up.length? `<ul class="cal">${up.map(calItem).join("")}</ul>` : `<p class="muted small">Geen momenten gepland.</p>`}
-    ${cht&&cht.n? `<div class="sechead" style="border-top:1px solid var(--line);padding-top:10px"><span><b style="font-weight:600">Challenges</b> <span class="muted small">netto</span> <b class="num" style="color:${cht.net>=0?"var(--good)":"var(--bad)"}">${esc(chMoney(cht.net,true))}</b></span><button class="btn sm" type="button" data-goto="challenges">Bekijk</button></div>`:""}</div>`;
-  el.innerHTML = `<div class="stack">
-    <div class="vd-hero">
-      <div class="vd-main">
-        <div class="vd-state"><span class="lyr l1">Doen</span><span class="eyebrow">${esc(DAYS_NL[d.getDay()])} ${esc(fmtDate(todayISO(),{day:"numeric",month:"long"}))}</span>${ms.text? `<span class="mstate ${ms.open?"open":""}"><i></i>${esc(ms.text)}</span>`:""}<span class="eyebrow">Plan v${esc(p.meta?.version||1)}</span></div>
-        <h1>${esc(h1)}</h1>
-        ${lede? `<p class="lede">${esc(lede)}</p>`:""}
-        ${actRows? `<div class="vd-acts">${actRows}</div>` : `<div class="vd-ok"><span>✓</span><span>Geen enkele planregel is geraakt. Houd je aan je vaste inleg en kijk weer bij de momenten hieronder.</span></div>`}
-        <div class="vd-pos">${posChips}</div>
-      </div>
-      ${side}
-    </div>
-    ${kompasHTML(p)}
-    <div class="grid g-2e">${briefHTML()}<div class="stack">${cal}${changes}</div></div>
+  // Eén raster: op een breed scherm staan je portefeuille en 'sinds je vorige bezoek' naast het verhaal,
+  // op de telefoon komt 'sinds je vorige bezoek' helemaal onderaan zodat het verhaal en de samenvattingen voorgaan.
+  el.innerHTML = `<div class="vd">
+    <div class="vd-a">${storyHTML(p)}</div>
+    <div class="vd-b">${side}</div>
+    ${changes? `<div class="vd-c">${changes}</div>` : ""}
+    <section class="vd-d stack" aria-labelledby="vdSumH"><div class="sechead"><div><span class="lyr l2">In het kort</span><h2 id="vdSumH" style="margin-top:6px">Per onderdeel</h2></div><span class="muted small">Het belangrijkste uit elk tabblad. Klik door voor de details.</span></div>
+      <div class="sumgrid">${sumCard(sumPlan(p))}${sumCard(sumMarkt(p))}${sumCard(sumInbox())}</div></section>
+    <div class="vd-e">${outlookHTML(p)}</div>
+    <div class="vd-f">${sourcesHTML(p)}</div>
   </div>`;
-  $("briefBtn")?.addEventListener("click", async ()=>{ const b=$("briefBtn"), stEl=$("briefStatus"); b.disabled=true;
-    try{ const r=await S.server.run("briefing"); setStatus(stEl, r.started? "Grok schrijft de briefing; die verschijnt hier binnen een minuut." : "Er loopt al een taak; probeer het zo opnieuw."); }
+  $("briefMore")?.addEventListener("toggle", e=>{ S.openBrief=e.target.open; });
+  el.querySelectorAll("details.src-more").forEach(dd=>dd.addEventListener("toggle", ()=>{ S.openSrc={...(S.openSrc||{}), [dd.dataset.src]:dd.open}; }));
+  $("briefBtn")?.addEventListener("click", async ()=>{ const bt=$("briefBtn"), stEl=$("briefStatus"); bt.disabled=true;
+    try{ const r=await S.server.run("briefing"); setStatus(stEl, r.started? "Grok schrijft een nieuwe briefing; het verhaal wordt binnen een minuut bijgewerkt." : "Er loopt al een taak; probeer het zo opnieuw."); }
     catch(e){ setStatus(stEl, "Starten lukte niet.", true); }
     setTimeout(()=>{ if($("briefBtn")) $("briefBtn").disabled=false; }, 60000); });
 }
@@ -3084,7 +3331,7 @@ function renderAll(){
   renderHeader();
   if(!document.activeElement?.closest?.("#mEditBody")) renderMarkt();
   renderCyclus(); renderPlan(); renderSignals(); renderUitleg(); renderFooter();
-  renderVandaag(); renderPortfolio();
+  renderVandaag(); renderPortfolio(); renderSummaries();
 }
 renderAll(); renderInbox(); renderHistory(); renderChallenges();
 
@@ -3099,10 +3346,10 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   db.doc("market/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("market",d)) return; S.market=d; renderAll(); }, onErr);
   db.doc("market/series").onSnapshot(s=>{ const d=s.exists? (s.data().series||{}) : {}; if(!changed("series",d)) return; S.series=d; renderAll(); }, onErr);
   db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);
-  db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); resumeAnalyses(); }, onErr);
+  db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); resumeAnalyses(); renderSummaries(); renderVandaag(); }, onErr);
   db.doc(CH_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("challenges",d)) return; CH.data=d; CH.loaded=true; renderChallenges(); renderVandaag(); }, onErr);
   db.doc(PF_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; S.pfLoaded=true; if(!changed("portfolio",d)) return; S.portfolio=d; renderPortfolio(); renderVandaag(); renderPlan(); }, onErr);
-  db.doc("briefing/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("briefing",d)) return; S.briefing=d; renderVandaag(); }, onErr);
+  db.doc("briefing/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("briefing",d)) return; S.briefing=d; renderVandaag(); renderSummaries(); }, onErr);
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); renderVandaag(); }, onErr);
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); resumeAnalyses(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
