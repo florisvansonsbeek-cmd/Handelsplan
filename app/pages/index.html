@@ -771,12 +771,21 @@ details.story-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem}
 .sumc-f li{padding-left:14px;position:relative;overflow-wrap:anywhere}
 .sumc-f li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--faint)}
 .sumc .btn{align-self:flex-start;margin-top:auto}
-.sumstrip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.sumc-rows{margin:0;display:grid;gap:8px}
+.sumc-rows > div{display:grid;gap:1px;align-content:start}
+.sumc-rows dt{font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+.sumc-rows dd{margin:0;font-size:.88rem;line-height:1.45;overflow-wrap:anywhere}
+.sumstrip{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.ss-top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.ss-top > b{font-weight:600;flex:1 1 280px;min-width:0}
+.ss-rows{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px}
+.ss-rows > div{display:grid;gap:2px;min-width:0;align-content:start}
+.ss-rows dt{font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+.ss-rows dd{margin:0;font-size:.88rem;line-height:1.45;overflow-wrap:anywhere}
+.ss-f{font-size:.86rem;color:var(--muted);overflow-wrap:anywhere}
+.ss-note{font-size:.8rem;color:var(--faint)}
 .sumstrip.good{border-left-color:var(--good)} .sumstrip.warn{border-left-color:var(--warn)} .sumstrip.bad{border-left-color:var(--bad)}
-.sumstrip .ss-main{display:flex;flex-direction:column;gap:3px;flex:1 1 320px;min-width:0}
-.sumstrip .ss-main b{font-weight:600}
-.sumstrip .ss-main span{font-size:.86rem;color:var(--muted);overflow-wrap:anywhere}
-.sumstrip .ss-main small{font-size:.8rem;color:var(--faint)}
+
 /* vooruitblik */
 .ol-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--gap)}
 @media (max-width:900px){.ol-top{grid-template-columns:minmax(0,1fr)}}
@@ -787,18 +796,26 @@ details.story-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem}
 .scb-t{height:8px;border-radius:4px;background:var(--surface-3);overflow:hidden}
 .scb-t i{display:block;height:100%;border-radius:4px}
 .scb-r .num{text-align:right;color:var(--muted)}
-.ol{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(170px,.9fr) minmax(0,1.9fr) minmax(0,1.5fr) auto;column-gap:16px}
+.hz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
+@media (max-width:900px){.hz{grid-template-columns:minmax(0,1fr)}}
+.hz-c{background:var(--surface-2);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.hz-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px}
+.hz-t{font:600 1.05rem var(--font-display)}
+.hz-cal{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;font-size:.88rem;line-height:1.4}
+.hz-cal li{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px}
+.hz-cal .when{font:500 .76rem var(--font-mono);color:var(--accent);padding-top:2px}
+.ol{display:grid;grid-template-columns:minmax(96px,.6fr) minmax(0,1.5fr) minmax(0,1.5fr) minmax(180px,1.05fr);column-gap:18px}
 .ol > .h{font:500 .66rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding:4px 0 6px;border-bottom:1px solid var(--line)}
 .ol-r{display:contents}
 .ol-r > div{padding:12px 0;border-bottom:1px solid var(--line-2);min-width:0;font-size:.9rem}
 .ol-n{display:flex;flex-direction:column;gap:2px}
 .ol-n b{font-weight:600}
-.ol-x{display:flex;flex-direction:column;gap:5px;justify-content:center}
-.ol-x > .small{font-size:.8rem}
-.ol-x .neg{color:var(--bad)} .ol-x .pos{color:var(--good)} .ol-x .flat{color:var(--muted)}
-.ol-k small{display:block;color:var(--muted);font-size:.8rem;margin-top:3px}
-.ol-s{display:flex;align-items:center;justify-content:flex-end}
-.ol-s .pill{white-space:normal;text-align:right}
+.ol-x,.ol-l,.ol-b{display:flex;flex-direction:column;gap:5px;line-height:1.45}
+.ol-x small,.ol-b small{color:var(--muted);font-size:.8rem}
+.ol-l .neg{color:var(--bad)} .ol-l .pos{color:var(--good)} .ol-l .flat{color:var(--muted)}
+.ol-b .pill{align-self:flex-start;white-space:normal}
+.olx-now b{font-weight:600;color:var(--ink)}
+
 .xbar{position:relative;display:block;width:100%;max-width:150px;height:10px;border-radius:5px;background:var(--surface-3)}
 .xbar i{position:absolute;display:block}
 .xbar .rng{top:3px;height:4px;border-radius:2px;background:var(--line)}
@@ -806,15 +823,30 @@ details.story-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem}
 .xbar .val.neg{background:var(--bad)} .xbar .val.pos{background:var(--good)} .xbar .val.flat{background:var(--faint)}
 .xbar .mid{left:calc(50% - 1px);top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.4;border-radius:1px;z-index:1}
 @media (max-width:860px){
-  .ol{grid-template-columns:minmax(0,1fr) auto}
+  .ol{grid-template-columns:minmax(0,1fr)}
   .ol > .h{display:none}
   .ol-r > div{border-bottom:0;padding:4px 0}
   .ol-n{padding-top:14px!important;border-top:1px solid var(--line-2)}
-  .ol-x{grid-column:2;grid-row:auto;padding-top:14px!important;border-top:1px solid var(--line-2);align-items:flex-end}
-  .ol-x .xbar{width:120px}
-  .ol-w,.ol-k,.ol-s{grid-column:1/-1}
-  .ol-w[data-l]::before,.ol-k[data-l]::before{content:attr(data-l);display:block;font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
-  .ol-s{justify-content:flex-start;padding-bottom:10px!important}
+  .ol-b{padding-bottom:12px!important}
+  .ol-x[data-l]::before,.ol-l[data-l]::before,.ol-b[data-l]::before{content:attr(data-l);display:block;font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+}
+/* wanneer bijkopen (Plan) */
+.by{display:grid;grid-template-columns:minmax(96px,.55fr) minmax(0,1.1fr) minmax(0,1.6fr) minmax(0,1.5fr);column-gap:18px}
+.by > .h{font:500 .66rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);padding:4px 0 6px;border-bottom:1px solid var(--line)}
+.by-r{display:contents}
+.by-r > div{padding:12px 0;border-bottom:1px solid var(--line-2);min-width:0;font-size:.9rem;line-height:1.45}
+.by-n,.by-now{display:flex;flex-direction:column;gap:3px}
+.by-now small,.by-when small{display:block;color:var(--muted);font-size:.8rem}
+.by-when ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.by-note{color:var(--muted);font-size:.86rem!important}
+.by-r.now .by-n b{color:var(--good)}
+@media (max-width:860px){
+  .by{grid-template-columns:minmax(0,1fr)}
+  .by > .h{display:none}
+  .by-r > div{border-bottom:0;padding:4px 0}
+  .by-n{padding-top:14px!important;border-top:1px solid var(--line-2)}
+  .by-note{padding-bottom:12px!important}
+  .by-now[data-l]::before,.by-when[data-l]::before,.by-note[data-l]::before{content:attr(data-l);display:block;font:500 .64rem var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
 }
 /* zijnoot: bronnen naast de AI */
 .srcgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -873,6 +905,7 @@ details.src-more[open] > summary{margin-bottom:6px}
   <section class="panel" id="p-plan" role="tabpanel" aria-labelledby="tb-plan" hidden>
     <div id="pl-sum"></div>
     <div id="pl-top"></div>
+    <div id="pl-buy"></div>
     <div id="pl-kp"></div>
     <div id="pl-pos"></div>
     <details class="box fold" id="fold-pf">
@@ -2110,8 +2143,8 @@ function renderUitleg(){
         <div><span class="lyr l3">Achtergrond</span> <span class="small">Briefing, signalen, scenario's, cyclus en alle cijfers. Handig om te begrijpen waarom het plan zo staat, maar geen reden om te handelen.</span></div>
       </div>
       <div class="tbl"><table class="src-tbl"><tbody>
-        <tr><td><b>Vandaag</b></td><td>Het verhaal (wat speelt er, wat betekent het, wat doe je), per tabblad in het kort, wat je de komende weken mag verwachten per belegging, en Tino en Gammon naast de AI.</td></tr>
-        <tr><td><b>Plan</b></td><td>Wanneer doe je iets (de cijfers die je regels sturen), dan per positie wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
+        <tr><td><b>Vandaag</b></td><td>Het verhaal (wat speelt er, wat betekent het, wat doe je), per tabblad in het kort, de vooruitblik op korte en langere termijn met per belegging of bijkopen nu kan, en Tino en Gammon naast de AI.</td></tr>
+        <tr><td><b>Plan</b></td><td>Wanneer bijkopen (per belegging: nu, wanneer wel en hoeveel), wanneer doe je iets (de cijfers die je regels sturen), dan per positie wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
         <tr><td><b>Markt</b></td><td>Overzicht, signalen, cyclus en alle cijfers met hun bron.</td></tr>
         <tr><td><b>Inbox</b></td><td>Transcripts analyseren, verwerkte mail (Post) en de historie van je plan.</td></tr>
       </tbody></table></div>
@@ -3081,6 +3114,101 @@ function storyData(p){
 function lensFromTranscript(l){ return /^Bijgewerkt uit/i.test(l?.basis||""); }
 function lensKind(l){ return lensFromTranscript(l)? "transcript" : /^Startversie/i.test(l?.basis||"")? "startversie" : "samenvatting"; }
 
+/* ---------- twee horizonnen: wat de komende weken zeer waarschijnlijk is, en wat je op langere termijn mag verwachten ---------- */
+function horizons(p){
+  const fresh=briefFresh(), V=fresh? (S.briefing.vooruitblik||null) : null, L=V?.lang||null, O=p.outlook||{};
+  const sc=arr(p.scenarios).slice().sort((a,b)=>(+b.prob||0)-(+a.prob||0)), top=sc[0], second=sc[1];
+  const tot=s=>Object.values(s.impact||{}).reduce((a,v)=>a+(+v||0),0);
+  const risk=sc.slice(1).filter(s=>tot(s)<0).sort((a,b)=>tot(a)-tot(b) || (+b.prob||0)-(+a.prob||0))[0];  // het zwaarste negatieve scenario
+  const up=arr(p.calendar).filter(c=>{ const d=daysFrom(c.date); return d>=0 && d<=35; }).sort((a,b)=>a.date.localeCompare(b.date));
+  const shortPad=V?.pad || O.short?.pad || (top? `Volgens je scenario's het meest waarschijnlijk: ${top.name.toLowerCase()} (${top.prob}%). ${sentences(top.desc,1)}` : "");
+  const longPad=L?.pad || O.long?.pad || (top? `Waarschijnlijkst: ${top.name.toLowerCase()} (${top.prob}%${top.horizon? ", "+top.horizon : ""})${second? `, daarna ${second.name.toLowerCase()} (${second.prob}%)` : ""}.${risk? ` Grootste risico: ${risk.name.toLowerCase()} (${risk.prob}%).` : ""}` : "");
+  return {
+    short:{periode: V?.periode || O.short?.periode || (up.length? "Tot "+fmtDate(up[up.length-1].date,{day:"numeric",month:"long"}) : "De komende weken"),
+      pad:shortPad, zeker: arr(V?.zeker).length? V.zeker : arr(O.short?.zeker), kantel: arr(V?.kantelpunten),
+      by: V?.pad? "Grok, "+ago(S.briefing.at) : O.short?.pad? "je plan ("+fmtDate(O.updatedAt||p.meta?.updatedAt||todayISO())+")" : "je scenario's"},
+    long:{periode: L?.periode || O.long?.periode || "3 tot 12 maanden", pad:longPad,
+      by: L?.pad? "Grok, "+ago(S.briefing.at) : O.long?.pad? "je plan ("+fmtDate(O.updatedAt||p.meta?.updatedAt||todayISO())+")" : "je scenario's"},
+    up, sc, V, L, O};
+}
+// kleine letter na een dubbele punt, maar alleen voor gewone woorden (namen als Nvidia of Circle blijven staan)
+function lcFirst(t){ t=String(t||""); return /^(Onder|Boven|Bij|Reële|De|Het|Een|Als|Zolang|Na|Voor|Tot|Wacht|Pas|Weekslot|Herstel)\b/.test(t)? t[0].toLowerCase()+t.slice(1) : t; }
+function noName(label, x){ const t=String(label||""); for(const n of [x.short, x.name, POS_SHORT[x.id]].filter(Boolean)){ if(t.toLowerCase().startsWith(String(n).toLowerCase()+" ")) return t.slice(String(n).length+1); } return lcFirst(t); }
+function calMini(c){ return `<li><span class="when">${esc(fmtDate(c.date,{weekday:"short",day:"numeric",month:"short"}))}${c.time? " "+esc(c.time) : ""}</span><span>${esc(c.event)}${arr(c.affects).length? ` <span class="faint small">· ${arr(c.affects).map(id=>esc(POS_SHORT[id]||id)).join(", ")}</span>` : ""}</span></li>`; }
+function shortTxt(p, x, H){ return H.V?.posities?.[x.id]?.tekst || p.macro?.positionImpact?.[x.id]?.why || ""; }
+function longTxt(p, x, H){ const v=scenarioView(p, x.id); return H.L?.posities?.[x.id] || H.O.long?.posities?.[x.id] || (v? `Beste scenario: ${v.best.name}; slechtste: ${v.worst.name}.` : ""); }
+
+/* ---------- wanneer bijkopen: alleen uit je eigen planregels ---------- */
+function isBuyRule(c){ return +c.fractionCash>0 || (c.tone==="good" && /bijkop|tranche|opbouw|weging/i.test((c.action||"")+" "+(c.then||""))); }
+function isStopRule(c){ return c.tone==="warn" && /bijkop/i.test(c.action||""); }
+function isCutRule(c){ return +c.fraction>0 && c.tone==="bad"; }
+function fracWord(f){ f=+f; return Math.abs(f-1/3)<0.02? "een derde" : Math.abs(f-0.5)<0.02? "de helft" : Math.abs(f-0.25)<0.02? "een kwart" : nf(f*100,0)+"%"; }
+function ruleStates(x){
+  return arr(x.checks).map((c,i)=>{ const cid=c.id||(x.id+"-"+i), it=item(c.key), v=typeof it?.value==="number"? it.value : null;
+    const hit= v!=null && (c.op==="lt"? v<c.level : v>c.level);
+    let rel= v!=null && c.level? Math.abs((v-c.level)/c.level)*100 : null;
+    if(c.key==="spxDD" && v!=null){ const ath=+item("spxDD")?.ath, spx=item("spx")?.value; if(ath && typeof spx==="number") rel=Math.abs(ath*(1+c.level/100)/spx-1)*100; }  // hoeveel de S&P nog moet bewegen
+    return {x, c, cid, v, hit, rel, done: !!x.done?.[cid]}; }).filter(o=>o.c.key);
+}
+function lvlDesc(o){
+  const c=o.c;
+  if(c.key==="spxDD"){ const ath=+item("spxDD")?.ath, spx=item("spx")?.value;
+    if(ath && typeof spx==="number"){ const t=ath*(1+c.level/100), gap=(t/spx-1)*100;
+      return {txt:`S&P 500 onder ${nf(t,0)} (${nf(c.level,0).replace("-","−")}% vanaf het record)`, dist: o.hit? "geraakt" : gap<0? `nog ${nf(-gap,1)}% omlaag` : "geraakt"}; }
+    return {txt:c.label, dist:""};
+  }
+  const it=item(c.key)||{};
+  if(o.v==null) return {txt:c.label, dist:""};
+  if(o.hit) return {txt:c.label, dist:"geraakt"};
+  const pp= it.suffix==="%" || it.suffix===" pp";
+  return {txt:c.label, dist: pp? `nog ${nf(Math.abs(o.v-c.level),1)} procentpunt` : `nog ${nf(o.rel,1)}% ${c.op==="lt"? "omlaag" : "omhoog"}`};
+}
+function buyAmount(x, c){
+  const C=typeof pfCompute==="function" && S.portfolio? pfCompute() : null;
+  if(+c.fractionCash>0) return `${fracWord(c.fractionCash)} van je cash${C && C.cash>0? ` (≈ ${eur(C.cash*c.fractionCash)})` : ""}`;
+  return "in stappen, naar je doelweging";
+}
+function buyInfo(x){
+  const rs=ruleStates(x);
+  const stop=rs.find(o=>isStopRule(o.c) && o.hit);              // een rem blijft gelden, ook als je hem als 'gezien' markeerde
+  const cut=rs.find(o=>isCutRule(o.c) && o.hit && !o.done);
+  const buys=rs.filter(o=>isBuyRule(o.c));
+  const now=buys.filter(o=>o.hit && !o.done);
+  const next=buys.filter(o=>!o.hit && o.v!=null).sort((a,b)=>(a.rel??1e9)-(b.rel??1e9));
+  if(stop) return {state:"stop", tone:"warn", pill:"Niet bijkopen", reason:stop.c.label, until:stop.c.then||"", next, x};
+  if(cut) return {state:"cut", tone:"bad", pill:"Eerst verkleinen", reason:cut.c.label, until:"", next, x};
+  if(now.length) return {state:"now", tone:"good", pill:"Nu: "+now[0].c.action.toLowerCase(), o:now[0], reason:now[0].c.label, next, x};
+  if(next.length) return {state:"wait", tone:"", pill: x.dca? "Alleen je vaste inleg" : "Nog niet", reason:"", next, x};
+  return {state:"none", tone:"", pill:"Geen koopregel", reason:"", next:[], x};
+}
+function buyWhenTxt(b, n=2){ return b.next.slice(0,n).map(o=>{ const d=lvlDesc(o); return `${lcFirst(d.txt)}${d.dist? ", "+d.dist : ""}: ${o.c.action.toLowerCase()}`; }); }
+function buyCellHTML(b){
+  const amount= b.state==="now"? buyAmount(b.x, b.o.c) : "";
+  const when=buyWhenTxt(b, 1);
+  return `<span class="pill ${TODO_TONE[b.tone||"base"]?.[0]||"t-neutral"}">${esc(b.pill)}</span>
+    ${b.state==="now"? `<small>${esc(b.reason)} · ${esc(amount)}</small>` : b.reason? `<small>${esc(noName(b.reason, b.x))}</small>` : ""}
+    ${when.length && b.state!=="now"? `<small>Wel ${b.state==="wait"? "bij" : "weer bij"}: ${when.map(esc).join("; ")}</small>` : ""}`;
+}
+function buyTableHTML(p){
+  const rows=arr(p.positions).map(x=>{ const b=buyInfo(x), it=item(x.priceKey||x.id)||{};
+    const now= b.state==="now"? `<b style="font-weight:600">${esc(b.o.c.action)}</b><small>${esc(b.reason)} · ${esc(buyAmount(x, b.o.c))}</small>`
+      : b.state==="stop"? `<b style="font-weight:600;color:var(--warn)">Niet bijkopen</b><small>${esc(b.until||b.reason)}</small>`
+      : b.state==="cut"? `<b style="font-weight:600;color:var(--bad)">Eerst verkleinen</b><small>${esc(b.reason)}</small>`
+      : `<span class="muted">${esc(b.pill)}</span>`;
+    const when=b.next.slice(0,2).map(o=>{ const d=lvlDesc(o); return `<li><b style="font-weight:600">${esc(d.txt)}</b> → ${esc(o.c.action.toLowerCase())}<small>${esc(d.dist)}${d.dist? " · " : ""}${esc(buyAmount(x, o.c))}</small></li>`; }).join("");
+    return `<div class="by-r ${b.state}">
+      <div class="by-n"><b>${esc(x.short||x.name)}</b><span class="faint small">${esc(itemText(it))}</span></div>
+      <div class="by-now" data-l="Nu">${now}</div>
+      <div class="by-when" data-l="Wanneer wel">${when? `<ul>${when}</ul>` : `<span class="muted small">Geen koopregel in je plan.</span>`}</div>
+      <div class="by-note" data-l="Toelichting">${esc(x.buyNote||x.doNow||"")}</div></div>`; }).join("");
+  return `<div class="box stack" id="pl-buy-box">
+    <div class="sechead"><div><span class="lyr l1">Doen</span><h2 style="margin-top:6px">Wanneer bijkopen?</h2></div><span class="muted small">Alleen volgens je eigen regels, in tranches en nooit met geleend geld</span></div>
+    <div class="by" role="table" aria-label="Wanneer bijkopen per belegging">
+      <div class="h" role="columnheader">Belegging</div><div class="h" role="columnheader">Nu</div><div class="h" role="columnheader">Wanneer wel</div><div class="h" role="columnheader">Toelichting</div>
+      ${rows}
+    </div></div>`;
+}
+
 /* ---------- in het kort per onderdeel ---------- */
 function sumPlan(p){
   const {st, acts, nears}=planState(p);
@@ -3091,23 +3219,28 @@ function sumPlan(p){
     : acts.length? acts.map(r=>`${posNm(r)}: ${r.s.next.c.action.toLowerCase()}`).join(" · ")
     : nears.length? nears.map(r=>`${posNm(r)} nadert ${fmtLvl(r.s.next.c.key, r.s.next.c.level)}`).join(" · ")
     : "Geen planregel geraakt: vaste inleg door.";
-  const facts=[st.map(r=>`${posNm(r)} ${r.s.label.toLowerCase()}`).join(" · ")];
-  const nx=kompas(p).filter(r=>r.focus && !r.focus.hit && r.focus.rel!=null).sort((a,b)=>a.focus.rel-b.focus.rel)[0];
-  if(nx){ const c=nx.focus.c; facts.push(`Eerstvolgende niveau: ${POS_SHORT[nx.focus.x.id]||nx.focus.x.name} bij ${fmtLvl(nx.key,c.level)} (nog ${nf(nx.focus.rel,1)}%): ${c.action.toLowerCase()}`); }
-  const C=pfCompute(), top=topScenario(p);
+  const B=arr(p.positions).map(buyInfo), nm=b=>b.x.short||b.x.name;
+  const now=B.filter(b=>b.state==="now"), no=B.filter(b=>b.state==="stop"||b.state==="cut");
+  const nxt=B.filter(b=>b.state==="wait"||b.state==="now").flatMap(b=>b.next.map(o=>({b, o}))).sort((a,c)=>(a.o.rel??1e9)-(c.o.rel??1e9))[0];
+  const rows=[
+    ["Bijkopen nu", now.length? now.map(b=>`${nm(b)}: ${b.o.c.action.toLowerCase()}, ${buyAmount(b.x, b.o.c)}`).join(" · ") : "Nergens: geen koopregel geraakt."],
+    ["Volgende koopkans", nxt? (()=>{ const d=lvlDesc(nxt.o); return `${nm(nxt.b)} bij ${lcFirst(noName(d.txt, nxt.b.x))}${d.dist? ", "+d.dist : ""}: ${nxt.o.c.action.toLowerCase()}`; })() : "Geen koopregel in de buurt."],
+    ["Niet bijkopen", no.length? no.map(b=>`${nm(b)} (${b.state==="cut"? "eerst verkleinen" : noName(b.reason, b.x)})`).join(" · ") : "Geen rem actief."]];
+  const C=pfCompute(), top=topScenario(p), facts=[];
   if(C.filled) facts.push(`Portefeuille ${eur(C.total)}${C.pnlPct!=null? ` (${C.pnlPct>0?"+":""}${nf(C.pnlPct,1)}%)` : ""}${C.cashW!=null? " · cash "+nf(C.cashW,0)+"%" : ""}`);
   else if(top) facts.push(`Hoofdscenario: ${top.name} (${top.prob}%)`);
-  return {tab:"plan", title:"Plan", tone, pill, line, facts, go:"Naar je plan"};
+  return {tab:"plan", title:"Plan", tone, pill, line, rows, facts, go:"Naar je plan"};
 }
 function sumMarkt(p){
-  const m=p.macro||{}, rk=RISK[m.riskMode];
-  const lv=arr(p.triggers).map(t=>trigLevel(t, trigValue(t).v)), red=lv.filter(x=>x==="stress").length, orange=lv.filter(x=>x==="gespannen").length, green=lv.filter(x=>x==="rustig").length;
+  const m=p.macro||{}, rk=RISK[m.riskMode], H=horizons(p);
+  const lv=arr(p.triggers).map(t=>trigLevel(t, trigValue(t).v)), red=lv.filter(x=>x==="stress").length, orange=lv.filter(x=>x==="gespannen").length;
   const tone= m.riskMode==="risk-off"? "bad" : m.riskMode==="defensief"? "warn" : m.riskMode==="risk-on"? "good" : "";
-  const nums=[["spxDD","S&P 500 t.o.v. record"],["us10y","10-jaars"],["vix","VIX"],["brent","Brent"]].map(([k,l])=>{ const it=item(k); return it && typeof it.value==="number"? `${l} ${itemText(it)}` : ""; }).filter(Boolean);
-  const facts=[`Signalen: ${red} rood, ${orange} oranje, ${green} groen`];
-  if(m.cycle?.verdict) facts.push(`Cyclus: ${m.cycle.verdict}`);
-  if(nums.length) facts.push(nums.slice(0,3).join(" · "));
-  return {tab:"markt", title:"Markt", tone, pill: rk? rk.label+(m.regime? " · "+m.regime : "") : (m.regime||"Marktbeeld"), line: m.headline||p.regime?.name||"", facts, go:"Naar de markt"};
+  const nums=[["spxDD","S&P 500 t.o.v. record"],["us10y","10-jaars"],["vix","VIX"]].map(([k,l])=>{ const it=item(k); return it && typeof it.value==="number"? `${l} ${itemText(it)}` : ""; }).filter(Boolean);
+  const rows=[
+    ["Nu", [m.regime||p.regime?.name, rk? rk.label.toLowerCase() : "", `signalen ${red} rood, ${orange} oranje`].filter(Boolean).join(" · ")],
+    ["Korte termijn", H.short.zeker.length? "Zeer waarschijnlijk: "+H.short.zeker.slice(0,2).map(z=>lcFirst(String(z).replace(/\.$/,""))).join("; ")+"." : sentences(H.short.pad,1)],
+    ["Langere termijn", sentences(H.long.pad,2)]];
+  return {tab:"markt", title:"Markt", tone, pill: rk? rk.label : (m.regime||"Marktbeeld"), line: m.headline||p.regime?.name||"", rows, facts: nums.length? [nums.join(" · ")] : [], go:"Naar de markt"};
 }
 function sumInbox(){
   const list=arr(S.inbox), open=list.filter(i=>i.status==="nieuw"||i.status==="transcript nodig"), busy=list.filter(i=>i.status==="analyseren"), review=list.filter(i=>i.status==="geanalyseerd");
@@ -3124,23 +3257,25 @@ function sumInbox(){
   const last=list.find(i=>i.status==="verwerkt"); if(last) facts.push(`Laatst verwerkt: ${last.source||""}${last.title? " · "+last.title : ""}`);
   const bl=CONN.data?.services?.ai?.backlog; if(S.server && bl){ const w=(bl.nieuw||0)+(bl.wacht||0); facts.push(w? `Post: ${w} document${w>1?"en wachten":" wacht"} op analyse` : "Post: alles geanalyseerd"); }
   if(!facts.length) facts.push("Plak een transcript van Tino, Gammon of je eigen notities: de AI stelt wijzigingen voor, jij beslist.");
-  return {tab:"inbox", title:"Inbox", tone, pill, line, facts, go:"Naar de inbox"};
+  return {tab:"inbox", title:"Inbox", tone, pill, line, rows:[], facts, go:"Naar de inbox"};
 }
+function sumRowsHTML(rows, cls){ return rows.length? `<dl class="${cls}">${rows.map(([t,v])=>`<div><dt>${esc(t)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>` : ""; }
 function sumCard(s){ return `<article class="sumc ${s.tone||""}"><div class="sechead"><h3>${esc(s.title)}</h3><span class="pill ${TONE_PILL[s.tone]||"t-neutral"}">${esc(s.pill)}</span></div>
-  <p class="sumc-line">${esc(s.line)}</p>${s.facts.length? `<ul class="sumc-f">${s.facts.slice(0,3).map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
+  <p class="sumc-line">${esc(s.line)}</p>${sumRowsHTML(s.rows||[], "sumc-rows")}${s.facts.length? `<ul class="sumc-f">${s.facts.slice(0, s.rows?.length? 1 : 3).map(f=>`<li>${esc(f)}</li>`).join("")}</ul>`:""}
   <button class="btn sm" type="button" data-goto="${esc(s.tab)}">${esc(s.go)} →</button></article>`; }
-function sumStrip(s, note=""){ return `<div class="sumstrip ${s.tone||""}" role="note" aria-label="In het kort"><span class="lyr l1">In het kort</span>
-  <div class="ss-main"><b>${esc(s.line)}</b>${s.facts.length? `<span>${s.facts.slice(0,3).map(esc).join(" · ")}</span>`:""}${note? `<small>${note}</small>`:""}</div>
-  <span class="pill ${TONE_PILL[s.tone]||"t-neutral"}">${esc(s.pill)}</span></div>`; }
+function sumStrip(s, note=""){ return `<div class="sumstrip ${s.tone||""}" role="note" aria-label="In het kort">
+  <div class="ss-top"><span class="lyr l1">In het kort</span><b>${esc(s.line)}</b><span class="pill ${TONE_PILL[s.tone]||"t-neutral"}">${esc(s.pill)}</span></div>
+  ${sumRowsHTML(s.rows||[], "ss-rows")}${!s.rows?.length && s.facts.length? `<span class="ss-f">${s.facts.slice(0,3).map(esc).join(" · ")}</span>` : ""}${note? `<small class="ss-note">${note}</small>`:""}</div>`; }
 function renderSummaries(){
   const p=S.plan, set=(id,h)=>{ const el=$(id); if(el && el.innerHTML!==h) el.innerHTML=h; };
-  if(!p){ ["pl-sum","mk-sum","in-sum"].forEach(id=>set(id,"")); return; }
+  if(!p){ ["pl-sum","mk-sum","in-sum","pl-buy"].forEach(id=>set(id,"")); return; }
   set("pl-sum", sumStrip(sumPlan(p)));
+  set("pl-buy", buyTableHTML(p));
   set("mk-sum", sumStrip(sumMarkt(p), "Hier lees je <b>waarom</b> je plan zo staat. Dagelijks volgen hoeft niet: je planregels rekenen al met deze cijfers."));
   set("in-sum", sumStrip(sumInbox()));
 }
 
-/* ---------- vooruitblik: wat te verwachten, en wat het met je beleggingen doet ---------- */
+/* ---------- vooruitblik: korte en langere termijn, en wat het met je beleggingen doet ---------- */
 function expBar(v){
   if(!v) return `<span class="xbar empty" aria-hidden="true"><i class="mid"></i></span>`;
   const X=x=>clamp((x+2)/4*100,0,100), w=clamp(v.w,-2,2), a=Math.min(X(0),X(w)), b=Math.max(X(0),X(w));
@@ -3149,41 +3284,43 @@ function expBar(v){
     <i class="val ${expTone(v.w)}" style="left:${a.toFixed(1)}%;width:${Math.max(2,b-a).toFixed(1)}%"></i></span>`;
 }
 function outlookHTML(p){
-  const fresh=briefFresh(), V=fresh? (S.briefing.vooruitblik||null) : null, m=p.macro||{};
-  const sc=arr(p.scenarios).slice().sort((a,b)=>(+b.prob||0)-(+a.prob||0)), top=sc[0];
-  const up=arr(p.calendar).filter(c=>{ const d=daysFrom(c.date); return d>=0 && d<=35; }).sort((a,b)=>a.date.localeCompare(b.date));
-  const periode=V?.periode || (up.length? "Tot "+fmtDate(up[up.length-1].date,{day:"numeric",month:"long"}) : "De komende weken");
-  const pad=V?.pad || (top? `Het meest waarschijnlijke pad volgens je plan: ${top.name.toLowerCase()} (${top.prob}%). ${sentences(top.desc,1)}` : "");
-  const C=pfCompute();
-  const bars = sc.length? `<div class="scb" role="list" aria-label="Kans per scenario">${sc.map(s=>`<div class="scb-r" role="listitem"><span class="scb-n">${esc(s.name)}</span><span class="scb-t"><i style="width:${clamp(+s.prob||0,0,100)}%;background:${SC_COLORS[s.id]||"var(--faint)"}"></i></span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div>` : "";
+  const H=horizons(p), m=p.macro||{}, C=pfCompute();
+  const bars = H.sc.length? `<div class="scb" role="list" aria-label="Kans per scenario">${H.sc.map(s=>`<div class="scb-r" role="listitem"><span class="scb-n">${esc(s.name)}${s.horizon? ` <span class="faint">· ${esc(s.horizon)}</span>` : ""}</span><span class="scb-t"><i style="width:${clamp(+s.prob||0,0,100)}%;background:${SC_COLORS[s.id]||"var(--faint)"}"></i></span><span class="num">${esc(s.prob)}%</span></div>`).join("")}</div>` : "";
   const rows=arr(p.positions).map(x=>{
-    const v=scenarioView(p, x.id), s=posStatus(x), n=s.next, pi=m.positionImpact?.[x.id]||{}, vp=V?.posities?.[x.id], it=item(x.priceKey||x.id)||{};
-    const row=C.rows.find(r=>r.id===x.id), ev=up.find(c=>arr(c.affects).includes(x.id));
-    const kantel= vp?.kantel || (n && !n.hit? `Bij ${fmtLvl(n.c.key,n.c.level)}: ${n.c.action.toLowerCase()}` : n?.hit? `Geraakt: ${n.c.label}` : "");
-    const why= vp?.tekst || pi.why || (v? `Beste scenario: ${v.best.name}; slechtste: ${v.worst.name}.` : "");
+    const v=scenarioView(p, x.id), pi=m.positionImpact?.[x.id]||{}, vp=H.V?.posities?.[x.id], it=item(x.priceKey||x.id)||{}, s=posStatus(x), n=s.next;
+    const row=C.rows.find(r=>r.id===x.id), ev=H.up.find(c=>arr(c.affects).includes(x.id)), b=buyInfo(x);
+    const kantel= vp?.kantel || (n && !n.hit? `bij ${fmtLvl(n.c.key,n.c.level)}: ${n.c.action.toLowerCase()}` : "");
     const wtxt= row && row.qty>0 && row.w!=null? ` · ${nf(row.w,0)}% van je geld` : "";
     const near= vp && vp.richting!=null? +vp.richting : (pi.dir!=null? +pi.dir : null);
     return `<div class="ol-r">
       <div class="ol-n"><b>${esc(x.short||x.name)}</b><span class="faint small">${esc(itemText(it))}${esc(wtxt)}</span></div>
-      <div class="ol-x">${near!=null? `<span class="olx-now">${dirMark(near)}<span>komende weken</span></span>` : ""}${expBar(v)}<span class="small ${v? expTone(v.w) : ""}">${v? "scenario's: "+esc(expWord(v.w)) : "–"}</span></div>
-      <div class="ol-w" data-l="Waarom">${esc(why)}</div>
-      <div class="ol-k" data-l="Kan kantelen bij">${esc(kantel)}${ev? `<small>${esc(fmtDate(ev.date,{weekday:"short",day:"numeric",month:"short"}))}: ${esc(ev.event)}</small>` : ""}</div>
-      <div class="ol-s"><span class="pill ${TODO_TONE[s.tone][0]}">${esc(s.label)}</span></div></div>`; }).join("");
+      <div class="ol-x" data-l="Komende weken">${near!=null? `<span class="olx-now">${dirMark(near)}<b>${esc(near<=-0.5? "omlaag" : near>=0.5? "omhoog" : "zijwaarts")}</b></span>` : ""}<span>${esc(shortTxt(p, x, H))}</span>${kantel||ev? `<small>${kantel? "Kantelt "+esc(lcFirst(kantel)) : ""}${kantel&&ev? " · " : ""}${ev? esc(fmtDate(ev.date,{weekday:"short",day:"numeric",month:"short"}))+": "+esc(ev.event) : ""}</small>` : ""}</div>
+      <div class="ol-l" data-l="Langere termijn">${expBar(v)}<span class="small ${v? expTone(v.w) : ""}" style="font-weight:600">${v? esc(expWord(v.w)) : "–"}</span><span>${esc(longTxt(p, x, H))}</span></div>
+      <div class="ol-b" data-l="Bijkopen?">${buyCellHTML(b)}</div></div>`; }).join("");
   return `<div class="box stack outlook">
-    <div class="sechead"><div><span class="lyr l2">Vooruitblik</span><h2 style="margin-top:6px">Wat kun je verwachten</h2></div><span class="muted small">${esc(periode)}</span></div>
-    <div class="ol-top">
-      <div class="stack" style="gap:10px"><p class="ol-pad">${esc(pad)}</p>${bars}
-        <p class="faint small" style="margin:0">Kansen uit je scenario's (Plan → Scenario's).${V? " Het pad is de lezing van Grok, "+esc(ago(S.briefing.at))+"." : ""}</p>
-        ${arr(V?.kantelpunten).length? `<div><span class="eyebrow">Wat het beeld kan kantelen, volgens Grok</span><ul class="actions small">${V.kantelpunten.map(k=>`<li><span>${esc(k)}</span></li>`).join("")}</ul></div>` : ""}</div>
-      <div class="stack" style="gap:8px"><span class="eyebrow">Momenten die het beeld kunnen kantelen</span>
-        ${up.length? `<ul class="cal">${up.slice(0,5).map(calItem).join("")}</ul>` : `<p class="muted small">Geen momenten gepland in de komende vijf weken.</p>`}</div>
+    <div class="sechead"><div><span class="lyr l2">Vooruitblik</span><h2 style="margin-top:6px">Wat kun je verwachten</h2></div><span class="muted small">Korte en langere termijn, en wanneer bijkopen</span></div>
+    <div class="hz">
+      <section class="hz-c" aria-label="Korte termijn">
+        <div class="hz-h"><span class="hz-t">Korte termijn</span><span class="muted small">${esc(H.short.periode)}</span></div>
+        <p class="ol-pad">${esc(H.short.pad)}</p>
+        ${H.short.zeker.length? `<div><span class="eyebrow">Zeer waarschijnlijk</span><ul class="actions small">${H.short.zeker.map(z=>`<li><span>${esc(z)}</span></li>`).join("")}</ul></div>` : ""}
+        ${H.up.length? `<div><span class="eyebrow">Momenten die het beeld kunnen kantelen</span><ul class="hz-cal">${H.up.slice(0,5).map(calMini).join("")}</ul></div>` : ""}
+        ${H.short.kantel.length? `<div><span class="eyebrow">Wat het kan doen kantelen, volgens Grok</span><ul class="hz-cal">${H.short.kantel.map(k=>`<li><span class="when">→</span><span>${esc(k)}</span></li>`).join("")}</ul></div>` : ""}
+        <p class="faint small" style="margin:0">Bron: ${esc(H.short.by)}</p>
+      </section>
+      <section class="hz-c" aria-label="Langere termijn">
+        <div class="hz-h"><span class="hz-t">Langere termijn</span><span class="muted small">${esc(H.long.periode)}</span></div>
+        <p class="ol-pad">${esc(H.long.pad)}</p>
+        ${bars? `<div><span class="eyebrow">Kans per scenario</span><div style="margin-top:6px">${bars}</div></div>` : ""}
+        <p class="faint small" style="margin:0">Bron: ${esc(H.long.by)}. Kansen uit je scenario's (Plan → Scenario's).</p>
+      </section>
     </div>
-    <div><span class="eyebrow">Effect op je beleggingen</span>
-    <div class="ol" role="table" aria-label="Effect op je beleggingen" style="margin-top:6px">
-      <div class="h" role="columnheader">Belegging</div><div class="h" role="columnheader">Verwachting</div><div class="h" role="columnheader">Waarom</div><div class="h" role="columnheader">Wat het kan kantelen</div><div class="h" role="columnheader">Je regel nu</div>
+    <div><span class="eyebrow">Per belegging</span>
+    <div class="ol" role="table" aria-label="Verwachting en bijkopen per belegging" style="margin-top:6px">
+      <div class="h" role="columnheader">Belegging</div><div class="h" role="columnheader">Komende weken</div><div class="h" role="columnheader">Langere termijn</div><div class="h" role="columnheader">Bijkopen?</div>
       ${rows}
     </div></div>
-    <p class="faint small" style="margin:0">De pijl is de richting voor de komende weken${V? " volgens Grok" : " volgens je marktbeeld"}. De balk is de verwachting over je scenario's (kans × effect, van sterk negatief −2 tot sterk positief +2); het lichte deel is de spreiding over de scenario's met minstens 10% kans. Verschillen ze, dan zit er spanning tussen korte en lange termijn. Een verwachting is geen voorspelling: je handelt alleen op je planregels.</p>
+    <p class="faint small" style="margin:0">Komende weken: de richting ${H.V? "volgens Grok" : "volgens je marktbeeld"}. Langere termijn: de verwachting over je scenario's (kans × effect, van sterk negatief −2 tot sterk positief +2); het lichte deel is de spreiding over de scenario's met minstens 10% kans. Bijkopen: alleen je eigen planregels. Een verwachting is geen voorspelling.</p>
   </div>`;
 }
 
@@ -3352,7 +3489,7 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   db.doc("market/levels").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("levels",d)) return; S.levels=d; renderAll(); }, onErr);
   db.collection("inbox").orderBy("createdAt","desc").limit(60).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("inbox",d)) return; S.inbox=d; renderInbox(); resumeAnalyses(); renderSummaries(); renderVandaag(); }, onErr);
   db.doc(CH_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("challenges",d)) return; CH.data=d; CH.loaded=true; renderChallenges(); renderVandaag(); }, onErr);
-  db.doc(PF_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; S.pfLoaded=true; if(!changed("portfolio",d)) return; S.portfolio=d; renderPortfolio(); renderVandaag(); renderPlan(); }, onErr);
+  db.doc(PF_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; S.pfLoaded=true; if(!changed("portfolio",d)) return; S.portfolio=d; renderPortfolio(); renderVandaag(); renderPlan(); renderSummaries(); }, onErr);
   db.doc("briefing/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("briefing",d)) return; S.briefing=d; renderVandaag(); renderSummaries(); }, onErr);
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); renderVandaag(); }, onErr);
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); resumeAnalyses(); }).catch(()=>{});

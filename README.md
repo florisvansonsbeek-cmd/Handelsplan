@@ -5,7 +5,7 @@ Je handelsplan op Railway, in vier tabs plus Uitleg:
 | Tab | Wat erin staat |
 |-----|----------------|
 | **Vandaag** | Het verhaal (wat speelt er, wat betekent het, wat doe je), per tab in het kort, de vooruitblik met het effect op elke belegging, en Tino en Gammon naast de AI |
-| **Plan** | De cijfers die je regels sturen (wanneer doe je iets?), per positie wat je hebt en je regels als ladder; daaronder portefeuille, scenario's en Eightcap-challenges (uitklapbaar) |
+| **Plan** | Wanneer bijkopen (per belegging: nu, wanneer wel en hoeveel, alleen uit je eigen regels), de cijfers die je regels sturen, per positie wat je hebt en je regels als ladder; daaronder portefeuille, scenario's en Eightcap-challenges (uitklapbaar) |
 | **Markt** | Overzicht, Signalen, Cyclus en Cijfers (subtabs) |
 | **Inbox** | Transcripts, Post (verwerkte mail) en Historie (subtabs) |
 
@@ -15,8 +15,8 @@ Met:
 
 - **Vandaag** (startpagina) vertelt één verhaal:
   - **Het verhaal**: de kop van de dag, *wat er speelt*, *wat het betekent* voor je posities en *wat je doet* (alleen geraakte planregels, met de knop Gedaan/Gezien en het bedrag uit je portefeuille).
-  - **In het kort per onderdeel**: een kaart voor Plan, Markt en Inbox met het belangrijkste en een knop erheen.
-  - **Wat kun je verwachten**: het meest waarschijnlijke pad, de kans per scenario, de momenten die het beeld kunnen kantelen (Nvidia, Fed, banen) en per belegging de richting voor de komende weken, de verwachting over je scenario's, waarom, wat het kan kantelen en je regel nu.
+  - **In het kort per onderdeel**: Plan (wat je nu doet, waar bijkopen nu mag, de volgende koopkans en waar een rem op staat), Markt (nu, korte termijn met wat zeer waarschijnlijk is, langere termijn) en Inbox, elk met een knop erheen.
+  - **Wat kun je verwachten**: links de korte termijn (wat zeer waarschijnlijk is en de momenten die het beeld kunnen kantelen), rechts de langere termijn (3 tot 12 maanden, met de kans per scenario). Daaronder per belegging: komende weken, langere termijn en of bijkopen nu kan.
   - **Zijnoot: Tino en Gammon naast de AI**: of TradersReality (Tino) en Rebel Capitalist (George Gammon) het eens, deels eens of oneens zijn met de analyse, en waarin. Zolang er geen transcript van een bron is verwerkt, staat er eerlijk "nog onbekend".
   - Daarnaast je portefeuille en wat er veranderde sinds je vorige bezoek.
 - **Plan**: een kaart per positie met wat je nu doet, wat je hebt (aantal, waarde, weging tegenover je doel) en je regels als ladder met de huidige koers ertussen. De **portefeuille** vul je in onder Plan → Portefeuille; de site rekent waarde, winst, weging en de bedragen van je planregels uit (bijv. "SMH een derde kleiner = ca. € 2.984"). Alles blijft in je eigen database.
