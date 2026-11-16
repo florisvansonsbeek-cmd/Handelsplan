@@ -881,6 +881,18 @@ details.src-more[open] > summary{margin-bottom:6px}
 .dz-list .mt{color:var(--muted);overflow-wrap:anywhere}
 .dz-list li.bad .mt{color:var(--bad)}
 @media (max-width:560px){.dz-list li{grid-template-columns:10px minmax(0,1fr)}.dz-list .mt{grid-column:2}}
+.srcdet{margin:-6px 0 0;font-size:.86rem;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}
+.srcdet b{color:var(--ink);font-weight:600}
+.srcdet .q{color:var(--faint)}
+.srcdet::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--faint);margin-right:7px;vertical-align:1px}
+.srcdet.ok::before{background:var(--good)}
+.srcdet.busy::before{background:var(--warn);animation:cpulse .8s ease-in-out infinite alternate}
+.srcdet.doubt::before,.srcdet.fail::before{background:var(--warn)}
+.srcdet.doubt,.srcdet.fail{color:var(--ink)}
+.dropall{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:color-mix(in srgb,var(--bg) 82%,transparent);pointer-events:none}
+.dropall > div{display:grid;gap:6px;max-width:440px;padding:26px 28px;border:2px dashed var(--accent);border-radius:16px;background:var(--surface);text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.dropall b{font-size:1.1rem;font-weight:600}
+.dropall span{color:var(--muted);font-size:.92rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 <!--BODY-->
@@ -981,23 +993,25 @@ details.src-more[open] > summary{margin-bottom:6px}
       <div class="grid g-2">
         <form class="box stack" id="inForm" autocomplete="off">
           <div class="sechead"><h2>Nieuw transcript, document of notitie</h2><span class="muted small" id="inWords"></span></div>
+          <div class="dropz" id="inDrop" hidden>
+            <input type="file" id="inFiles" multiple hidden accept=".pdf,.docx,.odt,.xlsx,.pptx,.rtf,.txt,.md,.csv,.tsv,.json,.xml,.html,.htm,.eml,.srt,.vtt,.jpg,.jpeg,.png,image/jpeg,image/png">
+            <div class="dz-main"><b>Document toevoegen</b><button type="button" class="btn sm" id="inPick">Bestand kiezen</button><span>of sleep het ergens op de site neer, of plak een screenshot.</span></div>
+            <span class="dz-hint">PDF, Word, Excel, PowerPoint, tekst, ondertitels (.srt of .vtt) of een afbeelding (JPG of PNG), tot 20 MB per bestand. De tekst komt in het veld hieronder en Grok bepaalt wat voor bron het is en van wie. Het bestand zelf wordt niet bewaard.</span>
+            <ul class="dz-list" id="inFileList" aria-live="polite"></ul>
+          </div>
           <div class="frow">
             <div><label for="inSource">Bron</label>
               <select id="inSource">
+                <option value="auto">Automatisch: Grok herkent het</option>
                 <option>TradersReality</option><option>Rebel Capitalist</option><option>Wolf of Washington</option>
                 <option>Eigen video</option><option>Eigen notitie</option><option>Artikel of rapport</option><option>Overig</option>
               </select></div>
             <div><label for="inDate">Datum video of notitie</label><input id="inDate" type="date"></div>
           </div>
+          <p class="srcdet" id="inDetect" hidden aria-live="polite"></p>
           <div class="frow">
             <div><label for="inTitle">Titel</label><input id="inTitle" placeholder="Bijv. Weekly outlook: Fed, olie, goud"></div>
             <div><label for="inUrl">Link (optioneel)</label><input id="inUrl" type="url" placeholder="https://youtube.com/watch?v=…"></div>
-          </div>
-          <div class="dropz" id="inDrop" hidden>
-            <input type="file" id="inFiles" multiple hidden accept=".pdf,.docx,.odt,.xlsx,.pptx,.rtf,.txt,.md,.csv,.tsv,.json,.xml,.html,.htm,.eml,.srt,.vtt,.jpg,.jpeg,.png,image/jpeg,image/png">
-            <div class="dz-main"><b>Document toevoegen</b><button type="button" class="btn sm" id="inPick">Bestand kiezen</button><span>of sleep een bestand hierheen, of plak een screenshot in het tekstveld.</span></div>
-            <span class="dz-hint">PDF, Word, Excel, PowerPoint, tekst, ondertitels (.srt of .vtt) of een afbeelding (JPG of PNG), tot 20 MB per bestand. De tekst komt in het veld hieronder; daarna kies je zelf Analyseer of Alleen bewaren. Het bestand zelf wordt niet bewaard.</span>
-            <ul class="dz-list" id="inFileList" aria-live="polite"></ul>
           </div>
           <div><label for="inText">Transcript of tekst</label>
             <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag). Een document of screenshot kun je ook hierboven toevoegen."></textarea></div>
@@ -1011,10 +1025,11 @@ details.src-more[open] > summary{margin-bottom:6px}
         <div class="box stack">
           <h3>Wat er gebeurt</h3>
           <ul class="actions">
-            <li><span>Een document (pdf, Word, ondertitels) of screenshot? De site haalt de tekst eruit en zet die in het tekstveld; bij een afbeelding leest Grok de tekst en cijfers.</span></li>
+            <li><span>Een document (pdf, Word, ondertitels) of screenshot? Sleep het ergens op de site neer of kies het hierboven. De site haalt de tekst eruit en zet die in het tekstveld; bij een afbeelding leest Grok de tekst en cijfers.</span></li>
+            <li><span>Staat de bron op <b>Automatisch</b>, dan bepaalt Grok eerst wat voor bron het is (video, artikel, rapport, melding) en van wie, en vult hij de titel en datum in. Klopt het niet, kies dan zelf de bron: jouw keuze gaat altijd voor.</span></li>
             <li><span>De AI (Grok) leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
             <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
-            <li><span>Is de bron TradersReality (Tino) of Rebel Capitalist (George Gammon), dan wordt hun <b>bril</b> bijgewerkt met hún visie. Op <b>Vandaag</b> zie je daarna waar ze het met de AI eens of oneens zijn.</span></li>
+            <li><span>Is de bron TradersReality (Tino) of Rebel Capitalist (George Gammon), door jou gekozen of door Grok herkend, dan wordt hun <b>bril</b> bijgewerkt met hún visie. Twijfelt Grok, dan blijft hun bril ongemoeid. Op <b>Vandaag</b> zie je daarna waar ze het met de AI eens of oneens zijn.</span></li>
             <li><span>Je krijgt voorstellen voor scenario's, posities, triggers, kalender en marktbeeld. Jij vinkt aan wat je overneemt; alles is terug te draaien.</span></li>
           </ul>
           <p class="muted small">Een analyse duurt meestal 30–90 seconden.</p>
@@ -1041,6 +1056,7 @@ details.src-more[open] > summary{margin-bottom:6px}
 
   <footer id="footer"></footer>
 </main>
+<div class="dropall" id="dropAll" hidden><div><b>Laat los om toe te voegen aan je inbox</b><span>De site haalt de tekst eruit en Grok bepaalt wat voor bron het is en van wie.</span></div></div>
 
 <script>
 (() => {
@@ -1188,12 +1204,12 @@ document.addEventListener("click", (ev)=>{
   if(t.dataset.tab || t.dataset.goto){ const scrolled=showTab(t.dataset.tab||t.dataset.goto); if(!scrolled) window.scrollTo({top:0}); return; }
   if(t.dataset.pillar){ S.sel = S.sel===t.dataset.pillar? null : t.dataset.pillar; renderMachine(); return; }
   if(t.dataset.review){ reviewAnalysis(t.dataset.review); return; }
-  if(t.dataset.ana){ const it=S.inbox.find(x=>x.id===t.dataset.ana); if(it) runAnalysis(it.id,{source:it.source,title:it.title,url:it.url,date:it.date}, it.text); return; }
+  if(t.dataset.ana){ const it=S.inbox.find(x=>x.id===t.dataset.ana); if(it) runAnalysis(it.id,{source:it.source,title:it.title,url:it.url,date:it.date,who:it.who||null}, it.text); return; }
   if(t.dataset.undo){ undo(t.dataset.undo); return; }
   if(t.dataset.done){ const [pid,cid]=t.dataset.done.split("|"); markDone(pid,cid,true); return; }
   if(t.dataset.undone){ const [pid,cid]=t.dataset.undone.split("|"); markDone(pid,cid,false); return; }
   const a=t.dataset.act;
-  if(a==="paste"){ $("inSource").value=t.dataset.source||"Overig"; showTab("inbox","transcripts"); window.scrollTo({top:0}); $("inText").focus(); }
+  if(a==="paste"){ $("inSource").value=t.dataset.source||"Overig"; S.det.manual=true; renderDetect(); showTab("inbox","transcripts"); window.scrollTo({top:0}); $("inText").focus(); }
   if(a==="refresh-macro") refreshMacro();
   if(a==="export") exportMd();
   if(a==="apply") applyPending();
@@ -2165,7 +2181,7 @@ function renderUitleg(){
         <tr><td><b>Vandaag</b></td><td>Het verhaal (wat speelt er, wat betekent het, wat doe je), per tabblad in het kort, de vooruitblik op korte en langere termijn met per belegging of bijkopen nu kan, en Tino en Gammon naast de AI.</td></tr>
         <tr><td><b>Plan</b></td><td>Wanneer bijkopen (per belegging: nu, wanneer wel en hoeveel), wanneer doe je iets (de cijfers die je regels sturen), dan per positie wat je hebt, je regels als ladder en waarom. Daaronder je portefeuille, scenario's en Eightcap-challenges.</td></tr>
         <tr><td><b>Markt</b></td><td>Overzicht, signalen, cyclus en alle cijfers met hun bron.</td></tr>
-        <tr><td><b>Inbox</b></td><td>Transcripts analyseren, verwerkte mail (Post) en de historie van je plan.</td></tr>
+        <tr><td><b>Inbox</b></td><td>Transcripts en documenten toevoegen (slepen kan overal op de site; Grok herkent de bron en de maker) en laten analyseren, verwerkte mail (Post) en de historie van je plan.</td></tr>
       </tbody></table></div>
     </div></div>`;
   $("ux-body").innerHTML = `${guide}${conn}${howto}
@@ -2474,7 +2490,7 @@ ACTUELE CIJFERS:
 ${marketForPrompt()}
 ${levelsForPrompt()? "\nNIVEAUBORD:\n"+levelsForPrompt() : ""}
 
-NIEUW: bron "${meta.source}", titel "${meta.title||"(geen titel)"}", datum ${meta.date||"onbekend"}${meta.url? ", link "+meta.url:""}
+NIEUW: bron "${meta.source}"${meta.who? ` (${detLine(meta.who)}; herkend door Grok, ${ZEKER[meta.who.zekerheid]||"onzeker"})` : ""}, titel "${meta.title||"(geen titel)"}", datum ${meta.date||"onbekend"}${meta.url? ", link "+meta.url:""}
 ---
 ${text}
 ---`;
@@ -2521,6 +2537,8 @@ function formMeta(){
   const m={source:$("inSource").value, title:$("inTitle").value.trim(), url:$("inUrl").value.trim(), date:$("inDate").value};
   const files=S.inFiles.filter(f=>f.state==="ok").map(f=>({name:f.name, label:f.label||"", pages:f.pages||null, words:f.words||0}));
   if(files.length) m.files=files;
+  const r=S.det.res;   // wat Grok herkende, alleen als de bron niet door jou gekozen is en bij deze tekst hoort
+  if(r && !S.det.manual && detFresh(inText.value.trim())) m.who={soort:r.soort, maker:r.maker, org:r.org, zekerheid:r.zekerheid, bewijs:r.bewijs, twijfel:r.twijfel||""};
   return m;
 }
 async function saveInbox(meta, text){
@@ -2528,10 +2546,121 @@ async function saveInbox(meta, text){
   await ref.set({...meta, text:text.slice(0,MAX_TEXT), truncated:text.length>MAX_TEXT, createdAt:new Date().toISOString(), status:"nieuw", addedBy:"hand"});
   return ref.id;
 }
-function clearForm(){ inText.value=""; $("inTitle").value=""; $("inUrl").value=""; $("inWords").textContent=""; S.inFiles=[]; renderFileList(); }
+function clearForm(){ inText.value=""; $("inTitle").value=""; $("inUrl").value=""; $("inWords").textContent=""; S.inFiles=[]; renderFileList();
+  const D=S.det; D.seq++; Object.assign(D,{state:"idle", res:null, len:0, head:"", err:"", manual:false, again:false});   // een herkenning die nog loopt telt niet meer
+  $("inSource").value="auto"; $("inDate").value=todayISO(); S.inTitleAuto=false; S.inDateTouched=false; renderDetect(); }
 /* ---------- documenten: de server haalt de tekst eruit, die komt in het tekstveld ---------- */
 const DOC_OK=/\.(pdf|docx|odt|xlsx|pptx|rtf|txt|md|csv|tsv|json|xml|html?|eml|srt|vtt|jpe?g|png)$/i;
 S.inFiles=[];
+/* ---------- bron herkennen: Grok bepaalt wat voor bron het is en van wie ---------- */
+const SRC_OPTS=["TradersReality","Rebel Capitalist","Wolf of Washington","Eigen video","Eigen notitie","Artikel of rapport","Overig"];
+const ZEKER={hoog:"zeker", middel:"waarschijnlijk", laag:"twijfel"};
+S.det={state:"idle", res:null, len:0, head:"", err:"", seq:0, busy:false, again:false, wait:null, manual:false};
+S.inTitleAuto=false; S.inDateTouched=false;
+const capFirst=(t)=>{ t=String(t||""); return t? t[0].toUpperCase()+t.slice(1) : t; };
+function detWho(r){ if(!r) return ""; const m=r.maker||"", o=r.org||""; return m && o && o.toLowerCase()!==m.toLowerCase()? `${m} (${o})` : (m||o); }
+function detLine(r){ if(!r) return ""; const who=detWho(r), k=r.soort||"bron"; return who? `${k} van ${who}` : `${k}, maker onbekend`; }
+// Naast de bronnaam: alleen de maker als het kanaal gelijk is aan de bron (‘Rebel Capitalist’ · George Gammon). Leeg bij twijfel.
+function whoShort(m){ const w=m?.who; if(!w || w.twijfel) return ""; return w.maker && w.org && w.org.toLowerCase()===String(m.source||"").toLowerCase()? w.maker : detWho(w); }
+// Hoort de herkenning nog bij de tekst in het veld? Een tikfout verbeteren telt niet; een ander of extra document wel.
+function detFresh(text){ const D=S.det; return D.state==="done" && !!D.res && !!D.len && text.slice(0,200)===D.head && Math.abs(text.length-D.len)<=Math.max(400, D.len*0.15); }
+function detectPrompt(text){
+  const t=text.length>9000? text.slice(0,7000)+"\n[…]\n"+text.slice(-1800) : text;
+  const files=S.inFiles.filter(f=>f.state==="ok").map(f=>`${f.name} (${f.label||"bestand"})`).join(", ");
+  return `BRONHERKENNING. Floris zet een tekst in de inbox van zijn beleggingsplan: een transcript, artikel, rapport, nieuwsbrief, melding, screenshot of eigen notitie. Bepaal wat voor bron het is en van wie het komt. Gebruik alleen aanwijzingen uit de tekst, de bestandsnaam, de titel en de link. Verzin geen maker.
+
+BEKENDE BRONNEN VAN FLORIS
+- "TradersReality": Tino en het TradersReality-team (betaald abonnement; trading, levels en macro).
+- "Rebel Capitalist": George Gammon (YouTube-kanaal Rebel Capitalist, ook The Rebel Capitalist Show).
+- "Wolf of Washington": meldingen van aan- en verkopen door insiders en politici (ticker, politicus, transactiedatum, meldingsdatum, bedrag).
+- "Eigen video": het transcript van een video van Floris zelf. "Eigen notitie": zijn eigen aantekeningen.
+- "Artikel of rapport": een artikel, nieuwsbericht, nieuwsbrief, research of rapport van iemand anders.
+- "Overig": al het andere.
+
+REGELS
+- Kies "TradersReality" of "Rebel Capitalist" alleen als de tekst zelf van die maker komt: de spreker stelt zich voor, de naam of het kanaal staat in de titel, bestandsnaam of link, of de tekst noemt hem duidelijk als maker. Wordt die persoon alleen geciteerd of besproken door een ander, dan is die ander de maker.
+- zekerheid: "hoog" = de maker staat er letterlijk; "middel" = sterke aanwijzingen; "laag" = een gok.
+- datum: de publicatie- of opnamedatum als die in de tekst of bestandsnaam staat (JJJJ-MM-DD), anders null. Vul nooit zomaar de datum van vandaag in.
+- titel: de echte titel als die erin staat, anders een korte beschrijvende titel (max 80 tekens).
+- soort: kort, in het Nederlands, kleine letters.
+
+Antwoord met ALLEEN dit JSON-object:
+{"bron":"TradersReality|Rebel Capitalist|Wolf of Washington|Eigen video|Eigen notitie|Artikel of rapport|Overig","soort":"bijv. video-transcript, podcast, artikel, rapport, nieuwsbericht, nieuwsbrief, post op X, melding, notitie, presentatie, e-mail, tabel","maker":"naam van de persoon, of null","organisatie":"bedrijf, kanaal of medium, of null","titel":"…","datum":"JJJJ-MM-DD of null","zekerheid":"hoog|middel|laag","bewijs":"korte letterlijke aanwijzing uit de tekst, max 100 tekens","uitleg":"1 korte zin waarom"}
+
+VANDAAG: ${todayISO()}
+BESTAND(EN): ${files||"geen (geplakte tekst)"}
+TITEL: ${$("inTitle").value.trim()||"(leeg)"}
+LINK: ${$("inUrl").value.trim()||"(geen)"}
+TEKST:
+---
+${t}
+---`;
+}
+function cleanDetect(o){
+  o=(o && typeof o==="object" && !Array.isArray(o))? o : {};
+  const s=(v)=>{ v=v==null? "" : String(v).trim(); return /^(null|none|onbekend|unknown|n\.?v\.?t\.?|-|—)$/i.test(v)? "" : v; };
+  const d=s(o.datum), zeker=ZEKER[s(o.zekerheid).toLowerCase()]? s(o.zekerheid).toLowerCase() : "laag";
+  const r={bron:SRC_OPTS.includes(s(o.bron))? s(o.bron) : "Overig", soort:s(o.soort).toLowerCase().slice(0,40), maker:s(o.maker).slice(0,80), org:s(o.organisatie).slice(0,80),
+    titel:s(o.titel).slice(0,140), datum:/^\d{4}-\d{2}-\d{2}$/.test(d) && d<=todayISO() && d>="2000-01-01"? d : "", zekerheid:zeker, bewijs:s(o.bewijs).slice(0,160), uitleg:s(o.uitleg).slice(0,240), twijfel:""};
+  if(SOURCE_LENS[r.bron] && zeker==="laag"){ r.twijfel=r.bron; r.bron="Overig"; }   // een gok mag nooit de bril van Tino of Gammon veranderen
+  return r;
+}
+function applyDetect(r){
+  if(S.det.manual || !r) return;
+  $("inSource").value=r.bron;
+  const ti=$("inTitle"); if(r.titel && (!ti.value.trim() || S.inTitleAuto)){ ti.value=r.titel; S.inTitleAuto=true; }
+  if(r.datum && !S.inDateTouched) $("inDate").value=r.datum;
+}
+function renderDetect(){
+  const el=$("inDetect"); if(!el) return;
+  const D=S.det, r=D.res, has=!!inText.value.trim();
+  let cls="", html="";
+  if(!has && D.state!=="busy"){ /* leeg formulier: niets tonen */ }
+  else if(D.manual){ if(r && D.state==="done") html=`Je koos de bron zelf. Grok dacht: ${esc(detLine(r))}.`; }
+  else if(D.state==="busy"){ cls="busy"; html="Grok bekijkt wat voor bron het is en van wie…"; }
+  else if(D.state==="done" && r && r.twijfel){ cls="doubt"; html=`Grok twijfelt: misschien ${esc(detLine(r))}. Daarom staat de bron op ‘Overig’ en wordt de bril van ${esc(r.twijfel)} niet aangepast. Weet je het zeker? Kies dan zelf ‘${esc(r.twijfel)}’.`; }
+  else if(D.state==="done" && r){ cls="ok"; html=`Herkend door Grok: <b>${esc(capFirst(detLine(r)))}</b>${r.datum? " · "+esc(fmtDate(r.datum)) : ""} · ${esc(ZEKER[r.zekerheid])}${r.bewijs? ` <span class="q">“${esc(r.bewijs)}”</span>` : ""}`; }
+  else if(D.state==="fail"){ cls="fail"; html=`Bron herkennen lukte niet (${esc(D.err||"onbekende fout")}). Kies hem zelf; anders wordt het ‘Overig’.`; }
+  else if(!S.sample && $("inSource").value==="auto"){ cls="fail"; html="Zonder AI kan de bron niet vanzelf worden herkend: kies hem zelf, anders wordt het ‘Overig’."; }
+  el.className="srcdet"+(cls? " "+cls : ""); el.innerHTML=html; el.hidden=!html;
+}
+// Eén herkenning tegelijk. Komt er intussen tekst bij, dan volgt daarna nog een ronde met de nieuwe tekst.
+async function detectSource(){
+  const D=S.det;
+  if(D.busy){ D.again=true; return D.wait; }
+  D.busy=true;
+  D.wait=(async()=>{
+    try{
+      for(let round=0; round<4; round++){
+        D.again=false;
+        const text=inText.value.trim();
+        if(D.manual || !text || !S.sample || detFresh(text)) return;
+        const seq=++D.seq; D.state="busy"; renderDetect();
+        let res=null, err=null;
+        try{ res=cleanDetect(await S.sample.json(detectPrompt(text), {modelTier:"default", cache:false})); }catch(e){ err=e; }
+        if(seq===D.seq){
+          if(err){ Object.assign(D,{state:"fail", res:null, err:sampleErrText(err)}); if(HIDE_CODES.includes(err?.code)) S.sample=null; }
+          else { Object.assign(D,{state:"done", res, err:"", len:text.length, head:text.slice(0,200)}); applyDetect(res); }
+          renderDetect();
+          if(err) return;
+        }
+        if(!D.again) return;
+      }
+    }finally{ D.busy=false; }
+  })();
+  return D.wait;
+}
+// Voor bewaren of analyseren: staat de bron op Automatisch, dan eerst laten herkennen. Lukt dat niet, dan wordt het ‘Overig’.
+async function resolveSource(st){
+  const D=S.det, sel=$("inSource"), text=inText.value.trim();
+  if(D.manual || !text || detFresh(text)) return;
+  if(S.sample){
+    setStatus(st,"Grok bekijkt eerst wat voor bron het is en van wie…");
+    await Promise.race([detectSource(), new Promise(ok=>setTimeout(ok, 90000))]);
+  }
+  if(!D.manual && !detFresh(text)) sel.value="Overig";
+  renderDetect();
+}
 function renderFileList(){
   const el=$("inFileList"); if(!el) return;
   el.innerHTML=S.inFiles.map(f=>`<li class="${f.state}"><i aria-hidden="true"></i><span class="nm">${esc(f.name)}</span><span class="mt">${esc(
@@ -2543,7 +2672,10 @@ async function addDocs(list){
   const files=[...(list||[])]; if(!files.length) return;
   const st=$("inStatus");
   if(!S.server?.extract){ setStatus(st,"Documenten toevoegen kan alleen op je eigen site (Railway).",true); return; }
-  if(S.tab!=="inbox") showTab("inbox","transcripts");
+  if(S.tab!=="inbox" || S.sub.inbox!=="transcripts"){   // ergens anders op de site neergezet: naar het formulier
+    showTab("inbox","transcripts"); requestAnimationFrame(()=>$("inForm").scrollIntoView({behavior:"smooth", block:"start"}));
+  }
+  let added=0;
   for(const f of files){
     const rec={name:f.name||"afbeelding.png", state:"busy", kind:/^image\//.test(f.type)? "afbeelding" : ""};
     S.inFiles.push(rec); renderFileList();
@@ -2556,34 +2688,60 @@ async function addDocs(list){
       const head=`--- Uit ${rec.name} (${[r.label, r.pages? r.pages+" pagina's" : ""].filter(Boolean).join(", ")}) ---`;
       const cur=inText.value.replace(/\s+$/,"");
       inText.value=(cur? cur+"\n\n" : "")+head+"\n"+String(r.text||"").trim();
-      inText.dispatchEvent(new Event("input"));
-      if(!$("inTitle").value.trim()) $("inTitle").value=rec.name.replace(/\.[^.]+$/,"").replace(/_+/g," ").trim();
-      setStatus(st, `${rec.name}: ${nf(r.words)} woorden in het tekstveld gezet.${r.truncated? " Lang document: ingekort." : ""} Kies nu Analyseer of Alleen bewaren.`);
+      inText.dispatchEvent(new Event("input")); added++;
+      if(!$("inTitle").value.trim()){ $("inTitle").value=rec.name.replace(/\.[^.]+$/,"").replace(/_+/g," ").trim(); S.inTitleAuto=true; }
+      setStatus(st, `${rec.name}: ${nf(r.words)} woorden in het tekstveld gezet.${r.truncated? " Lang document: ingekort." : ""} Kies daarna Analyseer of Alleen bewaren.`);
     }catch(e){ Object.assign(rec,{state:"bad", error:e?.message||"lukte niet"}); setStatus(st, `${rec.name}: ${e?.message||"tekst eruit halen lukte niet"}`, true); }
     renderFileList();
   }
   if(inText.value.length>MAX_TEXT) setStatus(st, `Samen ${nf(inText.value.length)} tekens: alleen de eerste ${nf(MAX_TEXT)} gaan mee in de analyse.`, true);
+  if(added && !S.det.manual) detectSource();   // loopt op de achtergrond; de regel onder ‘Bron’ laat zien wat Grok vindt
 }
 (function initDocs(){
-  const dz=$("inDrop"), form=$("inForm"), pick=$("inFiles");
+  const pick=$("inFiles"), ov=$("dropAll"), sel=$("inSource");
   const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes("Files");
+  const can=()=>!!S.server?.extract;
+  let hideT=0;
+  const showOv=()=>{ ov.hidden=false; clearTimeout(hideT); hideT=setTimeout(()=>{ ov.hidden=true; }, 700); };   // verdwijnt vanzelf als je het venster uit sleept
   $("inPick").addEventListener("click", ()=>pick.click());
   pick.addEventListener("change", ()=>{ addDocs(pick.files); pick.value=""; });
-  ["dragenter","dragover"].forEach(t=>form.addEventListener(t, e=>{ if(!dz.hidden && hasFiles(e)){ e.preventDefault(); dz.classList.add("drag"); } }));
-  form.addEventListener("dragleave", e=>{ if(!form.contains(e.relatedTarget)) dz.classList.remove("drag"); });
-  form.addEventListener("drop", e=>{ dz.classList.remove("drag"); if(dz.hidden || !e.dataTransfer?.files?.length) return; e.preventDefault(); addDocs(e.dataTransfer.files); });
-  inText.addEventListener("paste", e=>{ const fs=[...(e.clipboardData?.files||[])]; if(fs.length && !dz.hidden && !(e.clipboardData.getData("text")||"").trim()){ e.preventDefault(); addDocs(fs); } });
-  // Een bestand dat net naast het vak valt: niet laten openen door de browser, wel toevoegen als je op Transcripten staat.
-  window.addEventListener("dragover", e=>{ if(hasFiles(e)) e.preventDefault(); });
-  window.addEventListener("drop", e=>{ if(!e.dataTransfer?.files?.length || form.contains(e.target)) return; e.preventDefault();
-    if(!dz.hidden && S.tab==="inbox" && S.sub.inbox==="transcripts") addDocs(e.dataTransfer.files); });
+  // Slepen kan overal op de site: je komt vanzelf uit bij Inbox → Transcripten. De browser opent het bestand dus nooit zelf.
+  ["dragenter","dragover"].forEach(t=>document.addEventListener(t, e=>{ if(!hasFiles(e)) return; e.preventDefault();
+    if(e.dataTransfer) e.dataTransfer.dropEffect = can()? "copy" : "none"; if(can()) showOv(); }));
+  document.addEventListener("drop", e=>{ if(!hasFiles(e)) return; e.preventDefault(); clearTimeout(hideT); ov.hidden=true;
+    if(can() && e.dataTransfer.files?.length) addDocs(e.dataTransfer.files); });
+  // Plakken: een screenshot of afbeelding mag overal, behalve in een ander invulveld. Gewone tekst plakken werkt zoals altijd.
+  document.addEventListener("paste", e=>{
+    const fs=[...(e.clipboardData?.files||[])]; if(!fs.length || !can()) return;
+    const field=e.target?.closest?.("input,textarea,select,[contenteditable]");
+    if((field && field!==inText) || (e.clipboardData.getData("text")||"").trim()) return;
+    e.preventDefault(); addDocs(fs);
+  });
+  // Een lang transcript geplakt? Dan meteen laten herkennen.
+  inText.addEventListener("paste", e=>{ const t=e.clipboardData?.getData("text")||"";
+    if((t.match(/\S+/g)||[]).length>=60 && !S.det.manual) setTimeout(()=>detectSource(), 300); });
+  sel.addEventListener("change", ()=>{ S.det.manual = sel.value!=="auto";
+    if(!S.det.manual){ if(detFresh(inText.value.trim())) applyDetect(S.det.res); else detectSource(); }   // terug naar Automatisch: wat Grok al vond weer gebruiken
+    renderDetect(); });
+  $("inTitle").addEventListener("input", ()=>{ S.inTitleAuto=false; });
+  $("inDate").addEventListener("input", ()=>{ S.inDateTouched=true; });
+  inText.addEventListener("input", ()=>renderDetect());
 })();
+// Bron eerst vaststellen (zie resolveSource); intussen staan beide knoppen uit, zodat je niet twee keer verstuurt.
+async function withSource(st){
+  const b1=$("inAnalyze"), b2=$("inSave"); if(S.inBusy) return false;
+  S.inBusy=true; b1.disabled=true; b2.disabled=true;
+  try{ await resolveSource(st); return true; }
+  finally{ S.inBusy=false; b1.disabled=!!S.anaCtl; b2.disabled=false; }
+}
+const srcSaid=(m)=>{ const w=whoShort(m); return `‘${m.source}’${w? " ("+w+")" : ""}`; };
 $("inSave").addEventListener("click", async ()=>{
   const st=$("inStatus"), text=inText.value.trim();
   if(!S.db){ setStatus(st,"Opslag is niet beschikbaar in deze weergave.",true); return; }
   if(!text){ setStatus(st,"Plak eerst een transcript of notitie.",true); return; }
+  if(!await withSource(st)) return;
   setStatus(st,"Bewaren…");
-  try{ await saveInbox(formMeta(), text); clearForm(); setStatus(st,"Bewaard in de inbox."); }catch(e){ setStatus(st, dbErrText(e), true); }
+  try{ const meta=formMeta(); await saveInbox(meta, text); clearForm(); setStatus(st,`Bewaard in de inbox als ${srcSaid(meta)}.`); }catch(e){ setStatus(st, dbErrText(e), true); }
 });
 $("inForm").addEventListener("submit", async (ev)=>{
   ev.preventDefault();
@@ -2591,6 +2749,7 @@ $("inForm").addEventListener("submit", async (ev)=>{
   if(!S.db){ setStatus(st,"Opslag is niet beschikbaar in deze weergave.",true); return; }
   if(!text){ setStatus(st,"Plak eerst een transcript of notitie.",true); return; }
   if(!S.plan){ setStatus(st,"Het plan is nog niet geladen.",true); return; }
+  if(!await withSource(st)) return;
   const meta=formMeta(); let id;
   try{ id=await saveInbox(meta, text); clearForm(); }catch(e){ setStatus(st, dbErrText(e), true); return; }
   runAnalysis(id, meta, text.slice(0,MAX_TEXT));
@@ -2638,7 +2797,7 @@ async function resumeAnalyses(){
   const it=arr(S.inbox).find(i=>i.status==="analyseren" && i.job && !S.resumed?.has(i.job));
   if(!it) return;
   (S.resumed ||= new Set()).add(it.job);
-  const meta={source:it.source, title:it.title, url:it.url, date:it.date};
+  const meta={source:it.source, title:it.title, url:it.url, date:it.date, who:it.who||null};
   const btn=$("inAnalyze"), stop=$("inStop");
   S.anaCtl=new AbortController(); btn.disabled=true; stop.hidden=false; stop.onclick=()=>S.anaCtl?.abort();
   anaStatus(0);
@@ -2654,7 +2813,7 @@ async function resumeAnalyses(){
 }
 function reviewAnalysis(id){
   const it=arr(S.inbox).find(x=>x.id===id); if(!it?.analysis) return;
-  const meta={source:it.source, title:it.title, url:it.url, date:it.date};
+  const meta={source:it.source, title:it.title, url:it.url, date:it.date, who:it.who||null};
   S.pending={inboxId:it.id, meta, analysis:it.analysis, items:buildChangeItems(it.analysis, meta)};
   renderPending(); window.scrollTo({top:0, behavior:"smooth"});
 }
@@ -2711,7 +2870,8 @@ function buildChangeItems(a, meta){
     const lensId=SOURCE_LENS[meta?.source]; const ln=m.lens;
     if(lensId && ln && typeof ln==="object" && (ln.take || arr(ln.checks).length || arr(ln.newChecks).length)){
       const lens=arr(pm.lenses).find(l=>l.id===lensId);
-      if(lens) items.push({kind:"lens", on:true, label:"Bril "+lens.name, from:"", to:"bijgewerkt vanuit "+meta.source, detail:String(ln.take||""), data:{id:lensId, take:ln.take?String(ln.take):null,
+      const by=meta.who? `Bron herkend door Grok (${ZEKER[meta.who.zekerheid]||"onzeker"}): ${whoShort(meta)||detWho(meta.who)||meta.source}. ` : "";   // zo zie je bij het aanvinken dat Grok de bron koos
+      if(lens) items.push({kind:"lens", on:true, label:"Bril "+lens.name, from:"", to:"bijgewerkt vanuit "+meta.source, detail:by+String(ln.take||""), data:{id:lensId, take:ln.take?String(ln.take):null,
         checks:arr(ln.checks).filter(x=>x&&x.id).map(x=>({id:String(x.id), answer:x.answer?String(x.answer):null, status:LV[x.status]?x.status:null})),
         newChecks:arr(ln.newChecks).filter(x=>x&&x.q).slice(0,3).map(x=>({id:"n"+Math.random().toString(36).slice(2,7), q:String(x.q), answer:String(x.answer||""), status:LV[x.status]?x.status:"info"})),
         vs: ln.vsPlan && typeof ln.vsPlan==="object" && ln.vsPlan.verschil? {oordeel:VERDICT[ln.vsPlan.oordeel]? String(ln.vsPlan.oordeel) : "deels", verschil:String(ln.vsPlan.verschil).slice(0,360)} : null}});
@@ -2737,7 +2897,8 @@ function renderPending(){
   if(!P){ el.hidden=true; el.innerHTML=""; return; }
   const a=P.analysis; el.hidden=false;
   el.innerHTML = `<div class="box pending stack">
-    <div class="sechead"><div><span class="eyebrow">Voorstel · ${esc(P.meta.source)} · ${esc(fmtDate(P.meta.date))}</span><h2 style="margin-top:3px">${esc(P.meta.title||"Zonder titel")}</h2></div>
+    <div class="sechead"><div><span class="eyebrow">Voorstel · ${esc(P.meta.source)}${whoShort(P.meta)? " · "+esc(whoShort(P.meta)) : ""} · ${esc(fmtDate(P.meta.date))}</span><h2 style="margin-top:3px">${esc(P.meta.title||"Zonder titel")}</h2>
+      ${P.meta.who? `<p class="muted small" style="margin:2px 0 0">${P.meta.who.twijfel? `Grok twijfelde over de bron (misschien ${esc(detLine(P.meta.who))}), dus de bril van ${esc(P.meta.who.twijfel)} blijft ongemoeid.` : `Bron herkend door Grok: ${esc(capFirst(detLine(P.meta.who)))} · ${esc(ZEKER[P.meta.who.zekerheid]||"onzeker")}.`}</p>` : ""}</div>
       ${a.confidence? `<span class="pill ${a.confidence==="hoog"?"t-good":a.confidence==="laag"?"t-bad":"t-warn"}">Betrouwbaarheid ${esc(a.confidence)}</span>`:""}</div>
     ${a.summary? `<p>${esc(a.summary)}</p>`:""}
     ${a.keyPoints.length? `<ul class="actions">${a.keyPoints.map(k=>`<li><span>${esc(k)}</span></li>`).join("")}</ul>`:""}
@@ -2799,7 +2960,7 @@ function renderInbox(){
   if(!S.db && !S.offline){ el.innerHTML=`<p class="muted">Inbox laden…</p>`; return; }
   if(!list.length){ el.innerHTML=`<div class="empty"><b>De inbox is leeg</b><span>Plak hierboven je eerste transcript, of laat het laptop-script nieuwe video's toevoegen.</span></div>`; return; }
   el.innerHTML = list.map(i=>{ const s=INBOX_STATUS[i.status]||["t-neutral",i.status||"–"]; const a=i.analysis; return `
-    <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}${arr(i.files).length? " · document"+(i.files.length>1?"en":"")+": "+esc(i.files.map(f=>f.name).join(", ").slice(0,120)) : ""}</span>
+    <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}${i.who? " · "+esc(i.who.twijfel? detLine(i.who)+" (Grok twijfelt)" : (i.who.soort||"bron")+(whoShort(i)? " van "+whoShort(i) : "")) : ""}${arr(i.files).length? " · document"+(i.files.length>1?"en":"")+": "+esc(i.files.map(f=>f.name).join(", ").slice(0,120)) : ""}</span>
       ${i.url? `<a href="${esc(i.url)}" target="_blank" rel="noopener" class="small">bron</a>`:""}
       ${i.analysis && i.status==="geanalyseerd"? `<button class="btn sm primary" type="button" data-review="${esc(i.id)}">Voorstellen bekijken</button>`:""}
       ${(i.text && i.status!=="verwerkt" && i.status!=="analyseren")? `<button class="btn sm" type="button" data-ana="${esc(i.id)}" ${S.sample?"":"disabled"}>${i.status==="geanalyseerd"||i.status==="bewaard"?"Opnieuw analyseren":"Analyseer"}</button>`:""}</div>
@@ -3565,7 +3726,7 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   db.doc(PF_PATH).onSnapshot(s=>{ const d=s.exists? s.data() : null; S.pfLoaded=true; if(!changed("portfolio",d)) return; S.portfolio=d; renderPortfolio(); renderVandaag(); renderPlan(); renderSummaries(); }, onErr);
   db.doc("briefing/latest").onSnapshot(s=>{ const d=s.exists? s.data() : null; if(!changed("briefing",d)) return; S.briefing=d; renderVandaag(); renderSummaries(); }, onErr);
   db.collection("history").orderBy("at","desc").limit(40).onSnapshot(q=>{ const d=q.docs.map(x=>({id:x.id, ...x.data()})); if(!changed("history",d)) return; S.history=d; renderHistory(); renderVandaag(); }, onErr);
-  window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); resumeAnalyses(); }).catch(()=>{});
+  window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); renderDetect(); resumeAnalyses(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
   $("connBtn").addEventListener("click",()=>{ CONN.open=!CONN.open; renderConn(); if(CONN.open){ window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); if(S.server && Date.now()-CONN.at>20000) loadConn(); } });
   window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("sb-inbox-post").hidden=false; if(sv.extract) $("inDrop").hidden=false; if(S.tab==="inbox") showSub("inbox", localStorage.getItem("hp-sub-inbox")||S.sub.inbox); loadServerStatus(); loadConn(); if(onPost()) loadPost();

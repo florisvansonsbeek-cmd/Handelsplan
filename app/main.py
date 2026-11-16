@@ -123,7 +123,16 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=False,
                    allow_headers=["Authorization", "Content-Type"], expose_headers=["Content-Disposition"], max_age=600)
 app.add_middleware(SessionMiddleware, secret_key=SECRET,
                    https_only=SECURE_COOKIE, same_site="strict", max_age=60 * 60 * 24 * 14)
-app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
+class _Static(StaticFiles):
+    """/static met 'no-cache': de browser vraagt bij elke keer laden of zijn kopie nog klopt (met de ETag, dus goedkoop).
+    Zonder dit hield een browser na een update soms urenlang de oude shim.js vast, en zag je nieuwe functies niet."""
+    async def get_response(self, path, scope):
+        resp = await super().get_response(path, scope)
+        resp.headers["Cache-Control"] = "no-cache"
+        return resp
+
+
+app.mount("/static", _Static(directory=BASE / "static"), name="static")
 
 
 @app.middleware("http")
