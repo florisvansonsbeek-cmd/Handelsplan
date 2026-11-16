@@ -31,7 +31,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from . import ai, aijobs, db, health, jobs, loginguard, mail, patch, quotes, scheduler, updates
+from . import ai, aijobs, db, extract, health, jobs, loginguard, mail, patch, quotes, scheduler, updates
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logging.getLogger("httpx").setLevel(logging.WARNING)  # nooit volledige URL's (met sleutels) in de logs
@@ -360,6 +360,25 @@ def ai_job_status(jid: str, request: Request):
     out = {k: j.get(k) for k in ("id", "status", "text", "truncated", "error", "code", "seconds", "model", "tier")}
     out["elapsed"] = round(time.time() - float(j.get("startedAt") or time.time()))
     return out
+
+
+@app.post("/api/extract")
+async def extract_document(request: Request, name: str = ""):
+    """Tekst uit een document (pdf, Word, ondertitels, afbeelding …) voor de inbox. Het bestand wordt niet bewaard."""
+    require_login(request)
+    try:
+        size = int(request.headers.get("content-length") or 0)
+    except ValueError:
+        size = 0
+    if size > extract.MAX_BYTES:
+        raise HTTPException(413, "Dit bestand is groter dan 20 MB.")
+    data = await request.body()
+    try:
+        res = await asyncio.to_thread(extract.extract, name, request.headers.get("content-type", ""), data)
+    except extract.ExtractError as e:
+        raise HTTPException(422, str(e))
+    log.info("[inbox] tekst uit %s (%s): %s tekens", res["name"][:60], res["kind"], f"{res['chars']:,}".replace(",", "."))
+    return res
 
 
 @app.post("/api/ai")

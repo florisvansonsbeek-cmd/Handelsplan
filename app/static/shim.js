@@ -181,6 +181,19 @@
       return j;
     },
     logout: async () => { if (R) { R.logout(); return; } await fetch("/logout", { method: "POST", credentials: "same-origin" }); location.href = "/login"; },
+    // Document naar de server: die haalt de tekst eruit (pdf, Word, ondertitels, afbeelding via Grok) en bewaart het bestand niet.
+    extract: async (file, signal) => {
+      let r;
+      try {
+        r = await fetch(U("/api/extract?name=" + encodeURIComponent(file.name || "bestand")), { method: "POST", body: file, signal,
+          headers: H({ "Content-Type": file.type || "application/octet-stream" }), credentials: CRED, cache: "no-store" });
+      } catch (e) { throw { code: e && e.name === "AbortError" ? "cancelled" : "unavailable", message: "De server is niet bereikbaar." }; }
+      if (r.status === 401) { unauth(); throw { code: "revoked", message: "Je bent uitgelogd." }; }
+      let j = {}; try { j = await r.json(); } catch (e) { /* geen json */ }
+      if (r.status === 404) throw { code: "old_server", message: "Je server kent dit nog niet: zet eerst de nieuwste versie op Railway." };
+      if (!r.ok) throw { code: "extract_failed", message: j.detail || "Tekst uit dit bestand halen lukte niet." };
+      return j;
+    },
   };
   const caps = { db, sample, downloads, user, server };
   window.claude = { use: async (name) => { if (R) await R.ready; return caps[name] || null; } };
