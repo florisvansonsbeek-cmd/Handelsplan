@@ -868,6 +868,22 @@ details.story-more > summary{cursor:pointer;color:var(--muted);font-size:.86rem}
 details.src-more > summary{cursor:pointer;color:var(--muted);font-size:.82rem}
 details.src-more[open] > summary{margin-bottom:6px}
 .src .linkbtn{align-self:flex-start}
+/* documenten in de inbox */
+.dropz{border:1.5px dashed var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2);transition:border-color .15s,background .15s}
+.dropz.drag{border-color:var(--accent);background:var(--accent-soft)}
+.dz-main{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.dz-main b{font-weight:600}
+.dz-main > span{font-size:.9rem;color:var(--muted)}
+.dz-hint{font-size:.8rem;color:var(--faint)}
+.dz-list{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.dz-list:empty{display:none}
+.dz-list li{display:grid;grid-template-columns:10px minmax(0,max-content) minmax(0,1fr);gap:8px;align-items:baseline;font-size:.86rem}
+.dz-list li i{width:8px;height:8px;border-radius:50%;background:var(--faint);display:inline-block}
+.dz-list li.ok i{background:var(--good)} .dz-list li.bad i{background:var(--bad)} .dz-list li.busy i{background:var(--warn);animation:cpulse .8s ease-in-out infinite alternate}
+.dz-list .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:46ch}
+.dz-list .mt{color:var(--muted);overflow-wrap:anywhere}
+.dz-list li.bad .mt{color:var(--bad)}
+@media (max-width:560px){.dz-list li{grid-template-columns:10px minmax(0,1fr)}.dz-list .mt{grid-column:2}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head><body>
@@ -968,12 +984,12 @@ details.src-more[open] > summary{margin-bottom:6px}
     <div class="subview" data-view="transcripts">
       <div class="grid g-2">
         <form class="box stack" id="inForm" autocomplete="off">
-          <div class="sechead"><h2>Nieuw transcript of notitie</h2><span class="muted small" id="inWords"></span></div>
+          <div class="sechead"><h2>Nieuw transcript, document of notitie</h2><span class="muted small" id="inWords"></span></div>
           <div class="frow">
             <div><label for="inSource">Bron</label>
               <select id="inSource">
                 <option>TradersReality</option><option>Rebel Capitalist</option><option>Wolf of Washington</option>
-                <option>Eigen video</option><option>Eigen notitie</option><option>Overig</option>
+                <option>Eigen video</option><option>Eigen notitie</option><option>Artikel of rapport</option><option>Overig</option>
               </select></div>
             <div><label for="inDate">Datum video of notitie</label><input id="inDate" type="date"></div>
           </div>
@@ -981,8 +997,14 @@ details.src-more[open] > summary{margin-bottom:6px}
             <div><label for="inTitle">Titel</label><input id="inTitle" placeholder="Bijv. Weekly outlook: Fed, olie, goud"></div>
             <div><label for="inUrl">Link (optioneel)</label><input id="inUrl" type="url" placeholder="https://youtube.com/watch?v=…"></div>
           </div>
+          <div class="dropz" id="inDrop" hidden>
+            <input type="file" id="inFiles" multiple hidden accept=".pdf,.docx,.odt,.xlsx,.pptx,.rtf,.txt,.md,.csv,.tsv,.json,.xml,.html,.htm,.eml,.srt,.vtt,.jpg,.jpeg,.png,image/jpeg,image/png">
+            <div class="dz-main"><b>Document toevoegen</b><button type="button" class="btn sm" id="inPick">Bestand kiezen</button><span>of sleep een bestand hierheen, of plak een screenshot in het tekstveld.</span></div>
+            <span class="dz-hint">PDF, Word, Excel, PowerPoint, tekst, ondertitels (.srt of .vtt) of een afbeelding (JPG of PNG), tot 20 MB per bestand. De tekst komt in het veld hieronder; daarna kies je zelf Analyseer of Alleen bewaren. Het bestand zelf wordt niet bewaard.</span>
+            <ul class="dz-list" id="inFileList" aria-live="polite"></ul>
+          </div>
           <div><label for="inText">Transcript of tekst</label>
-            <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag)."></textarea></div>
+            <textarea id="inText" placeholder="Plak hier het transcript, je eigen aantekeningen of een Wolf of Washington-melding (ticker, politicus, transactiedatum, meldingsdatum, bedrag). Een document of screenshot kun je ook hierboven toevoegen."></textarea></div>
           <div class="btnrow">
             <button class="btn primary" type="submit" id="inAnalyze">Analyseer en stel wijzigingen voor</button>
             <button class="btn" type="button" id="inSave">Alleen bewaren</button>
@@ -993,6 +1015,7 @@ details.src-more[open] > summary{margin-bottom:6px}
         <div class="box stack">
           <h3>Wat er gebeurt</h3>
           <ul class="actions">
+            <li><span>Een document (pdf, Word, ondertitels) of screenshot? De site haalt de tekst eruit en zet die in het tekstveld; bij een afbeelding leest Grok de tekst en cijfers.</span></li>
             <li><span>De AI (Grok) leest het transcript naast je plan, het marktbeeld en de laatste cijfers.</span></li>
             <li><span>Feiten, meningen en voorspellingen worden gescheiden; claims gaan het claimregister in.</span></li>
             <li><span>Is de bron TradersReality (Tino) of Rebel Capitalist (George Gammon), dan wordt hun <b>bril</b> bijgewerkt met hún visie. Op <b>Vandaag</b> zie je daarna waar ze het met de AI eens of oneens zijn.</span></li>
@@ -2498,13 +2521,67 @@ $("askForm").addEventListener("submit", async (ev)=>{
 const inText=$("inText");
 inText.addEventListener("input", ()=>{ const n=(inText.value.trim().match(/\S+/g)||[]).length; $("inWords").textContent = n? nf(n)+" woorden" : ""; });
 $("inDate").value = todayISO();
-function formMeta(){ return {source:$("inSource").value, title:$("inTitle").value.trim(), url:$("inUrl").value.trim(), date:$("inDate").value}; }
+function formMeta(){
+  const m={source:$("inSource").value, title:$("inTitle").value.trim(), url:$("inUrl").value.trim(), date:$("inDate").value};
+  const files=S.inFiles.filter(f=>f.state==="ok").map(f=>({name:f.name, label:f.label||"", pages:f.pages||null, words:f.words||0}));
+  if(files.length) m.files=files;
+  return m;
+}
 async function saveInbox(meta, text){
   const ref=S.db.collection("inbox").doc();
   await ref.set({...meta, text:text.slice(0,MAX_TEXT), truncated:text.length>MAX_TEXT, createdAt:new Date().toISOString(), status:"nieuw", addedBy:"hand"});
   return ref.id;
 }
-function clearForm(){ inText.value=""; $("inTitle").value=""; $("inUrl").value=""; $("inWords").textContent=""; }
+function clearForm(){ inText.value=""; $("inTitle").value=""; $("inUrl").value=""; $("inWords").textContent=""; S.inFiles=[]; renderFileList(); }
+/* ---------- documenten: de server haalt de tekst eruit, die komt in het tekstveld ---------- */
+const DOC_OK=/\.(pdf|docx|odt|xlsx|pptx|rtf|txt|md|csv|tsv|json|xml|html?|eml|srt|vtt|jpe?g|png)$/i;
+S.inFiles=[];
+function renderFileList(){
+  const el=$("inFileList"); if(!el) return;
+  el.innerHTML=S.inFiles.map(f=>`<li class="${f.state}"><i aria-hidden="true"></i><span class="nm">${esc(f.name)}</span><span class="mt">${esc(
+    f.state==="busy"? (f.kind==="afbeelding"? "Grok leest de afbeelding…" : "tekst eruit halen…")
+    : f.state==="bad"? f.error
+    : [f.label, f.pages? f.pages+" pagina's" : "", nf(f.words)+" woorden", f.truncated? "ingekort" : "", f.note].filter(Boolean).join(" · "))}</span></li>`).join("");
+}
+async function addDocs(list){
+  const files=[...(list||[])]; if(!files.length) return;
+  const st=$("inStatus");
+  if(!S.server?.extract){ setStatus(st,"Documenten toevoegen kan alleen op je eigen site (Railway).",true); return; }
+  if(S.tab!=="inbox") showTab("inbox","transcripts");
+  for(const f of files){
+    const rec={name:f.name||"afbeelding.png", state:"busy", kind:/^image\//.test(f.type)? "afbeelding" : ""};
+    S.inFiles.push(rec); renderFileList();
+    if(f.size>20*1024*1024){ Object.assign(rec,{state:"bad", error:"groter dan 20 MB"}); renderFileList(); setStatus(st, `${rec.name} is groter dan 20 MB.`, true); continue; }
+    if(!DOC_OK.test(rec.name) && !/^image\/(jpeg|png)$/.test(f.type)){ Object.assign(rec,{state:"bad", error:"dit bestandstype wordt niet ondersteund"}); renderFileList(); setStatus(st, `${rec.name}: dit bestandstype wordt niet ondersteund.`, true); continue; }
+    setStatus(st, rec.kind==="afbeelding"? `Grok leest ${rec.name}… (10 tot 30 seconden)` : `Tekst uit ${rec.name} halen…`);
+    try{
+      const r=await S.server.extract(f);
+      Object.assign(rec, {state:"ok", name:r.name||rec.name, kind:r.kind, label:r.label, words:r.words, chars:r.chars, pages:r.pages||null, truncated:!!r.truncated, note:r.note||""});
+      const head=`--- Uit ${rec.name} (${[r.label, r.pages? r.pages+" pagina's" : ""].filter(Boolean).join(", ")}) ---`;
+      const cur=inText.value.replace(/\s+$/,"");
+      inText.value=(cur? cur+"\n\n" : "")+head+"\n"+String(r.text||"").trim();
+      inText.dispatchEvent(new Event("input"));
+      if(!$("inTitle").value.trim()) $("inTitle").value=rec.name.replace(/\.[^.]+$/,"").replace(/_+/g," ").trim();
+      setStatus(st, `${rec.name}: ${nf(r.words)} woorden in het tekstveld gezet.${r.truncated? " Lang document: ingekort." : ""} Kies nu Analyseer of Alleen bewaren.`);
+    }catch(e){ Object.assign(rec,{state:"bad", error:e?.message||"lukte niet"}); setStatus(st, `${rec.name}: ${e?.message||"tekst eruit halen lukte niet"}`, true); }
+    renderFileList();
+  }
+  if(inText.value.length>MAX_TEXT) setStatus(st, `Samen ${nf(inText.value.length)} tekens: alleen de eerste ${nf(MAX_TEXT)} gaan mee in de analyse.`, true);
+}
+(function initDocs(){
+  const dz=$("inDrop"), form=$("inForm"), pick=$("inFiles");
+  const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes("Files");
+  $("inPick").addEventListener("click", ()=>pick.click());
+  pick.addEventListener("change", ()=>{ addDocs(pick.files); pick.value=""; });
+  ["dragenter","dragover"].forEach(t=>form.addEventListener(t, e=>{ if(!dz.hidden && hasFiles(e)){ e.preventDefault(); dz.classList.add("drag"); } }));
+  form.addEventListener("dragleave", e=>{ if(!form.contains(e.relatedTarget)) dz.classList.remove("drag"); });
+  form.addEventListener("drop", e=>{ dz.classList.remove("drag"); if(dz.hidden || !e.dataTransfer?.files?.length) return; e.preventDefault(); addDocs(e.dataTransfer.files); });
+  inText.addEventListener("paste", e=>{ const fs=[...(e.clipboardData?.files||[])]; if(fs.length && !dz.hidden && !(e.clipboardData.getData("text")||"").trim()){ e.preventDefault(); addDocs(fs); } });
+  // Een bestand dat net naast het vak valt: niet laten openen door de browser, wel toevoegen als je op Transcripten staat.
+  window.addEventListener("dragover", e=>{ if(hasFiles(e)) e.preventDefault(); });
+  window.addEventListener("drop", e=>{ if(!e.dataTransfer?.files?.length || form.contains(e.target)) return; e.preventDefault();
+    if(!dz.hidden && S.tab==="inbox" && S.sub.inbox==="transcripts") addDocs(e.dataTransfer.files); });
+})();
 $("inSave").addEventListener("click", async ()=>{
   const st=$("inStatus"), text=inText.value.trim();
   if(!S.db){ setStatus(st,"Opslag is niet beschikbaar in deze weergave.",true); return; }
@@ -2726,7 +2803,7 @@ function renderInbox(){
   if(!S.db && !S.offline){ el.innerHTML=`<p class="muted">Inbox laden…</p>`; return; }
   if(!list.length){ el.innerHTML=`<div class="empty"><b>De inbox is leeg</b><span>Plak hierboven je eerste transcript, of laat het laptop-script nieuwe video's toevoegen.</span></div>`; return; }
   el.innerHTML = list.map(i=>{ const s=INBOX_STATUS[i.status]||["t-neutral",i.status||"–"]; const a=i.analysis; return `
-    <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}</span>
+    <div class="item"><div class="h"><span class="pill ${s[0]}">${esc(s[1])}</span><b>${esc(i.title||"Zonder titel")}</b><span class="chip">${esc(i.source||"")}</span><span class="muted small">${esc(fmtDate(i.date))}${i.addedBy==="automatisch"?" · automatisch":""}${arr(i.files).length? " · document"+(i.files.length>1?"en":"")+": "+esc(i.files.map(f=>f.name).join(", ").slice(0,120)) : ""}</span>
       ${i.url? `<a href="${esc(i.url)}" target="_blank" rel="noopener" class="small">bron</a>`:""}
       ${i.analysis && i.status==="geanalyseerd"? `<button class="btn sm primary" type="button" data-review="${esc(i.id)}">Voorstellen bekijken</button>`:""}
       ${(i.text && i.status!=="verwerkt" && i.status!=="analyseren")? `<button class="btn sm" type="button" data-ana="${esc(i.id)}" ${S.sample?"":"disabled"}>${i.status==="geanalyseerd"||i.status==="bewaard"?"Opnieuw analyseren":"Analyseer"}</button>`:""}</div>
@@ -3495,7 +3572,7 @@ renderAll(); renderInbox(); renderHistory(); renderChallenges();
   window.claude.use("sample").then(s=>{ S.sample=s; $("askBtn").disabled=!s; renderAll(); renderInbox(); resumeAnalyses(); }).catch(()=>{});
   window.claude.use("downloads").then(d=>{ S.downloads=d; renderUitleg(); }).catch(()=>{});
   $("connBtn").addEventListener("click",()=>{ CONN.open=!CONN.open; renderConn(); if(CONN.open){ window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); if(S.server && Date.now()-CONN.at>20000) loadConn(); } });
-  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("sb-inbox-post").hidden=false; if(S.tab==="inbox") showSub("inbox", localStorage.getItem("hp-sub-inbox")||S.sub.inbox); loadServerStatus(); loadConn(); if(onPost()) loadPost();
+  window.claude.use("server").then(sv=>{ if(sv){ S.server=sv; $("logoutBtn").hidden=false; $("sb-inbox-post").hidden=false; if(sv.extract) $("inDrop").hidden=false; if(S.tab==="inbox") showSub("inbox", localStorage.getItem("hp-sub-inbox")||S.sub.inbox); loadServerStatus(); loadConn(); if(onPost()) loadPost();
     setInterval(()=>{ if(!document.hidden) loadConn(); }, 60000);
     document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-CONN.at>30000) loadConn(); });
     window.addEventListener("online",()=>loadConn()); window.addEventListener("offline",()=>{ CONN.err="Je bent offline."; renderConn(); });
